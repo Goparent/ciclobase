@@ -1,12 +1,3 @@
-/* =============================================
-
-'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-const supabase = createClient(
-  'https://grzjubuuuropuvzefzrv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdyemp1YnV1dXJvcHV2emVmenJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzM1NTgsImV4cCI6MjA4ODc0OTU1OH0.05ETtHqfUggpAzm7KL3s-Ns7ZeR7JsgcTErS-Y0ODXY'
-)
-
 
 /* =============================================
    CicloBase — Main JavaScript
