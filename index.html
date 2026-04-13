@@ -115,17 +115,17 @@
 <div class="flex justify-between items-center px-12 py-6 max-w-[1440px] mx-auto">
 <a class="font-['Newsreader'] text-2xl font-black text-primary" href="/">CicloBase</a>
 <div class="hidden md:flex items-center gap-8">
-<a class="text-[#1A7A4A] border-b-2 border-[#1A7A4A] pb-1 font-['Newsreader'] font-bold text-lg translate-y-[-2px] transition-transform" href="#">Cómo funciona</a>
-<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#">Generadores</a>
-<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#">Compradores</a>
-<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#">Normativa eSIR</a>
-<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#">Sobre nosotros</a>
+<a class="text-[#1A7A4A] border-b-2 border-[#1A7A4A] pb-1 font-['Newsreader'] font-bold text-lg translate-y-[-2px] transition-transform" href="#como-funciona">Cómo funciona</a>
+<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#generadores">Generadores</a>
+<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#compradores">Compradores</a>
+<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#esir">Normativa eSIR</a>
+<a class="text-primary/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg" href="#nosotros">Sobre nosotros</a>
 </div>
 <button class="bg-[#1A7A4A] text-white px-6 py-2 rounded-xl font-bold hover:bg-primary transition-transform active:translate-y-[-2px]">Solicitar demo</button>
 </div>
 </nav>
 <!-- Hero Section -->
-<header class="relative pt-32 pb-20 px-6 md:px-12 overflow-hidden">
+<header class="relative pt-32 pb-20 px-6 md:px-12 overflow-hidden" id="generadores">
 <div class="max-w-[1440px] mx-auto grid md:grid-cols-2 gap-16 items-center">
 <div class="z-10">
 <h1 class="font-headline text-5xl md:text-7xl font-bold text-primary leading-tight tracking-tight mb-8">
@@ -212,7 +212,7 @@
 </div>
 </section>
 <!-- Solution Section -->
-<section class="py-24 px-6 md:px-12 bg-primary text-on-primary overflow-hidden relative">
+<section class="py-24 px-6 md:px-12 bg-primary text-on-primary overflow-hidden relative" id="compradores">
 <div class="max-w-[1440px] mx-auto relative z-10">
 <div class="max-w-3xl mb-20">
 <h2 class="font-headline text-4xl md:text-6xl font-bold mb-8 text-white leading-tight">
@@ -246,7 +246,7 @@
 <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none bg-gradient-to-l from-secondary to-transparent"></div>
 </section>
 <!-- How it Works -->
-<section class="py-24 px-6 md:px-12 bg-surface-bright">
+<section class="py-24 px-6 md:px-12 bg-surface-bright" id="como-funciona">
 <div class="max-w-[1440px] mx-auto">
 <h2 class="font-headline text-4xl font-bold text-primary mb-16">El Ledger Industrial en 4 Pasos</h2>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -348,7 +348,7 @@
 </div>
 </section>
 <!-- eSIR Section -->
-<section class="py-24 px-6 md:px-12 bg-surface-container-low">
+<section class="py-24 px-6 md:px-12 bg-surface-container-low" id="esir">
 <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row gap-16 items-center">
 <div class="w-full md:w-1/2">
 <img alt="Esquema técnico sobre fondo de almacén industrial, representando la trazabilidad de datos y cumplimiento normativo" class="rounded-xl shadow-lg border border-white/50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNiEdVmwrgirugLk5Y-90XsJlZQYdownCWX6NhEzCJ2xWM8TXPLzPr86C5A2hqKtajMpuA8LEwrLZPzgResksmGkVV3Au_nfVX38VR081-T9WzHmmxklU6zPcqWbltmsjN2teYPEgZ1Eec69pPMrMVE58LPKcvjTFHZ3kMEPqzLFxpbiSaVNqbbrRiT05KALPvZDVKE4BaVAjRsAh4NDPP0NhO-Ky0KS7rPo2_0Jk_8aKa5lffeWXv8DvMiFnkFgvsGmgCQcJc-YQ"/>
@@ -453,7 +453,7 @@
 </div>
 </section>
 <!-- Final CTA & Form -->
-<section class="py-24 bg-primary text-on-primary">
+<section class="py-24 bg-primary text-on-primary" id="nosotros">
 <div class="max-w-[1440px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-20 items-center">
 <div>
 <h2 class="font-headline text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
@@ -464,7 +464,7 @@
                 </p>
 </div>
 <div class="bg-white p-10 rounded-xl">
-<form class="space-y-6">
+<form action="mailto:ciclobasee@gmail.com" class="space-y-6" enctype="text/plain" method="POST">
 <div class="grid md:grid-cols-2 gap-6">
 <div class="space-y-2">
 <label class="font-label text-xs uppercase tracking-widest text-outline">Nombre</label>
@@ -506,18 +506,18 @@
 <div class="space-y-4">
 <h5 class="text-white font-bold font-['DM_Mono'] text-sm uppercase tracking-widest mb-6">Plataforma</h5>
 <ul class="space-y-3">
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Cómo funciona</a></li>
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Generadores</a></li>
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Compradores</a></li>
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Normativa eSIR</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#como-funciona">Cómo funciona</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#generadores">Generadores</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#compradores">Compradores</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#esir">Normativa eSIR</a></li>
 </ul>
 </div>
 <div class="space-y-4">
 <h5 class="text-white font-bold font-['DM_Mono'] text-sm uppercase tracking-widest mb-6">Legal</h5>
 <ul class="space-y-3">
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Privacidad</a></li>
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Términos</a></li>
-<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#">Compliance</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#como-funciona">Privacidad</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#generadores">Términos</a></li>
+<li><a class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors" href="#compradores">Compliance</a></li>
 </ul>
 </div>
 </div>
