@@ -1,521 +1,165 @@
 <!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CicloBase | The Architectural Ledger of Industrial Waste</title>
 
-<html class="scroll-smooth" lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>CicloBase | The Architectural Ledger of Industrial Waste</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Manrope:wght@200..800&amp;family=Space+Grotesk:wght@300..700&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
-            "colors": {
-                    "surface-tint": "#006d3f",
-                    "surface-dim": "#ded9d2",
-                    "error-container": "#ffdad6",
-                    "secondary-fixed": "#bdedd3",
-                    "on-background": "#1d1c17",
-                    "primary-container": "#003e22",
-                    "tertiary-fixed": "#cee9d9",
-                    "primary-fixed": "#9bf6ba",
-                    "inverse-primary": "#80d9a0",
-                    "on-primary-container": "#57af7a",
-                    "inverse-on-surface": "#f5f0e8",
-                    "on-tertiary-fixed-variant": "#354c41",
-                    "secondary": "#3a6753",
-                    "on-secondary-fixed-variant": "#224f3c",
-                    "on-error": "#ffffff",
-                    "on-primary-fixed": "#00210f",
-                    "tertiary-fixed-dim": "#b3ccbe",
-                    "secondary-container": "#baebd0",
-                    "on-error-container": "#93000a",
-                    "error": "#ba1a1a",
-                    "tertiary": "#0e241b",
-                    "on-surface": "#1d1c17",
-                    "inverse-surface": "#32302b",
-                    "outline-variant": "#c0c8c2",
-                    "surface-variant": "#e7e2da",
-                    "on-secondary": "#ffffff",
-                    "surface-container-lowest": "#ffffff",
-                    "on-secondary-fixed": "#002114",
-                    "on-tertiary-fixed": "#092016",
-                    "on-secondary-container": "#3f6b57",
-                    "primary": "#002613",
-                    "surface-container-highest": "#e7e2da",
-                    "surface-container-high": "#ece8e0",
-                    "outline": "#717973",
-                    "surface-container-low": "#f8f3eb",
-                    "on-surface-variant": "#414944",
-                    "on-tertiary": "#ffffff",
-                    "secondary-fixed-dim": "#a1d1b8",
-                    "surface-container": "#f2ede5",
-                    "on-primary": "#ffffff",
-                    "surface-bright": "#fef9f1",
-                    "tertiary-container": "#243a30",
-                    "background": "#fef9f1",
-                    "primary-fixed-dim": "#80d9a0",
-                    "on-primary-fixed-variant": "#00522e",
-                    "on-tertiary-container": "#8ba496",
-                    "surface": "#fef9f1"
+            colors: {
+              "surface-tint": "#006d3f",
+              "surface-dim": "#ded9d2",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#bdedd3",
+              "on-background": "#1d1c17",
+              "primary-container": "#003e22",
+              "tertiary-fixed": "#cee9d9",
+              "primary-fixed": "#9bf6ba",
+              "inverse-primary": "#80d9a0",
+              "on-primary-container": "#57af7a",
+              "inverse-on-surface": "#f5f0e8",
+              "on-tertiary-fixed-variant": "#354c41",
+              secondary: "#3a6753",
+              "on-secondary-fixed-variant": "#224f3c",
+              "on-error": "#ffffff",
+              "on-primary-fixed": "#00210f",
+              "tertiary-fixed-dim": "#b3ccbe",
+              "secondary-container": "#baebd0",
+              "on-error-container": "#93000a",
+              error: "#ba1a1a",
+              tertiary: "#0e241b",
+              "on-surface": "#1d1c17",
+              "inverse-surface": "#32302b",
+              "outline-variant": "#c0c8c2",
+              "surface-variant": "#e7e2da",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#002114",
+              "on-tertiary-fixed": "#092016",
+              "on-secondary-container": "#3f6b57",
+              primary: "#002613",
+              "surface-container-highest": "#e7e2da",
+              "surface-container-high": "#ece8e0",
+              outline: "#717973",
+              "surface-container-low": "#f8f3eb",
+              "on-surface-variant": "#414944",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed-dim": "#a1d1b8",
+              "surface-container": "#f2ede5",
+              "on-primary": "#ffffff",
+              "surface-bright": "#fef9f1",
+              "tertiary-container": "#243a30",
+              background: "#fef9f1",
+              "primary-fixed-dim": "#80d9a0",
+              "on-primary-fixed-variant": "#00522e",
+              "on-tertiary-container": "#8ba496",
+              surface: "#fef9f1",
             },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
             },
-            "fontFamily": {
-                    "headline": ["Newsreader"],
-                    "body": ["Manrope"],
-                    "label": ["Space Grotesk"],
-                    "mono": ["DM Mono"]
-            }
+            fontFamily: {
+              headline: ["Newsreader", "serif"],
+              body: ["Manrope", "sans-serif"],
+              label: ["Space Grotesk", "sans-serif"],
+              mono: ["DM Mono", "monospace"],
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(0, 0, 0, 0.08)",
+            },
           },
         },
-      }
+      };
     </script>
-<style>
+
+    <style>
       .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
       }
+
+      body {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
       .glass-nav {
         background: rgba(254, 249, 241, 0.9);
         backdrop-filter: blur(20px);
       }
-    </script>
-</head>
-<body class="bg-background text-on-background font-body">
+    </style>
+  </head>
 
-    <!-- TopNavBar -->
-    <nav class="fixed top-0 w-full z-50 bg-[#fef9f1]/90 dark:bg-[#002613]/90 backdrop-blur-md">
-        <div class="flex justify-between items-center px-12 py-6 max-w-[1440px] mx-auto">
-            <a href="/" class="font-['Newsreader'] text-2xl font-black text-[#002613] dark:text-[#fef9f1]">CicloBase</a>
-            
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#" class="text-[#1A7A4A] border-b-2 border-[#1A7A4A] pb-1 font-['Newsreader'] font-bold text-lg translate-y-[-2px] transition-transform">How it works</a>
-                <a href="#" class="text-[#002613]/70 dark:text-[#fef9f1]/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg">Generators</a>
-                <a href="#" class="text-[#002613]/70 dark:text-[#fef9f1]/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg">Buyers</a>
-                <a href="#" class="text-[#002613]/70 dark:text-[#fef9f1]/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg">eSIR Compliance</a>
-                <a href="#" class="text-[#002613]/70 dark:text-[#fef9f1]/70 hover:text-[#1A7A4A] transition-colors duration-300 font-['Newsreader'] font-bold text-lg">About us</a>
-            </div>
+  <body class="bg-background text-on-background font-body">
+    <nav class="fixed top-0 z-50 w-full bg-[#fef9f1]/90 backdrop-blur-md dark:bg-[#002613]/90">
+      <div class="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-12">
+        <a href="#" class="font-headline text-2xl font-black text-[#002613] dark:text-[#fef9f1]">CicloBase</a>
 
-            <button class="bg-[#1A7A4A] text-white px-6 py-2 rounded-xl font-bold hover:bg-[#003e22] transition-transform active:translate-y-[-2px]">Solicitar demo</button>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#como-funciona" class="translate-y-[-2px] border-b-2 border-[#1A7A4A] pb-1 font-headline text-lg font-bold text-[#1A7A4A] transition-transform">How it works</a>
+          <a href="#generators" class="font-headline text-lg font-bold text-[#002613]/70 transition-colors duration-300 hover:text-[#1A7A4A] dark:text-[#fef9f1]/70">Generators</a>
+          <a href="#buyers" class="font-headline text-lg font-bold text-[#002613]/70 transition-colors duration-300 hover:text-[#1A7A4A] dark:text-[#fef9f1]/70">Buyers</a>
+          <a href="#esir" class="font-headline text-lg font-bold text-[#002613]/70 transition-colors duration-300 hover:text-[#1A7A4A] dark:text-[#fef9f1]/70">eSIR Compliance</a>
+          <a href="#about" class="font-headline text-lg font-bold text-[#002613]/70 transition-colors duration-300 hover:text-[#1A7A4A] dark:text-[#fef9f1]/70">About us</a>
         </div>
+
+        <a href="#contacto" class="rounded-xl bg-[#1A7A4A] px-6 py-2 font-bold text-white transition-transform hover:bg-[#003e22] active:-translate-y-0.5">Solicitar demo</a>
+      </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="relative pt-32 pb-20 px-6 md:px-12 overflow-hidden">
-        <div class="max-w-[1440px] mx-auto grid md:grid-cols-2 gap-16 items-center">
-            <div class="z-10">
-                <h1 class="font-headline text-5xl md:text-7xl font-bold text-primary leading-tight tracking-tight mb-8">
-                    Tus residuos industriales valen dinero. <span class="italic text-secondary">Cóbralo.</span>
-                </h1>
-                <p class="text-xl text-on-surface-variant max-w-lg mb-10 leading-relaxed">
-                    El primer marketplace B2B que conecta generadores de residuos con compradores certificados, garantizando trazabilidad total y cumplimiento normativo eSIR.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button class="bg-[#1A7A4A] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all shadow-sm">
-                        Solicitar demo gratuita
-                    </button>
-                    <button class="border-2 border-outline-variant text-primary px-8 py-4 rounded-xl font-bold text-lg hover:bg-surface-container-low transition-all">
-                        Calcular cuánto pierdes hoy
-                    </button>
-                </div>
-            </div>
-            <div class="relative">
-                <div class="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1530124566582-aa61dd3c9dca?auto=format&fit=crop&q=80&w=1200" 
-                         data-alt="Modern architectural industrial recycling facility with clean lines, steel structures, and soft morning light casting long shadows" 
-                         class="w-full h-full object-cover">
-                </div>
-                <!-- Float card -->
-                <div class="absolute -bottom-10 -left-10 bg-surface-container-lowest p-8 rounded-xl shadow-xl hidden lg:block border border-outline-variant/10">
-                    <div class="flex items-center gap-4 mb-4">
-                        <span class="material-symbols-outlined text-secondary text-3xl">verified</span>
-                        <div class="font-mono text-sm uppercase tracking-widest text-outline">Verified Audit</div>
-                    </div>
-                    <div class="font-mono text-2xl font-bold text-primary">+2.400 Tn</div>
-                    <div class="text-on-surface-variant text-sm">Residuos gestionados hoy</div>
-                </div>
-            </div>
+    <header class="relative overflow-hidden px-6 pb-20 pt-32 md:px-12">
+      <div class="mx-auto grid max-w-[1440px] items-center gap-16 md:grid-cols-2">
+        <div class="z-10">
+          <h1 class="mb-8 font-headline text-5xl font-bold leading-tight tracking-tight text-primary md:text-7xl">
+            Tus residuos industriales valen dinero.
+            <span class="italic text-secondary">Cóbralo.</span>
+          </h1>
+          <p class="mb-10 max-w-lg text-xl leading-relaxed text-on-surface-variant">
+            El primer marketplace B2B que conecta generadores de residuos con compradores certificados, garantizando trazabilidad total y cumplimiento normativo eSIR.
+          </p>
+          <div class="flex flex-col gap-4 sm:flex-row">
+            <a href="#contacto" class="rounded-xl bg-[#1A7A4A] px-8 py-4 text-center text-lg font-bold text-white shadow-sm transition-all hover:bg-primary-container">
+              Solicitar demo gratuita
+            </a>
+            <a href="#calculadora" class="rounded-xl border-2 border-outline-variant px-8 py-4 text-center text-lg font-bold text-primary transition-all hover:bg-surface-container-low">
+              Calcular cuánto pierdes hoy
+            </a>
+          </div>
         </div>
-    </header>
 
-    <!-- Metrics Band -->
-    <section class="bg-surface-container-low py-16 px-6 md:px-12">
-        <div class="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
-            <div class="text-center md:text-left">
-                <div class="font-mono text-3xl md:text-4xl font-bold text-primary mb-2">€44.500M</div>
-                <div class="font-label text-xs uppercase tracking-widest text-outline">Mercado potencial anual</div>
-            </div>
-            <div class="text-center md:text-left">
-                <div class="font-mono text-3xl md:text-4xl font-bold text-primary mb-2">7,4%</div>
-                <div class="font-label text-xs uppercase tracking-widest text-outline">Ahorro medio operativo</div>
-            </div>
-            <div class="text-center md:text-left">
-                <div class="font-mono text-3xl md:text-4xl font-bold text-primary mb-2">29,1%</div>
-                <div class="font-label text-xs uppercase tracking-widest text-outline">Margen de recuperación</div>
-            </div>
-            <div class="text-center md:text-left">
-                <div class="font-mono text-3xl md:text-4xl font-bold text-primary mb-2">71,5%</div>
-                <div class="font-label text-xs uppercase tracking-widest text-outline">Tasa de cumplimiento eSIR</div>
-            </div>
-        </div>
-    </section>
+        <div class="relative">
+          <div class="aspect-[4/5] overflow-hidden rounded-xl shadow-2xl">
+            <img
+              src="https://images.unsplash.com/photo-1530124566582-aa61dd3c9dca?auto=format&fit=crop&q=80&w=1200"
+              alt="Modern architectural industrial recycling facility with clean lines, steel structures, and soft morning light casting long shadows"
+              class="h-full w-full object-cover"
+            />
+          </div>
 
-    <!-- Problem Section -->
-    <section class="py-24 px-6 md:px-12 bg-surface">
-        <div class="max-w-[1440px] mx-auto">
-            <h2 class="font-headline text-4xl md:text-5xl font-bold text-primary mb-16 text-center">
-                Cada mes que pasa, tu empresa pierde dinero...
-            </h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-surface-container-lowest p-10 rounded-xl border-t-4 border-error/20 hover:border-error transition-all group">
-                    <span class="material-symbols-outlined text-error mb-6 text-4xl">trending_down</span>
-                    <h3 class="font-headline text-2xl font-bold mb-4 text-primary">Coste oculto</h3>
-                    <p class="text-on-surface-variant leading-relaxed">
-                        "Pagamos por que se lleven materiales que otras empresas comprarían como materia prima. Es una fuga de capital invisible."
-                    </p>
-                </div>
-                <div class="bg-surface-container-lowest p-10 rounded-xl border-t-4 border-error/20 hover:border-error transition-all group">
-                    <span class="material-symbols-outlined text-error mb-6 text-4xl">gavel</span>
-                    <h3 class="font-headline text-2xl font-bold mb-4 text-primary">Riesgo regulatorio</h3>
-                    <p class="text-on-surface-variant leading-relaxed">
-                        "La Ley 7/2022 nos exige una trazabilidad que nuestros gestores actuales no pueden documentar con rigor legal."
-                    </p>
-                </div>
-                <div class="bg-surface-container-lowest p-10 rounded-xl border-t-4 border-error/20 hover:border-error transition-all group">
-                    <span class="material-symbols-outlined text-error mb-6 text-4xl">description</span>
-                    <h3 class="font-headline text-2xl font-bold mb-4 text-primary">Informe ESG</h3>
-                    <p class="text-on-surface-variant leading-relaxed">
-                        "Recopilar datos de 15 plantas diferentes para la memoria de sostenibilidad nos lleva semanas de trabajo manual."
-                    </p>
-                </div>
+          <div class="absolute -bottom-10 -left-10 hidden rounded-xl border border-outline-variant/10 bg-surface-container-lowest p-8 shadow-xl lg:block">
+            <div class="mb-4 flex items-center gap-4">
+              <span class="material-symbols-outlined text-3xl text-secondary">verified</span>
+              <div class="font-mono text-sm uppercase tracking-widest text-outline">Verified Audit</div>
             </div>
-        </div>
-    </section>
-
-    <!-- Solution Section -->
-    <section class="py-24 px-6 md:px-12 bg-primary text-on-primary overflow-hidden relative">
-        <div class="max-w-[1440px] mx-auto relative z-10">
-            <div class="max-w-3xl mb-20">
-                <h2 class="font-headline text-4xl md:text-6xl font-bold mb-8 text-white leading-tight">
-                    CicloBase convierte tus residuos industriales en activos auditables.
-                </h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-12">
-                <div class="space-y-6">
-                    <div class="w-16 h-16 bg-primary-container flex items-center justify-center rounded-full">
-                        <span class="material-symbols-outlined text-[#1A7A4A] text-3xl">payments</span>
-                    </div>
-                    <h3 class="font-headline text-2xl font-bold text-white">Ingreso Directo</h3>
-                    <p class="text-on-primary-container text-lg">Subasta tus residuos en tiempo real y obtén el mejor valor de mercado en lugar de pagar por su gestión.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="w-16 h-16 bg-primary-container flex items-center justify-center rounded-full">
-                        <span class="material-symbols-outlined text-[#1A7A4A] text-3xl">task_alt</span>
-                    </div>
-                    <h3 class="font-headline text-2xl font-bold text-white">eSIR Automático</h3>
-                    <p class="text-on-primary-container text-lg">Documentación digital instantánea. Cumple con la normativa sin levantar un dedo ni rellenar excels.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="w-16 h-16 bg-primary-container flex items-center justify-center rounded-full">
-                        <span class="material-symbols-outlined text-[#1A7A4A] text-3xl">bar_chart_4_bars</span>
-                    </div>
-                    <h3 class="font-headline text-2xl font-bold text-white">Datos ESG</h3>
-                    <p class="text-on-primary-container text-lg">Visualiza tu impacto ambiental con métricas listas para tu memoria anual y auditorías externas.</p>
-                </div>
-            </div>
-        </div>
-        <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none bg-gradient-to-l from-secondary to-transparent"></div>
-    </section>
-
-    <!-- How it Works -->
-    <section class="py-24 px-6 md:px-12 bg-surface-bright">
-        <div class="max-w-[1440px] mx-auto">
-            <h2 class="font-headline text-4xl font-bold text-primary mb-16">El Ledger Industrial en 4 Pasos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="relative p-8 bg-surface-container-lowest rounded-xl">
-                    <div class="font-mono text-6xl font-black text-outline/10 absolute top-4 right-4">01</div>
-                    <h4 class="font-headline text-xl font-bold mb-4 pt-10">Publica</h4>
-                    <p class="text-on-surface-variant text-sm">Sube fotos, peso y tipo de residuo desde nuestra app móvil en planta.</p>
-                </div>
-                <div class="relative p-8 bg-surface-container-lowest rounded-xl">
-                    <div class="font-mono text-6xl font-black text-outline/10 absolute top-4 right-4">02</div>
-                    <h4 class="font-headline text-xl font-bold mb-4 pt-10">Recibe ofertas</h4>
-                    <p class="text-on-surface-variant text-sm">Compradores verificados pujan por tu material en un entorno seguro.</p>
-                </div>
-                <div class="relative p-8 bg-surface-container-lowest rounded-xl">
-                    <div class="font-mono text-6xl font-black text-outline/10 absolute top-4 right-4">03</div>
-                    <h4 class="font-headline text-xl font-bold mb-4 pt-10">Cierra transacción</h4>
-                    <p class="text-on-surface-variant text-sm">Acepta la mejor oferta. CicloBase gestiona el contrato digital.</p>
-                </div>
-                <div class="relative p-8 bg-surface-container-lowest rounded-xl">
-                    <div class="font-mono text-6xl font-black text-outline/10 absolute top-4 right-4">04</div>
-                    <h4 class="font-headline text-xl font-bold mb-4 pt-10">Descarga eSIR</h4>
-                    <p class="text-on-surface-variant text-sm">Al finalizar la recogida, tu certificado de trazabilidad está listo.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Calculator Section -->
-    <section class="py-24 px-6 md:px-12 bg-surface">
-        <div class="max-w-[1440px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
-            <div>
-                <h2 class="font-headline text-4xl md:text-5xl font-bold text-primary mb-8 leading-tight">
-                    Calcula cuánto estás dejando de ingresar hoy mismo.
-                </h2>
-                <p class="text-lg text-on-surface-variant mb-8">
-                    Nuestra base de datos de precios reales de mercado te permite estimar el valor de tu inventario de residuos en segundos.
-                </p>
-                <ul class="space-y-4 mb-10">
-                    <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-secondary">check_circle</span>
-                        <span>Precios actualizados por región</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-secondary">check_circle</span>
-                        <span>Detección de materiales premium</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-secondary">check_circle</span>
-                        <span>Simulación de ahorros logísticos</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="bg-surface-container-high p-10 rounded-xl shadow-inner border border-outline-variant/30">
-                <div class="space-y-6">
-                    <div>
-                        <label class="font-label text-xs uppercase tracking-widest text-outline mb-2 block">Tipo de residuo</label>
-                        <select class="w-full bg-surface-container-lowest border-none rounded-lg p-4 font-body">
-                            <option>Chatarra Inoxidable (304/316)</option>
-                            <option>Plástico industrial (PEAD/PP)</option>
-                            <option>Cartón y embalaje industrial</option>
-                            <option>Aceites y lubricantes usados</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="font-label text-xs uppercase tracking-widest text-outline mb-2 block">Cantidad mensual (Toneladas)</label>
-                        <input type="range" class="w-full h-2 bg-outline-variant rounded-lg appearance-none cursor-pointer accent-secondary">
-                        <div class="flex justify-between font-mono mt-2 text-primary font-bold">
-                            <span>0 Tn</span>
-                            <span>25 Tn</span>
-                            <span>100+ Tn</span>
-                        </div>
-                    </div>
-                    <div class="pt-8 border-t border-outline-variant">
-                        <div class="text-center">
-                            <div class="font-label text-xs uppercase tracking-widest text-outline mb-1">Ingreso potencial estimado</div>
-                            <div class="font-mono text-5xl font-black text-[#1A7A4A]">€12.450/mes</div>
-                        </div>
-                    </div>
-                    <button class="w-full bg-primary text-white py-4 rounded-xl font-bold hover:opacity-90 transition-opacity">
-                        Ver desglose detallado
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- eSIR Section -->
-    <section class="py-24 px-6 md:px-12 bg-surface-container-low">
-        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row gap-16 items-center">
-            <div class="w-full md:w-1/2">
-                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200" 
-                     data-alt="Technical schematic overlay on an industrial warehouse background, representing data traceability and compliance documentation" 
-                     class="rounded-xl shadow-lg border border-white/50">
-            </div>
-            <div class="w-full md:w-1/2">
-                <div class="inline-block bg-[#1A7A4A]/10 text-[#1A7A4A] px-4 py-1 rounded-full font-mono text-xs font-bold mb-6">REGULATORY COMPLIANCE</div>
-                <h2 class="font-headline text-4xl font-bold text-primary mb-8 leading-tight">Ley 7/2022 y la nueva era de la trazabilidad.</h2>
-                <p class="text-lg text-on-surface-variant mb-6 leading-relaxed">
-                    No es solo ecología, es ley. CicloBase integra directamente con las plataformas autonómicas y el Ministerio para que cada transacción genere automáticamente los documentos NT y DI necesarios.
-                </p>
-                <div class="bg-surface-container-lowest p-6 rounded-lg flex items-start gap-4">
-                    <span class="material-symbols-outlined text-secondary text-3xl">verified_user</span>
-                    <div>
-                        <h4 class="font-bold text-primary mb-1">Responsabilidad compartida protegida</h4>
-                        <p class="text-sm text-on-surface-variant">Blindamos tu responsabilidad jurídica mediante el registro inmutable de cada paso de la cadena de valor.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="py-24 px-6 md:px-12 bg-surface">
-        <div class="max-w-[1440px] mx-auto">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="bg-surface-container-low p-12 rounded-xl relative">
-                    <span class="font-headline text-8xl text-secondary/10 absolute top-4 left-4">“</span>
-                    <p class="text-xl italic font-headline text-primary mb-8 relative z-10">
-                        "CicloBase nos permitió digitalizar un proceso que antes era un caos de albaranes en papel. Ahora el 100% de nuestros residuos son trazables y, lo mejor, rentables."
-                    </p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-outline-variant overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150" data-alt="Portrait of Marta G., Operations Director in a professional setting" class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <div class="font-bold text-primary">Marta G.</div>
-                            <div class="text-xs font-label uppercase tracking-tighter text-outline">Dir. Operaciones, MetalSpain</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-surface-container-low p-12 rounded-xl relative">
-                    <span class="font-headline text-8xl text-secondary/10 absolute top-4 left-4">“</span>
-                    <p class="text-xl italic font-headline text-primary mb-8 relative z-10">
-                        "Como compradores, la calidad del dato que recibimos de CicloBase es inigualable. Sabemos exactamente qué compramos y dónde se generó."
-                    </p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-outline-variant overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150" data-alt="Portrait of Jordi P., Logistics Manager looking professional" class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <div class="font-bold text-primary">Jordi P.</div>
-                            <div class="text-xs font-label uppercase tracking-tighter text-outline">Responsable Logística, EcoRecupera</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="py-24 px-6 md:px-12 bg-surface-bright">
-        <div class="max-w-[1440px] mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="font-headline text-4xl font-bold text-primary mb-4">Planes adaptados a tu volumen</h2>
-                <p class="text-on-surface-variant">Transparencia total desde la primera tonelada.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Basic -->
-                <div class="bg-surface-container-lowest p-10 rounded-xl flex flex-col">
-                    <h3 class="font-headline text-2xl font-bold mb-2">Basic</h3>
-                    <div class="font-mono text-3xl font-black mb-6">€0 <span class="text-sm font-normal">/ mes</span></div>
-                    <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Acceso al marketplace</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Publicación limitada (2/mes)</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Comisión 5% por venta</li>
-                    </ul>
-                    <button class="w-full border-2 border-outline-variant py-3 rounded-lg font-bold hover:bg-surface-container-low transition-all">Empezar gratis</button>
-                </div>
-                <!-- Pro -->
-                <div class="bg-primary text-white p-10 rounded-xl flex flex-col scale-105 shadow-2xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-secondary px-4 py-1 text-xs font-bold font-mono">POPULAR</div>
-                    <h3 class="font-headline text-2xl font-bold mb-2">Pro</h3>
-                    <div class="font-mono text-3xl font-black mb-6">€249 <span class="text-sm font-normal text-on-primary-container">/ mes</span></div>
-                    <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Publicaciones ilimitadas</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Dashboard eSIR automático</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Soporte prioritario</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Comisión reducida 2.5%</li>
-                    </ul>
-                    <button class="w-full bg-[#1A7A4A] py-3 rounded-lg font-bold hover:opacity-90 transition-all">Seleccionar Pro</button>
-                </div>
-                <!-- Enterprise -->
-                <div class="bg-surface-container-lowest p-10 rounded-xl flex flex-col">
-                    <h3 class="font-headline text-2xl font-bold mb-2">Enterprise</h3>
-                    <div class="font-mono text-3xl font-black mb-6">Consultar</div>
-                    <ul class="space-y-4 mb-10 flex-grow">
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Múltiples sedes/plantas</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Integración ERP vía API</li>
-                        <li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-secondary text-sm">check</span> Auditoría ESG anual incluida</li>
-                    </ul>
-                    <button class="w-full border-2 border-outline-variant py-3 rounded-lg font-bold hover:bg-surface-container-low transition-all">Contactar ventas</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA & Form -->
-    <section class="py-24 bg-primary text-on-primary">
-        <div class="max-w-[1440px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-20 items-center">
-            <div>
-                <h2 class="font-headline text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
-                    Tu empresa genera residuos... también puede generar ingresos.
-                </h2>
-                <p class="text-xl text-on-primary-container leading-relaxed">
-                    Únete a las más de 450 empresas industriales que ya están optimizando sus balances financieros y ambientales con CicloBase.
-                </p>
-            </div>
-            <div class="bg-white p-10 rounded-xl">
-                <form class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="font-label text-xs uppercase tracking-widest text-outline">Nombre</label>
-                            <input type="text" class="w-full border-b border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 transition-colors">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="font-label text-xs uppercase tracking-widest text-outline">Empresa</label>
-                            <input type="text" class="w-full border-b border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 transition-colors">
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="font-label text-xs uppercase tracking-widest text-outline">Email Corporativo</label>
-                        <input type="email" class="w-full border-b border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 transition-colors">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="font-label text-xs uppercase tracking-widest text-outline">Tipo de interés</label>
-                        <select class="w-full border-b border-outline-variant bg-transparent py-2 focus:border-primary focus:ring-0 transition-colors">
-                            <option>Generador (Quiero vender)</option>
-                            <option>Comprador (Quiero comprar)</option>
-                            <option>Gestor (Partnership)</option>
-                        </select>
-                    </div>
-                    <button class="w-full bg-[#1A7A4A] text-white py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all">Solicitar información</button>
-                    <p class="text-[10px] text-outline text-center">Al enviar este formulario, aceptas nuestra política de privacidad y tratamiento de datos industriales.</p>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-[#1A1A1A] w-full pt-20 pb-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 px-12 max-w-[1440px] mx-auto">
-            <div>
-                <span class="font-['Newsreader'] text-3xl font-bold text-white mb-4 block">CicloBase</span>
-                <p class="text-gray-400 font-['DM_Mono'] text-sm tracking-tighter uppercase leading-relaxed">
-                    © 2024 CicloBase. The Architectural Ledger of Industrial Waste. Enabling the circular economy through technical rigors.
-                </p>
-            </div>
-            <div class="grid grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <h5 class="text-white font-bold font-['DM_Mono'] text-sm uppercase tracking-widest mb-6">Plataforma</h5>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">How it works</a></li>
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">Generators</a></li>
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">Buyers</a></li>
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">eSIR Compliance</a></li>
-                    </ul>
-                </div>
-                <div class="space-y-4">
-                    <h5 class="text-white font-bold font-['DM_Mono'] text-sm uppercase tracking-widest mb-6">Legal</h5>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="text-gray-400 font-['DM_Mono'] text-sm uppercase hover:text-[#1A7A4A] transition-colors">Compliance Ledger</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <h5 class="text-white font-bold font-['DM_Mono'] text-sm uppercase tracking-widest mb-6">Inscribirse al Ledger</h5>
-                <p class="text-gray-400 text-sm mb-6 font-body">Reportes trimestrales sobre el precio del residuo industrial y cambios normativos.</p>
-                <div class="flex gap-2">
-                    <input type="email" placeholder="Email" class="bg-neutral-800 border-none rounded-lg px-4 py-2 text-white text-sm flex-grow">
-                    <button class="bg-[#1A7A4A] text-white p-2 rounded-lg">
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html></style></head><body></body></html>
+            <div class="font-mono text-2xl font-bold text-primary">+2.400 Tn</div>
+            <div class="text-sm text
