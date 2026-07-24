@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CicloBase · Mensajes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep: #0D3D2B; --green-mid: #1A7A4A; --green-soft: #C5DFD0; --green-pale: #EBF5EF;
+  --sand: #F5F0E8; --sand-dark: #E8E0D0; --ink: #1A1A18; --ink-soft: #3D3D38;
+  --muted: #7A7A72; --border: #D4CFC4; --white: #FAFAF7;
+  --amber: #D4730A; --amber-pale: #FDF3E7; --red: #C0392B; --red-pale: #FDECEA;
+  --r: 10px; --r-lg: 16px;
+  --shadow: 0 2px 12px rgba(13,61,43,0.08), 0 1px 3px rgba(13,61,43,0.05);
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--ink); min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--green-deep); display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 120% 50% at 0% 80%, rgba(26,122,74,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+.sidebar > * { position: relative; z-index: 1; }
+.sidebar-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 28px 24px 24px; border-bottom: 1px solid rgba(197,223,208,0.1);
+}
+.brand-mark {
+  width: 34px; height: 34px; background: var(--green-mid);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.brand-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); letter-spacing: -.02em; }
+.sidebar-user { padding: 20px 24px 16px; border-bottom: 1px solid rgba(197,223,208,0.1); }
+.user-company { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: rgba(197,223,208,0.55); }
+.nav { padding: 16px 0; flex: 1; }
+.nav-section { padding: 0 16px; margin-bottom: 4px; }
+.nav-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(197,223,208,0.35); padding: 8px 8px 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 8px; border-radius: 8px; cursor: pointer;
+  font-size: 13.5px; font-weight: 500; color: rgba(197,223,208,0.65);
+  transition: all .18s; border: none; background: none; width: 100%; text-align: left; margin-bottom: 2px;
+  text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.nav-item.active { background: rgba(255,255,255,0.1); color: var(--white); }
+.nav-item .ico { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
+.nav-item .badge-count {
+  margin-left: auto; background: var(--green-mid); color: white;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+}
+.sidebar-footer { padding: 16px 24px 24px; border-top: 1px solid rgba(197,223,208,0.1); }
+.btn-logout {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: rgba(197,223,208,0.4); background: none;
+  border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color .18s; padding: 0;
+}
+.btn-logout:hover { color: rgba(197,223,208,0.8); }
+
+/* ── MAIN ── */
+.main { display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 36px; height: 64px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 10; flex-shrink: 0;
+}
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 20px; letter-spacing: -.02em; }
+.btn-primary {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; background: var(--green-deep); color: white;
+  border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .18s;
+}
+.btn-primary:hover { background: #0a2e20; }
+.btn-secondary {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; background: transparent; color: var(--ink-soft);
+  border: 1.5px solid var(--border); border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all .18s;
+}
+.btn-secondary:hover { border-color: var(--ink-soft); }
+
+/* ── MENSAJERÍA LAYOUT ── */
+.msg-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 64px);
+}
+
+/* ── LISTA DE CONVERSACIONES ── */
+.conv-list {
+  border-right: 1px solid var(--border);
+  background: var(--white);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.conv-list-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.conv-list-header h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; letter-spacing: -.02em; margin-bottom: 12px;
+}
+.search-conv {
+  width: 100%; padding: 8px 12px;
+  border: 1.5px solid var(--border); border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
+  background: var(--sand); outline: none; transition: border-color .18s;
+}
+.search-conv:focus { border-color: var(--green-mid); }
+
+.conv-items { overflow-y: auto; flex: 1; }
+.conv-item {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .15s;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.conv-item:hover { background: var(--sand); }
+.conv-item.active { background: var(--green-pale); border-left: 3px solid var(--green-mid); }
+.conv-item.unread .conv-subject { font-weight: 700; color: var(--ink); }
+.conv-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: var(--green-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.conv-meta { flex: 1; min-width: 0; }
+.conv-subject {
+  font-size: 13px; font-weight: 500; color: var(--ink-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+}
+.conv-preview {
+  font-size: 12px; color: var(--muted); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
+}
+.conv-footer { display: flex; justify-content: space-between; align-items: center; }
+.conv-time { font-size: 11px; color: var(--muted); }
+.conv-status {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.status-active { background: var(--green-pale); color: var(--green-mid); }
+.status-negotiating { background: var(--amber-pale); color: var(--amber); }
+.status-closed { background: var(--sand-dark); color: var(--muted); }
+.status-archived { background: var(--sand-dark); color: var(--muted); }
+.unread-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--green-mid);
+  flex-shrink: 0; margin-top: 4px;
+}
+
+.conv-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; padding: 40px 24px; text-align: center;
+}
+.conv-empty .ico { font-size: 36px; margin-bottom: 14px; }
+.conv-empty h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--ink-soft); }
+.conv-empty p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+/* ── PANEL DE CHAT ── */
+.chat-panel {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--sand);
+}
+.chat-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; text-align: center; padding: 40px;
+}
+.chat-empty .ico { font-size: 48px; margin-bottom: 16px; }
+.chat-empty h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 10px; color: var(--ink-soft); }
+.chat-empty p { font-size: 14px; color: var(--muted); max-width: 320px; line-height: 1.6; }
+
+/* Chat header */
+.chat-header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.chat-header-left { display: flex; flex-direction: column; gap: 3px; }
+.chat-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+.chat-subtitle { font-size: 12px; color: var(--muted); }
+.chat-header-actions { display: flex; gap: 8px; }
+.btn-sm {
+  padding: 6px 12px; border-radius: 7px; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500; cursor: pointer; transition: all .18s; border: none;
+}
+.btn-sm-outline {
+  background: transparent; border: 1.5px solid var(--border); color: var(--ink-soft);
+}
+.btn-sm-outline:hover { border-color: var(--ink-soft); }
+.btn-sm-green { background: var(--green-deep); color: white; }
+.btn-sm-green:hover { background: #0a2e20; }
+.btn-sm-amber { background: var(--amber); color: white; }
+.btn-sm-amber:hover { background: #b35f08; }
+
+/* Listing pill */
+.listing-pill {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 10px 24px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+}
+.listing-pill-ico { font-size: 20px; }
+.listing-pill-info { flex: 1; min-width: 0; }
+.listing-pill-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.listing-pill-meta { font-size: 11.5px; color: var(--muted); }
+.listing-pill-price {
+  font-size: 13px; font-weight: 700; color: var(--green-mid);
+  white-space: nowrap;
+}
+
+/* Messages area */
+.messages-area {
+  flex: 1; overflow-y: auto; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.msg-group { display: flex; flex-direction: column; gap: 4px; }
+.msg-group.mine { align-items: flex-end; }
+.msg-group.theirs { align-items: flex-start; }
+
+.msg-sender-name {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  padding: 0 4px; margin-bottom: 2px;
+}
+
+.msg-bubble {
+  max-width: 68%; padding: 10px 14px;
+  border-radius: 16px; font-size: 13.5px; line-height: 1.55;
+  word-break: break-word;
+}
+.msg-group.mine .msg-bubble {
+  background: var(--green-deep); color: white;
+  border-bottom-right-radius: 4px;
+}
+.msg-group.theirs .msg-bubble {
+  background: var(--white); color: var(--ink);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+.msg-time {
+  font-size: 10.5px; color: var(--muted); padding: 0 4px; margin-top: 2px;
+}
+
+.msg-attachment {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px; margin-top: 4px;
+  background: rgba(255,255,255,0.15); cursor: pointer;
+  text-decoration: none; font-size: 12.5px;
+}
+.msg-group.mine .msg-attachment { color: rgba(255,255,255,0.9); }
+.msg-group.theirs .msg-attachment { background: var(--sand); color: var(--ink-soft); border: 1px solid var(--border); }
+
+.msg-date-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 8px 0; color: var(--muted); font-size: 11.5px;
+}
+.msg-date-divider::before, .msg-date-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* System message */
+.msg-system {
+  text-align: center; font-size: 12px; color: var(--muted);
+  padding: 6px 14px; background: var(--sand-dark);
+  border-radius: 20px; align-self: center; margin: 4px 0;
+}
+
+/* Input area */
+.chat-input-area {
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 16px 24px; flex-shrink: 0;
+}
+.closed-notice {
+  text-align: center; padding: 14px;
+  background: var(--sand); border-radius: var(--r);
+  font-size: 13px; color: var(--muted);
+}
+.input-row {
+  display: flex; gap: 10px; align-items: flex-end;
+}
+.input-wrap { flex: 1; position: relative; }
+.msg-input {
+  width: 100%; padding: 10px 42px 10px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+  background: var(--sand); outline: none; resize: none;
+  transition: border-color .18s; max-height: 120px; min-height: 42px;
+  line-height: 1.5;
+}
+.msg-input:focus { border-color: var(--green-mid); background: var(--white); }
+.attach-btn {
+  position: absolute; right: 10px; bottom: 10px;
+  background: none; border: none; cursor: pointer;
+  font-size: 18px; color: var(--muted); transition: color .18s; padding: 0;
+}
+.attach-btn:hover { color: var(--green-mid); }
+.send-btn {
+  width: 42px; height: 42px; border-radius: var(--r);
+  background: var(--green-deep); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s; flex-shrink: 0;
+}
+.send-btn:hover { background: #0a2e20; }
+.send-btn:disabled { opacity: .45; cursor: not-allowed; }
+.send-btn svg { width: 18px; height: 18px; }
+
+.attach-preview {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; background: var(--sand); border-radius: 8px;
+  margin-bottom: 10px; font-size: 12.5px; color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+.attach-preview .remove-attach {
+  margin-left: auto; background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 16px; line-height: 1;
+}
+
+/* Modal cierre */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(13,61,43,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 24px;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: var(--white); border-radius: var(--r-lg);
+  padding: 32px; max-width: 480px; width: 100%;
+  box-shadow: 0 20px 60px rgba(13,61,43,0.2);
+}
+.modal h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; margin-bottom: 8px; letter-spacing: -.02em;
+}
+.modal p { font-size: 13.5px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.modal-fields { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+.field label {
+  display: block; font-size: 11.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin-bottom: 6px;
+}
+.field input, .field select {
+  width: 100%; padding: 10px 13px; border: 1.5px solid var(--border);
+  border-radius: var(--r); font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--ink); background: var(--white); outline: none;
+  transition: border-color .18s; appearance: none;
+}
+.field input:focus, .field select:focus { border-color: var(--green-mid); }
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions .btn-primary { flex: 1; justify-content: center; }
+.modal-actions .btn-secondary { justify-content: center; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: #fff; padding: 12px 20px; border-radius: var(--r);
+  font-size: 13.5px; font-weight: 500; opacity: 0; transition: all .3s ease;
+  z-index: 999; white-space: nowrap; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--green-mid); }
+.toast.error { background: var(--red); }
+
+/* Spinner */
+.spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Loading state */
+.loading-state {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; color: var(--muted); font-size: 14px; gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .msg-layout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- Modal: Cerrar transacción -->
+<div class="modal-overlay hidden" id="modalCierre">
+  <div class="modal">
+    <h3>Cerrar transacción</h3>
+    <p>Confirma los datos finales de la transacción. Se generará el PDF eSIR automáticamente.</p>
+    <div class="modal-fields">
+      <div class="field-row-2">
+        <div class="field">
+          <label>Cantidad final (ton) <span style="color:var(--green-mid)">*</span></label>
+          <input type="number" id="closeQty" placeholder="0.0" step="0.1" min="0.1">
+        </div>
+        <div class="field">
+          <label>Precio final (€/ton) <span style="color:var(--green-mid)">*</span></label>
+          <input type="number" id="closePrice" placeholder="0" step="1">
+        </div>
+      </div>
+      <div class="field">
+        <label>Fecha de traslado <span style="color:var(--green-mid)">*</span></label>
+        <input type="date" id="closeDate">
+      </div>
+      <div class="field">
+        <label>Código de valorización R <span style="color:var(--green-mid)">*</span></label>
+        <select id="closeRCode">
+          <option value="">Seleccionar...</option>
+          <option value="R3">R3 — Reciclado de sustancias orgánicas</option>
+          <option value="R4">R4 — Reciclado de metales</option>
+          <option value="R12">R12 — Intercambio de residuos para valorización</option>
+          <option value="R13">R13 — Almacenamiento previo a valorización</option>
+        </select>
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label>Transportista <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(opcional)</span></label>
+          <input type="text" id="closeTransporter" placeholder="Nombre empresa">
+        </div>
+        <div class="field">
+          <label>Matrícula <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(opcional)</span></label>
+          <input type="text" id="closePlate" placeholder="1234 ABC">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" id="btnConfirmClose" onclick="confirmClose()">
+        ✓ Confirmar y generar PDF eSIR
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+          <path d="M11 3C11 3 4 7 4 13C4 16.31 7.13 19 11 19C14.87 19 18 16.31 18 13C18 7 11 3 11 3Z" stroke="#C5DFD0" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="11" cy="13" r="2.5" stroke="#C5DFD0" stroke-width="1.3"/>
+          <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">CicloBase</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-company" id="sidebarCompany">Cargando...</div>
+      <div class="user-role" id="sidebarRole">—</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-lbl">Principal</div>
+        <a class="nav-item" href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+        <a class="nav-item" href="dashboard.html"><span class="ico">📦</span> Mis listings</a>
+        <a class="nav-item" href="dashboard.html"><span class="ico">🔍</span> Buscar material</a>
+        <a class="nav-item active" href="mensajeria_1.html">
+          <span class="ico">💬</span> Mensajes
+          <span class="badge-count" id="msgBadge" style="display:none">0</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Compliance</div>
+        <a class="nav-item" href="dashboard.html"><span class="ico">📜</span> Módulo eSIR</a>
+        <a class="nav-item" href="dashboard.html"><span class="ico">🌱</span> Impacto ESG</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Cuenta</div>
+        <a class="nav-item" href="dashboard.html"><span class="ico">🏭</span> Perfil empresa</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btnLogout"><span>↩</span> Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Mensajes</div>
+    </div>
+
+    <div class="msg-layout">
+      <!-- Lista de conversaciones -->
+      <div class="conv-list">
+        <div class="conv-list-header">
+          <h3>Conversaciones</h3>
+          <input class="search-conv" id="searchConv" placeholder="Buscar conversación..." oninput="filterConversations(this.value)">
+        </div>
+        <div class="conv-items" id="convItems">
+          <div class="loading-state"><span>Cargando...</span></div>
+        </div>
+      </div>
+
+      <!-- Panel de chat -->
+      <div class="chat-panel" id="chatPanel">
+        <div class="chat-empty">
+          <div class="ico">💬</div>
+          <h3>Tus mensajes</h3>
+          <p>Selecciona una conversación para ver los mensajes, o inicia una desde el detalle de un listing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+const SUPABASE_URL = 'https://jusyaleikqsdpvxffnql.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1c3lhbGVpa3FzZHB2eGZmbnFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMDQ5NDEsImV4cCI6MjA4OTc4MDk0MX0.BQALdU3vN0I6ewi0AKdVSGLL61S206jHlEaTSk_xAaY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const ROLE_LABELS = { generador:'Generador', comprador:'Comprador', ambos:'Generador & Comprador' };
+const STATUS_LABELS = { active:'Activo', negotiating:'Negociando', closed:'Cerrado', archived:'Archivado' };
+
+let currentUser = null;
+let currentProfile = null;
+let conversations = [];
+let activeConvId = null;
+let messagesSubscription = null;
+let pendingFile = null;
+
+const $ = id => document.getElementById(id);
+
+function toast(msg, type='error') {
+  const el=$('toast');
+  el.textContent=msg; el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+function escHTML(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(dateStr) {
+  const d = new Date(dateStr), now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if(diff < 60) return 'ahora';
+  if(diff < 3600) return Math.floor(diff/60) + 'm';
+  if(diff < 86400) return Math.floor(diff/3600) + 'h';
+  if(diff < 604800) return Math.floor(diff/86400) + 'd';
+  return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+}
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+}
+
+function formatTime(dateStr) {
+  return new Date(dateStr).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+}
+
+function initials(name) {
+  return (name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
+
+async function init() {
+  if(IS_LOCAL) {
+    currentUser = { id:'local-demo', email:'demo@metaliberica.com' };
+    currentProfile = { id:'local-demo', company_name:'Metal Ibérica S.L.', role:'ambos', verified:true };
+    $('sidebarCompany').textContent = currentProfile.company_name;
+    $('sidebarRole').textContent = ROLE_LABELS[currentProfile.role] || currentProfile.role;
+    $('btnLogout').onclick = () => { window.location.href='ciclobase-auth.html'; };
+    await loadConversations();
+    const params = new URLSearchParams(window.location.search);
+    const convParam = params.get('conv');
+    if(convParam) openConversation(convParam);
+    return;
+  }
+
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session) { window.location.href='ciclobase-auth.html'; return; }
+
+  currentUser = session.user;
+
+  const {data:profile} = await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+  if(!profile) { window.location.href='ciclobase-auth.html'; return; }
+  currentProfile = profile;
+
+  $('sidebarCompany').textContent = profile.company_name;
+  $('sidebarRole').textContent = ROLE_LABELS[profile.role] || profile.role;
+  $('btnLogout').onclick = async () => { await sb.auth.signOut(); window.location.href='ciclobase-auth.html'; };
+
+  // Abrir conversación desde URL param
+  const params = new URLSearchParams(window.location.search);
+  const convParam = params.get('conv');
+
+  await loadConversations();
+
+  if(convParam) openConversation(convParam);
+}
+
+// ── CARGAR CONVERSACIONES ─────────────────────────────────────────
+async function loadConversations() {
+  const {data, error} = await sb
+    .from('conversations')
+    .select(`
+      id, status, created_at, updated_at, closed_at,
+      listing_id,
+      listings(id, waste_subcategory, ler_code, quantity_tons, min_price_per_ton, status),
+      generator:generator_id(id, company_name),
+      buyer:buyer_id(id, company_name)
+    `)
+    .or(`generator_id.eq.${currentUser.id},buyer_id.eq.${currentUser.id}`)
+    .order('updated_at', {ascending: false});
+
+  if(error) { toast('Error al cargar conversaciones'); return; }
+
+  conversations = data || [];
+
+  // Contar no leídos
+  await loadUnreadCounts();
+  renderConversationList(conversations);
+}
+
+async function loadUnreadCounts() {
+  const convIds = conversations.map(c=>c.id);
+  if(!convIds.length) return;
+
+  const {data} = await sb
+    .from('messages')
+    .select('conversation_id')
+    .in('conversation_id', convIds)
+    .eq('is_read', false)
+    .neq('sender_id', currentUser.id);
+
+  const counts = {};
+  (data||[]).forEach(m => { counts[m.conversation_id] = (counts[m.conversation_id]||0)+1; });
+  conversations.forEach(c => { c._unread = counts[c.id]||0; });
+
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  const badge = $('msgBadge');
+  if(badge) { badge.style.display = total>0?'':'none'; badge.textContent=total; }
+}
+
+function renderConversationList(convs) {
+  const el = $('convItems');
+  if(!convs.length) {
+    el.innerHTML = `
+      <div class="conv-empty">
+        <div class="ico">💬</div>
+        <h4>Sin conversaciones</h4>
+        <p>Cuando contactes a un generador desde un listing, la conversación aparecerá aquí.</p>
+      </div>`;
+    return;
+  }
+
+  el.innerHTML = convs.map(c => {
+    const isGen = c.generator?.id === currentUser.id;
+    const other = isGen ? c.buyer : c.generator;
+    const material = c.listings?.waste_subcategory || c.listings?.ler_code || 'Material';
+    const price = c.listings?.min_price_per_ton ? `€${c.listings.min_price_per_ton}/ton` : 'A convenir';
+    const unread = c._unread || 0;
+
+    return `
+      <div class="conv-item${activeConvId===c.id?' active':''}${unread>0?' unread':''}"
+           onclick="openConversation('${c.id}')">
+        <div class="conv-avatar">${initials(other?.company_name)}</div>
+        <div class="conv-meta">
+          <div class="conv-subject">${escHTML(other?.company_name||'—')}</div>
+          <div class="conv-preview">${escHTML(material)} · ${price}</div>
+          <div class="conv-footer">
+            <span class="conv-time">${timeAgo(c.updated_at)}</span>
+            <span class="conv-status status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
+          </div>
+        </div>
+        ${unread>0?`<div class="unread-dot"></div>`:''}
+      </div>`;
+  }).join('');
+}
+
+function filterConversations(query) {
+  const q = query.toLowerCase();
+  const filtered = q
+    ? conversations.filter(c => {
+        const other = c.generator?.id===currentUser.id ? c.buyer : c.generator;
+        return (other?.company_name||'').toLowerCase().includes(q) ||
+               (c.listings?.waste_subcategory||'').toLowerCase().includes(q);
+      })
+    : conversations;
+  renderConversationList(filtered);
+}
+
+// ── ABRIR CONVERSACIÓN ────────────────────────────────────────────
+async function openConversation(convId) {
+  activeConvId = convId;
+  renderConversationList(conversations);
+
+  const conv = conversations.find(c=>c.id===convId);
+  if(!conv) return;
+
+  // Marcar como leídos
+  await sb.from('messages')
+    .update({is_read: true})
+    .eq('conversation_id', convId)
+    .neq('sender_id', currentUser.id);
+
+  conv._unread = 0;
+  await loadUnreadCounts();
+  renderConversationList(conversations);
+
+  renderChatPanel(conv);
+  await loadMessages(convId);
+  subscribeToMessages(convId);
+}
+
+function renderChatPanel(conv) {
+  const isGen = conv.generator?.id === currentUser.id;
+  const other = isGen ? conv.buyer : conv.generator;
+  const listing = conv.listings;
+  const isClosed = conv.status === 'closed' || conv.status === 'archived';
+
+  const material = listing?.waste_subcategory || listing?.ler_code || 'Material';
+  const price = listing?.min_price_per_ton ? `€${listing.min_price_per_ton}/ton` : 'A convenir';
+  const qty = listing?.quantity_tons ? `${listing.quantity_tons} ton` : '';
+
+  $('chatPanel').innerHTML = `
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-title">${escHTML(other?.company_name||'—')}</div>
+        <div class="chat-subtitle">${isGen?'Comprador':'Generador'} · Conversación ${STATUS_LABELS[conv.status]||conv.status}</div>
+      </div>
+      <div class="chat-header-actions">
+        ${conv.status==='active'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','negotiating')">Marcar Negociando</button>`:''}
+        ${conv.status==='negotiating'?`<button class="btn-sm btn-sm-amber" onclick="openCloseModal('${conv.id}')">Cerrar transacción</button>`:''}
+        ${conv.status==='active'||conv.status==='negotiating'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','archived')">Archivar</button>`:''}
+      </div>
+    </div>
+
+    <div class="listing-pill">
+      <div class="listing-pill-ico">📦</div>
+      <div class="listing-pill-info">
+        <div class="listing-pill-name">${escHTML(material)}</div>
+        <div class="listing-pill-meta">${qty ? qty+' · ' : ''}LER: ${escHTML(listing?.ler_code||'—')}</div>
+      </div>
+      <div class="listing-pill-price">${price}</div>
+    </div>
+
+    <div class="messages-area" id="messagesArea">
+      <div class="loading-state">Cargando mensajes...</div>
+    </div>
+
+    <div class="chat-input-area" id="inputArea">
+      ${isClosed
+        ? `<div class="closed-notice">Esta conversación está cerrada. ${conv.status==='closed'?'La transacción fue completada.':''}</div>`
+        : `<div id="attachPreview" style="display:none"></div>
+           <div class="input-row">
+             <div class="input-wrap">
+               <textarea class="msg-input" id="msgInput" placeholder="Escribe un mensaje..." rows="1"
+                 onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+               <label class="attach-btn" title="Adjuntar archivo">
+                 📎
+                 <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
+               </label>
+             </div>
+             <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar">
+               <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                 <line x1="22" y1="2" x2="11" y2="13"></line>
+                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+               </svg>
+             </button>
+           </div>`
+      }
+    </div>
+  `;
+
+  setTimeout(()=>{ const i=$('msgInput'); if(i)i.focus(); }, 100);
+}
+
+// ── CARGAR MENSAJES ───────────────────────────────────────────────
+async function loadMessages(convId) {
+  const {data, error} = await sb
+    .from('messages')
+    .select('*, sender:sender_id(id, company_name)')
+    .eq('conversation_id', convId)
+    .order('created_at', {ascending: true});
+
+  if(error) { toast('Error al cargar mensajes'); return; }
+  renderMessages(data||[]);
+}
+
+function renderMessages(msgs) {
+  const area = $('messagesArea');
+  if(!area) return;
+
+  if(!msgs.length) {
+    area.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:13px;margin:auto">Sin mensajes aún. ¡Sé el primero en escribir!</div>`;
+    return;
+  }
+
+  let html = '';
+  let lastDate = '';
+
+  msgs.forEach(msg => {
+    const mine = msg.sender_id === currentUser.id;
+    const msgDate = new Date(msg.created_at).toDateString();
+
+    if(msgDate !== lastDate) {
+      html += `<div class="msg-date-divider">${formatDate(msg.created_at)}</div>`;
+      lastDate = msgDate;
+    }
+
+    const attachHtml = msg.attachment_url
+      ? `<a class="msg-attachment" href="${escHTML(msg.attachment_url)}" target="_blank" rel="noopener">
+           📎 ${escHTML(msg.attachment_name||'Archivo adjunto')}
+         </a>`
+      : '';
+
+    html += `
+      <div class="msg-group ${mine?'mine':'theirs'}">
+        ${!mine?`<div class="msg-sender-name">${escHTML(msg.sender?.company_name||'—')}</div>`:''}
+        <div class="msg-bubble">${escHTML(msg.content)}</div>
+        ${attachHtml}
+        <div class="msg-time">${formatTime(msg.created_at)}</div>
+      </div>`;
+  });
+
+  area.innerHTML = html;
+  area.scrollTop = area.scrollHeight;
+}
+
+// ── REALTIME ──────────────────────────────────────────────────────
+function subscribeToMessages(convId) {
+  if(messagesSubscription) sb.removeChannel(messagesSubscription);
+
+  messagesSubscription = sb
+    .channel(`messages:${convId}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages',
+      filter: `conversation_id=eq.${convId}`
+    }, async (payload) => {
+      // Obtener datos del sender
+      const {data:sender} = await sb.from('profiles').select('id,company_name').eq('id',payload.new.sender_id).single();
+      const msg = {...payload.new, sender};
+
+      // Marcar como leído si no es mío
+      if(msg.sender_id !== currentUser.id) {
+        await sb.from('messages').update({is_read:true}).eq('id',msg.id);
+      }
+
+      appendMessage(msg);
+      await loadUnreadCounts();
+    })
+    .subscribe();
+}
+
+function appendMessage(msg) {
+  const area = $('messagesArea');
+  if(!area) return;
+
+  // Quitar el placeholder si existe
+  const placeholder = area.querySelector('div[style]');
+  if(placeholder && placeholder.style.textAlign==='center') placeholder.remove();
+
+  const mine = msg.sender_id === currentUser.id;
+
+  const attachHtml = msg.attachment_url
+    ? `<a class="msg-attachment" href="${escHTML(msg.attachment_url)}" target="_blank" rel="noopener">
+         📎 ${escHTML(msg.attachment_name||'Archivo adjunto')}
+       </a>`
+    : '';
+
+  const div = document.createElement('div');
+  div.className = `msg-group ${mine?'mine':'theirs'}`;
+  div.innerHTML = `
+    ${!mine?`<div class="msg-sender-name">${escHTML(msg.sender?.company_name||'—')}</div>`:''}
+    <div class="msg-bubble">${escHTML(msg.content)}</div>
+    ${attachHtml}
+    <div class="msg-time">${formatTime(msg.created_at)}</div>`;
+
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+// ── ENVIAR MENSAJE ────────────────────────────────────────────────
+async function sendMessage() {
+  const input = $('msgInput');
+  if(!input) return;
+  const content = input.value.trim();
+  if(!content && !pendingFile) return;
+
+  const btn = $('sendBtn');
+  if(btn) btn.disabled = true;
+
+  let attachmentUrl = null, attachmentName = null;
+
+  // Subir archivo si hay
+  if(pendingFile) {
+    const ext = pendingFile.name.split('.').pop();
+    const path = `messages/${activeConvId}/${Date.now()}.${ext}`;
+    const {error: uploadErr} = await sb.storage.from('ciclobase-files').upload(path, pendingFile);
+    if(uploadErr) {
+      toast('Error al subir el archivo');
+      if(btn) btn.disabled = false;
+      return;
+    }
+    const {data: urlData} = sb.storage.from('ciclobase-files').getPublicUrl(path);
+    attachmentUrl = urlData.publicUrl;
+    attachmentName = pendingFile.name;
+    clearAttachment();
+  }
+
+  const {error} = await sb.from('messages').insert({
+    conversation_id: activeConvId,
+    sender_id: currentUser.id,
+    content: content || '📎 Archivo adjunto',
+    attachment_url: attachmentUrl,
+    attachment_name: attachmentName,
+  });
+
+  if(error) {
+    toast('Error al enviar el mensaje');
+  } else {
+    if(input) { input.value=''; input.style.height=''; }
+  }
+
+  if(btn) btn.disabled = false;
+  if(input) input.focus();
+}
+
+function handleKey(e) {
+  if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = '';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── ADJUNTOS ──────────────────────────────────────────────────────
+function handleFile(input) {
+  if(!input.files.length) return;
+  const file = input.files[0];
+  if(file.size > 10*1024*1024) { toast('El archivo no puede superar 10MB'); return; }
+  pendingFile = file;
+
+  const preview = $('attachPreview');
+  if(preview) {
+    preview.style.display='flex';
+    preview.innerHTML = `
+      <span>📎</span>
+      <span>${escHTML(file.name)}</span>
+      <span style="color:var(--muted);font-size:11px">(${(file.size/1024).toFixed(0)} KB)</span>
+      <button class="remove-attach" onclick="clearAttachment()">×</button>`;
+  }
+}
+
+function clearAttachment() {
+  pendingFile = null;
+  const preview = $('attachPreview');
+  if(preview) { preview.style.display='none'; preview.innerHTML=''; }
+  const fi = $('fileInput');
+  if(fi) fi.value='';
+}
+
+// ── CAMBIAR ESTADO ────────────────────────────────────────────────
+async function changeStatus(convId, status) {
+  const {error} = await sb.from('conversations').update({status}).eq('id', convId);
+  if(error) { toast('Error al actualizar el estado'); return; }
+
+  const conv = conversations.find(c=>c.id===convId);
+  if(conv) conv.status = status;
+
+  // Mensaje de sistema
+  await sb.from('messages').insert({
+    conversation_id: convId,
+    sender_id: currentUser.id,
+    content: `[SISTEMA] Estado actualizado a: ${STATUS_LABELS[status]||status}`,
+  });
+
+  toast(`Estado actualizado a "${STATUS_LABELS[status]}"`, 'ok');
+  openConversation(convId);
+  await loadConversations();
+}
+
+// ── MODAL CIERRE ──────────────────────────────────────────────────
+function openCloseModal(convId) {
+  activeConvId = convId;
+  $('closeDate').value = new Date().toISOString().split('T')[0];
+  $('modalCierre').classList.remove('hidden');
+}
+
+function closeModal() {
+  $('modalCierre').classList.add('hidden');
+}
+
+// ── GENERADOR PDF eSIR ───────────────────────────────────────────
+function generateESIRHtml(data) {
+  const {
+    generator, buyer, listing,
+    qty, price, total, date, rcode,
+    transporter, plate, convId, txId
+  } = data;
+
+  const rcodeDesc = {
+    R3: 'Reciclado de sustancias orgánicas que no se utilizan como disolventes',
+    R4: 'Reciclado y recuperación de metales y compuestos metálicos',
+    R12: 'Intercambio de residuos para someterlos a alguna de las operaciones enumeradas entre R1 y R11',
+    R13: 'Almacenamiento de residuos en espera de alguna de las operaciones enumeradas entre R1 y R12'
+  }[rcode] || rcode;
+
+  const dateFormatted = new Date(date).toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+  const now = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 11pt; color: #1a1a18; background: white; padding: 32px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 2px solid #0D3D2B; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark { width: 36px; height: 36px; background: #1A7A4A; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .brand-name { font-size: 20px; font-weight: 700; color: #0D3D2B; letter-spacing: -.02em; }
+  .doc-info { text-align: right; }
+  .doc-title { font-size: 13px; font-weight: 700; color: #0D3D2B; text-transform: uppercase; letter-spacing: .05em; }
+  .doc-ref { font-size: 10px; color: #7A7A72; margin-top: 4px; }
+  .alert-box { background: #EBF5EF; border: 1px solid #C5DFD0; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 10pt; color: #0D3D2B; }
+  .alert-box strong { font-weight: 700; }
+  .section { margin-bottom: 22px; }
+  .section-title { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #7A7A72; border-bottom: 1px solid #D4CFC4; padding-bottom: 6px; margin-bottom: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .field { margin-bottom: 10px; }
+  .field-label { font-size: 8.5pt; font-weight: 700; color: #7A7A72; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+  .field-value { font-size: 10.5pt; color: #1a1a18; padding: 6px 10px; background: #F5F0E8; border-radius: 5px; min-height: 28px; }
+  .field-value.highlight { background: #EBF5EF; color: #0D3D2B; font-weight: 700; }
+  .field-value.amount { font-size: 13pt; font-weight: 700; color: #1A7A4A; }
+  .total-box { background: #0D3D2B; border-radius: 8px; padding: 16px 20px; margin: 16px 0; color: white; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .total-item .t-label { font-size: 8.5pt; color: rgba(197,223,208,0.7); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .total-item .t-value { font-size: 15pt; font-weight: 700; color: white; }
+  .total-item .t-value.commission { color: #C5DFD0; font-size: 12pt; }
+  .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #D4CFC4; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .sig-box { border: 1px dashed #D4CFC4; border-radius: 6px; padding: 12px; height: 70px; }
+  .sig-label { font-size: 8.5pt; color: #7A7A72; margin-bottom: 4px; }
+  .legal-note { margin-top: 20px; font-size: 8pt; color: #7A7A72; line-height: 1.5; grid-column: 1/-1; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 8.5pt; font-weight: 700; }
+  .badge-green { background: #EBF5EF; color: #1A7A4A; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+        <path d="M11 3C11 3 4 7 4 13C4 16.31 7.13 19 11 19C14.87 19 18 16.31 18 13C18 7 11 3 11 3Z" stroke="#C5DFD0" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="11" cy="13" r="2.5" stroke="#C5DFD0" stroke-width="1.3"/>
+        <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="brand-name">CicloBase</div>
+  </div>
+  <div class="doc-info">
+    <div class="doc-title">Comunicación Previa de Traslado</div>
+    <div class="doc-title" style="color:#7A7A72;font-size:11px">Compatible Ley 7/2022 · Art. 63-66</div>
+    <div class="doc-ref">Ref. transacción: ${txId}</div>
+    <div class="doc-ref">Generado: ${now}</div>
+  </div>
+</div>
+
+<div class="alert-box">
+  <strong>⚠️ Instrucciones:</strong> Este documento ha sido generado automáticamente por CicloBase con los datos de la transacción. 
+  Descárgalo, revisa los datos y preséntalo en el portal electrónico de tu Comunidad Autónoma 
+  (SIGA en Catalunya · GERIA en Madrid) antes de la fecha de traslado.
+</div>
+
+<div class="section">
+  <div class="section-title">1. Productor / Poseedor del Residuo</div>
+  <div class="grid-2">
+    <div class="field"><div class="field-label">Razón Social</div><div class="field-value">${generator.company_name}</div></div>
+    <div class="field"><div class="field-label">CIF</div><div class="field-value">${generator.cif}</div></div>
+    <div class="field"><div class="field-label">Número NIMA</div><div class="field-value highlight">${generator.nima || '— Pendiente de introducir —'}</div></div>
+    <div class="field"><div class="field-label">Dirección</div><div class="field-value">${generator.address || '—'}</div></div>
+    <div class="field"><div class="field-label">Municipio</div><div class="field-value">${generator.municipality}</div></div>
+    <div class="field"><div class="field-label">Provincia</div><div class="field-value">${generator.province}</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2. Destinatario / Gestor Autorizado</div>
+  <div class="grid-2">
+    <div class="field"><div class="field-label">Razón Social</div><div class="field-value">${buyer.company_name}</div></div>
+    <div class="field"><div class="field-label">CIF</div><div class="field-value">${buyer.cif}</div></div>
+    <div class="field"><div class="field-label">Número NIMA Gestor</div><div class="field-value highlight">${buyer.nima || '— Pendiente de introducir —'}</div></div>
+    <div class="field"><div class="field-label">Municipio</div><div class="field-value">${buyer.municipality}</div></div>
+    <div class="field"><div class="field-label">Provincia</div><div class="field-value">${buyer.province}</div></div>
+    <div class="field"><div class="field-label">Contacto</div><div class="field-value">${buyer.contact_person || '—'}</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">3. Identificación del Residuo</div>
+  <div class="grid-3">
+    <div class="field"><div class="field-label">Código LER</div><div class="field-value highlight">${listing.ler_code}</div></div>
+    <div class="field"><div class="field-label">Descripción</div><div class="field-value">${listing.subcategory || listing.category}</div></div>
+    <div class="field"><div class="field-label">Categoría</div><div class="field-value">${listing.category}</div></div>
+  </div>
+  <div class="field" style="margin-top:8px"><div class="field-label">Descripción detallada</div><div class="field-value">${listing.description || '—'}</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">4. Datos del Traslado</div>
+  <div class="grid-3">
+    <div class="field"><div class="field-label">Cantidad (toneladas)</div><div class="field-value highlight">${qty} t</div></div>
+    <div class="field"><div class="field-label">Fecha de traslado</div><div class="field-value highlight">${dateFormatted}</div></div>
+    <div class="field"><div class="field-label">Operación valorización</div><div class="field-value highlight">${rcode}</div></div>
+  </div>
+  <div class="field"><div class="field-label">Descripción operación ${rcode}</div><div class="field-value">${rcodeDesc}</div></div>
+  ${transporter ? `
+  <div class="grid-2" style="margin-top:8px">
+    <div class="field"><div class="field-label">Transportista</div><div class="field-value">${transporter}</div></div>
+    <div class="field"><div class="field-label">Matrícula</div><div class="field-value">${plate || '—'}</div></div>
+  </div>` : ''}
+</div>
+
+<div class="section">
+  <div class="section-title">5. Resumen Económico de la Transacción</div>
+  <div class="total-box">
+    <div class="total-item">
+      <div class="t-label">Cantidad</div>
+      <div class="t-value">${qty} ton</div>
+    </div>
+    <div class="total-item">
+      <div class="t-label">Precio acordado</div>
+      <div class="t-value">€${price}/ton</div>
+    </div>
+    <div class="total-item">
+      <div class="t-label">Valor total</div>
+      <div class="t-value">€${total.toFixed(2)}</div>
+    </div>
+  </div>
+  <div style="font-size:9pt;color:#7A7A72;margin-top:8px">
+    Comisión plataforma CicloBase (7%): €${(total*0.07).toFixed(2)} · Se facturará a fin de mes al productor.
+  </div>
+</div>
+
+<div class="footer">
+  <div>
+    <div class="sig-label">Firma del Productor / Poseedor</div>
+    <div class="sig-box"></div>
+    <div style="font-size:8.5pt;color:#7A7A72;margin-top:6px">${generator.company_name} · ${generator.cif}</div>
+  </div>
+  <div>
+    <div class="sig-label">Firma del Gestor Autorizado</div>
+    <div class="sig-box"></div>
+    <div style="font-size:8.5pt;color:#7A7A72;margin-top:6px">${buyer.company_name} · ${buyer.cif}</div>
+  </div>
+  <div class="legal-note">
+    Documento generado por CicloBase (ciclobase.com) en cumplimiento de la Ley 7/2022, de 8 de abril, de residuos y suelos contaminados 
+    para una economía circular (Arts. 63-66). La comunicación previa de traslado debe presentarse ante el órgano competente de la 
+    Comunidad Autónoma antes del inicio del traslado. Este documento no sustituye a la presentación electrónica obligatoria en el 
+    sistema eSIR o plataforma autonómica equivalente.
+  </div>
+</div>
+
+</body>
+</html>`;
+}
+
+async function confirmClose() {
+  const qty   = parseFloat($('closeQty').value);
+  const price = parseFloat($('closePrice').value);
+  const date  = $('closeDate').value;
+  const rcode = $('closeRCode').value;
+  const transporter = $('closeTransporter').value.trim();
+  const plate = $('closePlate').value.trim();
+
+  if(!qty||qty<=0)    { toast('Introduce la cantidad final'); return; }
+  if(!price||price<=0){ toast('Introduce el precio final'); return; }
+  if(!date)            { toast('Introduce la fecha de traslado'); return; }
+  if(!rcode)           { toast('Selecciona el código de valorización R'); return; }
+
+  const btn = $('btnConfirmClose');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Generando...';
+
+  const conv = conversations.find(c=>c.id===activeConvId);
+  const total = qty * price;
+
+  // 1. Obtener datos completos de generador y comprador
+  const {data: genProfile} = await sb.from('profiles').select('*').eq('id', conv.generator.id).single();
+  const {data: buyProfile}  = await sb.from('profiles').select('*').eq('id', conv.buyer.id).single();
+
+  // 2. Cerrar conversación
+  await sb.from('conversations').update({
+    status: 'closed',
+    closed_at: new Date().toISOString()
+  }).eq('id', activeConvId);
+
+  // 3. Crear registro de transacción
+  const {data: tx, error: txErr} = await sb.from('transactions').insert({
+    conversation_id:     activeConvId,
+    listing_id:          conv.listing_id,
+    generator_id:        conv.generator.id,
+    buyer_id:            conv.buyer.id,
+    final_quantity_tons: qty,
+    final_price_per_ton: price,
+    transfer_date:       date,
+    transporter_name:    transporter || null,
+    transporter_plate:   plate || null,
+    valorization_code:   rcode,
+  }).select().single();
+
+  if(txErr) {
+    toast('Error al registrar la transacción: ' + txErr.message);
+    btn.disabled=false; btn.innerHTML='✓ Confirmar y generar PDF eSIR';
+    return;
+  }
+
+  // 4. Generar HTML del PDF eSIR
+  const esirHtml = generateESIRHtml({
+    generator: genProfile,
+    buyer: buyProfile,
+    listing: conv.listings,
+    qty, price, total, date, rcode,
+    transporter, plate,
+    convId: activeConvId,
+    txId: tx.id
+  });
+
+  // 5. Subir HTML a Storage como archivo descargable
+  const fileName = `esir_${tx.id}.html`;
+  const filePath = `esir/${fileName}`;
+  const blob = new Blob([esirHtml], {type: 'text/html'});
+
+  let esirUrl = null;
+  const {error: uploadErr} = await sb.storage
+    .from('ciclobase-files')
+    .upload(filePath, blob, {contentType: 'text/html', upsert: true});
+
+  if(!uploadErr) {
+    const {data: urlData} = sb.storage.from('ciclobase-files').getPublicUrl(filePath);
+    esirUrl = urlData.publicUrl;
+
+    // 6. Guardar URL en la transacción
+    await sb.from('transactions').update({esir_pdf_url: esirUrl}).eq('id', tx.id);
+  }
+
+  // 7. Mensaje de sistema con enlace al documento
+  const esirLink = esirUrl
+    ? `Descarga el documento eSIR: ${esirUrl}`
+    : 'El documento eSIR no pudo generarse automáticamente.';
+
+  await sb.from('messages').insert({
+    conversation_id: activeConvId,
+    sender_id: currentUser.id,
+    content: `✅ TRANSACCIÓN CERRADA\n${qty} ton · €${price}/ton · Total: €${total.toFixed(2)}\nFecha de traslado: ${date} · Código ${rcode}${transporter?' · '+transporter:''}\n\n${esirLink}`,
+    attachment_url: esirUrl,
+    attachment_name: `Documento_eSIR_${date}.html`,
+  });
+
+  closeModal();
+
+  // 8. Abrir el documento en nueva pestaña
+  if(esirUrl) {
+    window.open(esirUrl, '_blank');
+    toast('Transacción cerrada. Documento eSIR abierto.', 'ok');
+  } else {
+    toast('Transacción cerrada.', 'ok');
+  }
+
+  if(conv) conv.status = 'closed';
+  await loadConversations();
+  openConversation(activeConvId);
+
+  btn.disabled=false; btn.innerHTML='✓ Confirmar y generar PDF eSIR';
+}
+// ── INICIAR ───────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

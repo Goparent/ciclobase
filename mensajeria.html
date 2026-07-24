@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CicloBase · Buscar material</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep: #0D3D2B; --green-mid: #1A7A4A; --green-soft: #C5DFD0; --green-pale: #EBF5EF;
+  --sand: #F5F0E8; --sand-dark: #E8E0D0; --ink: #1A1A18; --ink-soft: #3D3D38;
+  --muted: #7A7A72; --border: #D4CFC4; --white: #FAFAF7;
+  --amber: #D4730A; --amber-pale: #FDF3E7; --r: 10px; --r-lg: 16px;
+  --shadow: 0 2px 12px rgba(13,61,43,0.08), 0 1px 3px rgba(13,61,43,0.05);
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--ink); min-height: 100vh; }
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { background: var(--green-deep); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.sidebar::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 120% 50% at 0% 80%, rgba(26,122,74,0.3) 0%, transparent 70%); pointer-events: none; }
+.sidebar > * { position: relative; z-index: 1; }
+.sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 28px 24px 24px; border-bottom: 1px solid rgba(197,223,208,0.1); }
+.brand-mark { width: 34px; height: 34px; background: var(--green-mid); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.brand-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); letter-spacing: -.02em; }
+.sidebar-user { padding: 20px 24px 16px; border-bottom: 1px solid rgba(197,223,208,0.1); }
+.user-company { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: rgba(197,223,208,0.55); }
+.nav { padding: 16px 0; flex: 1; }
+.nav-section { padding: 0 16px; margin-bottom: 4px; }
+.nav-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(197,223,208,0.35); padding: 8px 8px 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 8px; cursor: pointer; font-size: 13.5px; font-weight: 500; color: rgba(197,223,208,0.65); transition: all .18s; border: none; background: none; width: 100%; text-align: left; margin-bottom: 2px; text-decoration: none; font-family: 'DM Sans', sans-serif; }
+.nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.nav-item.active { background: rgba(255,255,255,0.1); color: var(--white); }
+.nav-item .ico { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
+.sidebar-footer { padding: 16px 24px 24px; border-top: 1px solid rgba(197,223,208,0.1); }
+.btn-logout { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: rgba(197,223,208,0.4); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color .18s; padding: 0; }
+.btn-logout:hover { color: rgba(197,223,208,0.8); }
+
+/* ── MAIN ── */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 36px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 20px; letter-spacing: -.02em; }
+.btn-primary { display: flex; align-items: center; gap: 7px; padding: 9px 18px; background: var(--green-deep); color: white; border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .18s; }
+.btn-primary:hover { background: #0a2e20; }
+
+/* ── CONTENT ── */
+.content { padding: 32px 36px; flex: 1; }
+
+/* ── FILTROS ── */
+.filters-bar { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 24px; box-shadow: var(--shadow); }
+.filters-row { display: grid; grid-template-columns: 1fr 160px 160px 160px auto; gap: 12px; align-items: end; }
+.filter-field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 6px; }
+.search-wrap { position: relative; }
+.search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
+.search-wrap input { padding-left: 36px; }
+input[type=text], select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--r); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); outline: none; appearance: none; -webkit-appearance: none; transition: border-color .18s, box-shadow .18s; }
+input:focus, select:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(26,122,74,0.17); }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7A72' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+
+/* ── CHIPS FAMILIA ── */
+.familia-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12.5px; font-weight: 500; color: var(--muted); background: var(--white); cursor: pointer; transition: all .18s; user-select: none; }
+.chip:hover { border-color: var(--green-soft); color: var(--green-mid); background: var(--green-pale); }
+.chip.sel { border-color: var(--green-mid); color: var(--green-mid); background: var(--green-pale); }
+
+/* ── RESULTADOS ── */
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.results-count { font-size: 13px; color: var(--muted); }
+.results-sort { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.results-sort select { width: auto; padding: 6px 32px 6px 10px; font-size: 13px; }
+
+.listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+
+/* ── LISTING CARD ── */
+.listing-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: transform .18s, box-shadow .18s; }
+.listing-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,61,43,0.12); }
+.listing-photo { width: 100%; aspect-ratio: 16/9; background: var(--sand-dark); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--muted); position: relative; }
+.listing-photo img { width: 100%; height: 100%; object-fit: cover; }
+.listing-familia-badge { position: absolute; top: 10px; left: 10px; background: rgba(13,61,43,0.75); color: #fff; font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 20px; backdrop-filter: blur(4px); }
+.listing-body { padding: 14px 16px 16px; }
+.listing-tipo { font-family: 'DM Serif Display', serif; font-size: 16px; letter-spacing: -.02em; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.listing-meta { font-size: 12px; color: var(--muted); font-weight: 300; margin-bottom: 10px; line-height: 1.5; }
+.listing-footer { display: flex; align-items: center; justify-content: space-between; }
+.listing-price { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--green-mid); }
+.listing-price-unit { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--muted); font-weight: 400; }
+.listing-qty { font-size: 12px; color: var(--muted); background: var(--sand); padding: 3px 8px; border-radius: 20px; }
+.ler-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--green-mid); background: var(--green-pale); padding: 2px 7px; border-radius: 10px; margin-bottom: 8px; font-weight: 600; font-family: monospace; }
+
+/* ── EMPTY / LOADER ── */
+.empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+.empty-state .empty-ico { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { font-size: 14px; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+.page-loader { display: flex; align-items: center; justify-content: center; min-height: 300px; }
+.page-spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--green-mid); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeUp .25s ease; }
+
+/* ── MODAL DETALLE ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--r-lg); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-photo { width: 100%; aspect-ratio: 16/9; background: var(--sand-dark); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+.modal-photo img { width: 100%; height: 100%; object-fit: cover; }
+.modal-body { padding: 24px 28px; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -.03em; color: var(--ink); margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.modal-field label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: block; margin-bottom: 3px; }
+.modal-field span { font-size: 14px; color: var(--ink); font-weight: 500; }
+.modal-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; padding: 14px 16px; background: var(--sand); border-radius: var(--r); }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions .btn-primary { flex: 2; justify-content: center; }
+.modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: var(--r); font-size: 13.5px; font-weight: 500; opacity: 0; transition: all .3s ease; z-index: 999; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--green-mid); }
+
+@media (max-width: 768px) { .app { grid-template-columns: 1fr; } .sidebar { display: none; } .content { padding: 20px; } .filters-row { grid-template-columns: 1fr; } .listings-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal" style="position:relative">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-photo" id="modalPhoto"></div>
+    <div class="modal-body">
+      <div class="ler-tag" id="modalLer"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-sub" id="modalSub"></div>
+      <div class="modal-grid" id="modalGrid"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="modalContactBtn" onclick="contactarGenerador()">💬 Contactar generador</button>
+        <button style="padding:9px 16px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13.5px;cursor:pointer" onclick="closeModalBtn()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+          <path d="M11 3C11 3 4 7 4 13C4 16.31 7.13 19 11 19C14.87 19 18 16.31 18 13C18 7 11 3 11 3Z" stroke="#C5DFD0" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="11" cy="13" r="2.5" stroke="#C5DFD0" stroke-width="1.3"/>
+          <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">CicloBase</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-company" id="sidebarCompany">Cargando...</div>
+      <div class="user-role" id="sidebarRole">—</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-lbl">Principal</div>
+        <button class="nav-item " onclick="window.location.href='dashboard.html'"><span class="ico">📊</span> Dashboard</button>
+        <button class="nav-item " onclick="window.location.href='nuevo-listing.html'"><span class="ico">📦</span> Mis listings</button>
+        <button class="nav-item active" onclick="window.location.href='buscar.html'"><span class="ico">🔍</span> Buscar material</button>
+        <button class="nav-item " onclick="window.location.href='mensajeria.html'"><span class="ico">💬</span> Mensajes</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Compliance</div>
+        <button class="nav-item" onclick="window.location.href='dashboard.html#esir'"><span class="ico">📜</span> Módulo eSIR</button>
+        <button class="nav-item" onclick="window.location.href='dashboard.html#impacto'"><span class="ico">🌱</span> Impacto ESG</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Cuenta</div>
+        <button class="nav-item" onclick="window.location.href='dashboard.html#perfil'"><span class="ico">🏭</span> Perfil empresa</button>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btnLogout">↩ Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Buscar material RCD</div>
+      <button class="btn-primary" onclick="window.location.href='nuevo-listing.html'">+ Publicar listing</button>
+    </div>
+
+    <div class="content">
+      <div class="filters-bar">
+        <div class="familia-chips" id="familiaChips"></div>
+        <div class="filters-row">
+          <div class="filter-field">
+            <label>Buscar</label>
+            <div class="search-wrap">
+              <span class="search-ico">🔍</span>
+              <input type="text" id="searchInput" placeholder="Hormigón reciclado, perfil IPE, vidrio...">
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>Provincia</label>
+            <select id="filtProvince">
+              <option value="">Todas</option>
+              <option>Barcelona</option>
+              <option>Tarragona</option>
+              <option>Lleida</option>
+              <option>Girona</option>
+              <option>Madrid</option>
+              <option>Valencia</option>
+              <option>Sevilla</option>
+              <option>Zaragoza</option>
+              <option>Bilbao / Bizkaia</option>
+              <option>Málaga</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Frecuencia</label>
+            <select id="filtFreq">
+              <option value="">Todas</option>
+              <option value="one_time">Puntual</option>
+              <option value="monthly">Mensual</option>
+              <option value="quarterly">Trimestral</option>
+              <option value="continuous">Continuo</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Ordenar por</label>
+            <select id="filtSort" onchange="applyFilters()">
+              <option value="recent">Más reciente</option>
+              <option value="qty_desc">Mayor cantidad</option>
+              <option value="price_asc">Menor precio</option>
+              <option value="price_desc">Mayor precio</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>&nbsp;</label>
+            <button class="btn-primary" onclick="applyFilters()" style="height:42px;white-space:nowrap">Filtrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-loader" id="pageLoader"><div class="page-spinner"></div></div>
+
+      <div id="resultsArea" style="display:none">
+        <div class="results-header">
+          <span class="results-count" id="resultsCount"></span>
+        </div>
+        <div class="listings-grid" id="listingsGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://jusyaleikqsdpvxffnql.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1c3lhbGVpa3FzZHB2eGZmbnFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMDQ5NDEsImV4cCI6MjA4OTc4MDk0MX0.BQALdU3vN0I6ewi0AKdVSGLL61S206jHlEaTSk_xAaY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let profile = null;
+let allListings = [];
+let selectedFamilia = '';
+let selectedListing = null;
+
+const $ = id => document.getElementById(id);
+const escHTML = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function toast(msg, type='error') {
+  const el=$('toast');
+  el.textContent=msg; el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+const FAMILIAS = {
+  petros:   { icon:'🪨', name:'Pétreos y áridos' },
+  metales:  { icon:'🔩', name:'Metales estructurales' },
+  madera:   { icon:'🪵', name:'Madera de obra' },
+  elementos:{ icon:'🚪', name:'Elementos reutilizables' },
+  vidrio:   { icon:'🪟', name:'Vidrio plano' },
+};
+
+const FREQ_LABELS = { one_time:'Puntual', monthly:'Mensual', quarterly:'Trimestral', continuous:'Continuo' };
+
+function renderFamiliaChips() {
+  const chips = [{ id:'', icon:'🏗️', name:'Todos los materiales' }, ...Object.entries(FAMILIAS).map(([id,f])=>({id,...f}))];
+  $('familiaChips').innerHTML = chips.map(c=>`
+    <div class="chip${selectedFamilia===c.id?' sel':''}" onclick="selectFamilia('${c.id}')">
+      <span>${c.icon}</span><span>${c.name}</span>
+    </div>`).join('');
+}
+
+function selectFamilia(id) {
+  selectedFamilia = id;
+  renderFamiliaChips();
+  applyFilters();
+}
+
+function applyFilters() {
+  const search = $('searchInput').value.toLowerCase().trim();
+  const province = $('filtProvince').value;
+  const freq = $('filtFreq').value;
+  const sort = $('filtSort').value;
+
+  let filtered = allListings.filter(l => {
+    if(selectedFamilia && l.category !== selectedFamilia) return false;
+    if(province && l.province !== province) return false;
+    if(freq && l.frequency !== freq) return false;
+    if(search) {
+      const hay = [l.subcategory, l.category, l.description, l.ler_code, l.municipality].join(' ').toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  if(sort === 'qty_desc') filtered.sort((a,b) => (b.quantity||0)-(a.quantity||0));
+  else if(sort === 'price_asc') filtered.sort((a,b) => (a.min_price||999999)-(b.min_price||999999));
+  else if(sort === 'price_desc') filtered.sort((a,b) => (b.min_price||0)-(a.min_price||0));
+  else filtered.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+
+  renderListings(filtered);
+}
+
+function renderListings(listings) {
+  $('resultsCount').textContent = `${listings.length} resultado${listings.length!==1?'s':''} encontrado${listings.length!==1?'s':''}`;
+
+  if(!listings.length) {
+    $('listingsGrid').innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-ico">🔍</div>
+        <p>No hay materiales que coincidan con tu búsqueda.<br>Prueba a cambiar los filtros o ampliar la zona geográfica.</p>
+      </div>`;
+    return;
+  }
+
+  $('listingsGrid').innerHTML = listings.map(l => {
+    const fam = FAMILIAS[l.category] || { icon:'📦', name: l.category };
+    const photo = l.listing_photos?.[0]?.url;
+    const priceHtml = l.min_price
+      ? `<span class="listing-price">${parseFloat(l.min_price).toFixed(0)}€<span class="listing-price-unit"> ${l.price_unit||'/t'}</span></span>`
+      : `<span style="font-size:13px;color:var(--muted)">A convenir</span>`;
+
+    return `
+      <div class="listing-card fade-in" onclick="openModal('${l.id}')">
+        <div class="listing-photo">
+          ${photo ? `<img src="${escHTML(photo)}" alt="${escHTML(l.subcategory)}">` : fam.icon}
+          <div class="listing-familia-badge">${fam.icon} ${fam.name}</div>
+        </div>
+        <div class="listing-body">
+          <div class="ler-tag">LER ${escHTML(l.ler_code||'—')}</div>
+          <div class="listing-tipo">${escHTML(l.subcategory||l.category)}</div>
+          <div class="listing-meta">📍 ${escHTML(l.municipality)}, ${escHTML(l.province)} · 🔄 ${FREQ_LABELS[l.frequency]||l.frequency}</div>
+          <div class="listing-footer">
+            ${priceHtml}
+            <span class="listing-qty">⚖️ ${l.quantity} ${l.unit||'t'}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openModal(id) {
+  const l = allListings.find(x => x.id === id);
+  if(!l) return;
+  selectedListing = l;
+  const fam = FAMILIAS[l.category] || { icon:'📦', name: l.category };
+  const photo = l.listing_photos?.[0]?.url;
+
+  $('modalPhoto').innerHTML = photo ? `<img src="${escHTML(photo)}" alt="">` : `<span style="font-size:56px">${fam.icon}</span>`;
+  $('modalLer').textContent = `LER ${l.ler_code||'—'}`;
+  $('modalTitle').textContent = l.subcategory || l.category;
+  $('modalSub').textContent = `${fam.icon} ${fam.name} · ${FREQ_LABELS[l.frequency]||l.frequency}`;
+  $('modalDesc').textContent = l.description || 'Sin descripción adicional.';
+
+  $('modalGrid').innerHTML = [
+    ['Cantidad', `${l.quantity} ${l.unit||'t'}`],
+    ['Precio', l.min_price ? `${parseFloat(l.min_price).toFixed(0)}€ ${l.price_unit||'/t'}` : 'A convenir'],
+    ['Ubicación', `${l.municipality}, ${l.province}`],
+    ['Procedencia', l.procedencia || '—'],
+    ['Disponible desde', l.disponible_desde ? new Date(l.disponible_desde).toLocaleDateString('es-ES') : '—'],
+    ['Documentación', [l.docs_albaran&&'Albarán',l.docs_analisis&&'Análisis'].filter(Boolean).join(', ')||'—'],
+  ].map(([label,val])=>`
+    <div class="modal-field">
+      <label>${label}</label>
+      <span>${escHTML(String(val))}</span>
+    </div>`).join('');
+
+  $('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if(e.target === $('modalOverlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  $('modalOverlay').classList.remove('open');
+  selectedListing = null;
+}
+
+async function contactarGenerador() {
+  if(!selectedListing) return;
+  if(!profile?.id) { toast('Sesion no disponible'); return; }
+  if(selectedListing.generator_id === profile.id) { toast('Este listing ya es tuyo'); return; }
+
+  const listingId = selectedListing.id;
+  const buyerId = profile.id;
+  const sellerId = selectedListing.generator_id;
+
+  const { data: existingThread, error: existingError } = await sb
+    .from('threads')
+    .select('id')
+    .eq('listing_id', listingId)
+    .eq('buyer_id', buyerId)
+    .maybeSingle();
+
+  if(existingError) {
+    toast('Error preparando el chat: ' + existingError.message);
+    return;
+  }
+
+  let threadId = existingThread?.id;
+
+  if(!threadId) {
+    const { data: newThread, error: createError } = await sb
+      .from('threads')
+      .insert({
+        listing_id: listingId,
+        buyer_id: buyerId,
+        seller_id: sellerId
+      })
+      .select('id')
+      .single();
+
+    if(createError) {
+      toast('Error creando el chat: ' + createError.message);
+      return;
+    }
+
+    threadId = newThread.id;
+  }
+
+  window.location.href = `mensajeria.html?thread=${threadId}`;
+}
+
+async function loadListings() {
+  const { data, error } = await sb
+    .from('listings')
+    .select('*, listing_photos(url, sort_order)')
+    .eq('status', 'active')
+    .order('created_at', { ascending: false });
+
+  if(error) {
+    console.error(error);
+    $('pageLoader').style.display = 'none';
+    $('resultsArea').style.display = 'block';
+    $('listingsGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-ico">⚠️</div><p>Error al cargar los materiales: ${error.message}</p></div>`;
+    return;
+  }
+
+  allListings = (data||[]).map(l => ({
+    ...l,
+    listing_photos: (l.listing_photos||[]).sort((a,b)=>a.sort_order-b.sort_order)
+  }));
+
+  $('pageLoader').style.display = 'none';
+  $('resultsArea').style.display = 'block';
+  applyFilters();
+}
+
+// Búsqueda en tiempo real
+let searchTimeout;
+document.addEventListener('DOMContentLoaded', () => {
+  $('searchInput').addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(applyFilters, 300);
+  });
+  $('filtProvince').addEventListener('change', applyFilters);
+  $('filtFreq').addEventListener('change', applyFilters);
+});
+
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
+
+async function init() {
+  if(IS_LOCAL) {
+    profile = { id:'local-demo', company_name:'Metal Ibérica S.L.', role:'ambos', verified:true };
+    $('sidebarCompany').textContent = profile.company_name;
+    $('sidebarRole').textContent = 'Generador & Comprador';
+    $('btnLogout').onclick = () => { window.location.href='ciclobase-auth.html'; };
+    renderFamiliaChips();
+    await loadListings();
+    return;
+  }
+
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session) { window.location.href = 'ciclobase-auth.html'; return; }
+
+  const { data: p } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if(!p) { window.location.href = 'ciclobase-auth.html'; return; }
+  profile = p;
+
+  $('sidebarCompany').textContent = p.company_name;
+  $('sidebarRole').textContent = { generador:'Generador', comprador:'Comprador', ambos:'Generador & Comprador' }[p.role] || p.role;
+
+  $('btnLogout').onclick = async () => { await sb.auth.signOut(); window.location.href = 'ciclobase-auth.html'; };
+
+  renderFamiliaChips();
+  await loadListings();
+}
+
+init();
+</script>
+</body>
+</html>

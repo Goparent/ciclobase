@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CicloBase · Registro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep:#0D3D2B; --green-mid:#1A7A4A; --green-soft:#C5DFD0; --green-pale:#EBF5EF;
+  --sand:#F5F0E8; --sand-dark:#E8E0D0; --ink:#1A1A18; --ink-soft:#3D3D38;
+  --muted:#7A7A72; --border:#D4CFC4; --white:#FAFAF7; --error:#C0392B; --r:10px; --r-lg:16px;
+}
+body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; }
+.shell { display:grid; grid-template-columns:400px 1fr; min-height:100vh; }
+.left { background:var(--green-deep); display:flex; flex-direction:column; justify-content:space-between; padding:48px 44px; position:sticky; top:0; height:100vh; overflow:hidden; }
+.left::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 30% 70%,rgba(26,122,74,.35) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 20%,rgba(197,223,208,.07) 0%,transparent 60%); pointer-events:none; }
+.left>* { position:relative; z-index:1; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-mark { width:40px; height:40px; background:var(--green-mid); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+.brand-name { font-family:'DM Serif Display',serif; font-size:22px; color:var(--white); letter-spacing:-.02em; }
+.left-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:48px 0 32px; }
+.left-body h2 { font-family:'DM Serif Display',serif; font-size:32px; line-height:1.2; color:var(--white); letter-spacing:-.03em; margin-bottom:18px; }
+.left-body h2 em { font-style:italic; color:var(--green-soft); }
+.left-body p { font-size:14px; line-height:1.65; color:rgba(197,223,208,.7); font-weight:300; max-width:290px; }
+.stat-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.stat-card { background:rgba(255,255,255,.06); border:1px solid rgba(197,223,208,.14); border-radius:var(--r); padding:14px 16px; }
+.stat-card .val { font-family:'DM Serif Display',serif; font-size:24px; color:var(--green-soft); letter-spacing:-.03em; line-height:1.1; margin-bottom:5px; }
+.stat-card .lbl { font-size:10.5px; color:rgba(197,223,208,.5); text-transform:uppercase; letter-spacing:.08em; font-weight:500; line-height:1.4; }
+.left-foot { font-size:11.5px; color:rgba(197,223,208,.3); font-weight:300; }
+.right { background:var(--white); display:flex; flex-direction:column; align-items:center; padding:56px 48px; overflow-y:auto; }
+.form-wrap { width:100%; max-width:500px; }
+.prog-wrap { width:100%; height:3px; background:var(--sand-dark); border-radius:2px; margin-bottom:36px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--green-mid); border-radius:2px; transition:width .4s ease; }
+.steps { display:flex; align-items:center; margin-bottom:10px; }
+.step-dot { width:27px; height:27px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0; transition:all .25s; }
+.step-dot.done { background:var(--green-mid); color:#fff; }
+.step-dot.active { background:var(--green-deep); color:#fff; box-shadow:0 0 0 4px rgba(26,122,74,.15); }
+.step-dot.pending { background:var(--sand-dark); color:var(--muted); }
+.step-line { flex:1; height:2px; background:var(--sand-dark); margin:0 4px; transition:background .25s; }
+.step-line.done { background:var(--green-mid); }
+.step-labels { display:flex; justify-content:space-between; margin-bottom:36px; }
+.step-lbl { font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); text-align:center; flex:1; }
+.step-lbl.active { color:var(--green-deep); }
+.tabs { display:flex; background:var(--sand); border-radius:var(--r); padding:4px; margin-bottom:32px; }
+.tab { flex:1; padding:9px; border:none; background:transparent; border-radius:7px; font-family:'DM Sans',sans-serif; font-size:13.5px; font-weight:500; color:var(--muted); cursor:pointer; transition:all .2s; }
+.tab.active { background:var(--white); color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.10); }
+.form-title { font-family:'DM Serif Display',serif; font-size:27px; letter-spacing:-.03em; color:var(--ink); margin-bottom:6px; }
+.form-sub { font-size:13.5px; color:var(--muted); margin-bottom:32px; line-height:1.55; font-weight:300; }
+.form-sub strong { color:var(--ink-soft); font-weight:500; }
+.field { margin-bottom:20px; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+.field-row .field { margin-bottom:0; }
+.field label, label.lbl { display:block; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); margin-bottom:7px; }
+.req { color:var(--green-mid); margin-left:2px; }
+.opt { color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; margin-left:4px; }
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=tel],select { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:var(--r); font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); background:var(--white); transition:border-color .18s,box-shadow .18s; outline:none; appearance:none; -webkit-appearance:none; }
+input:focus,select:focus { border-color:var(--green-mid); box-shadow:0 0 0 3px rgba(26,122,74,.17); }
+input.err,select.err { border-color:var(--error); }
+.err-msg { font-size:11.5px; color:var(--error); margin-top:5px; }
+.hint-msg { font-size:11.5px; color:var(--muted); margin-top:5px; font-weight:300; }
+.ok-msg { font-size:11.5px; color:var(--green-mid); margin-top:5px; font-weight:500; }
+select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7A72' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:36px; cursor:pointer; }
+.pwd-bars { display:flex; gap:4px; margin-top:8px; margin-bottom:4px; }
+.pwd-bar { flex:1; height:3px; background:var(--sand-dark); border-radius:2px; transition:background .25s; }
+.pwd-lbl { font-size:11px; color:var(--muted); }
+.role-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:6px; }
+.role-card { border:1.5px solid var(--border); border-radius:var(--r); padding:14px 10px; cursor:pointer; transition:all .18s; text-align:center; background:var(--white); user-select:none; }
+.role-card:hover { border-color:var(--green-soft); background:var(--green-pale); }
+.role-card.sel { border-color:var(--green-mid); background:var(--green-pale); box-shadow:0 0 0 3px rgba(26,122,74,.12); }
+.role-icon { font-size:22px; display:block; margin-bottom:7px; }
+.role-name { font-size:12px; font-weight:600; color:var(--ink); display:block; margin-bottom:4px; }
+.role-desc { font-size:10.5px; color:var(--muted); line-height:1.4; font-weight:300; }
+.nima-box { background:var(--green-pale); border:1px solid var(--green-soft); border-radius:var(--r); padding:12px 14px; margin-bottom:20px; display:flex; gap:10px; align-items:flex-start; }
+.nima-box p { font-size:12.5px; color:var(--ink-soft); line-height:1.5; font-weight:300; }
+.nima-box strong { font-weight:600; color:var(--green-deep); }
+.sec-lbl { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); border-bottom:1px solid var(--border); padding-bottom:9px; margin-bottom:20px; margin-top:28px; }
+.chk-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+.chk-row input[type=checkbox] { width:16px; height:16px; flex-shrink:0; margin-top:2px; accent-color:var(--green-mid); cursor:pointer; }
+.chk-row span { font-size:13px; color:var(--ink-soft); line-height:1.5; font-weight:300; }
+.chk-row a { color:var(--green-mid); text-decoration:none; font-weight:500; }
+.btn-p { width:100%; padding:13px 20px; background:var(--green-deep); color:white; border:none; border-radius:var(--r); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background .18s; letter-spacing:.01em; }
+.btn-p:hover { background:#0a2e20; }
+.btn-p:disabled { opacity:.55; cursor:not-allowed; }
+.btn-s { width:100%; padding:12px 20px; background:transparent; color:var(--ink-soft); border:1.5px solid var(--border); border-radius:var(--r); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; cursor:pointer; transition:all .18s; }
+.btn-s:hover { border-color:var(--ink-soft); background:var(--sand); }
+.btn-txt { background:none; border:none; color:var(--green-mid); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+.btn-row { display:flex; gap:12px; margin-top:28px; }
+.btn-row .btn-p { flex:2; }
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:#fff; padding:12px 20px; border-radius:var(--r); font-size:13.5px; font-weight:500; opacity:0; transition:all .3s ease; z-index:999; white-space:nowrap; pointer-events:none; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.error { background:var(--error); }
+.toast.ok { background:var(--green-mid); }
+.success { display:flex; flex-direction:column; align-items:center; text-align:center; padding:40px 0 24px; }
+.success-ico { width:72px; height:72px; background:var(--green-pale); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; margin-bottom:22px; border:2px solid var(--green-soft); }
+.success h3 { font-family:'DM Serif Display',serif; font-size:25px; color:var(--ink); margin-bottom:10px; letter-spacing:-.02em; }
+.success p { font-size:13.5px; color:var(--muted); line-height:1.6; max-width:360px; font-weight:300; margin-bottom:28px; }
+.success-card { width:100%; background:var(--green-pale); border:1px solid var(--green-soft); border-radius:var(--r-lg); padding:18px 20px; margin-bottom:24px; text-align:left; }
+.success-card .ttl { font-weight:600; font-size:13px; margin-bottom:12px; color:var(--green-deep); }
+.success-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; }
+.success-item:last-child { margin-bottom:0; }
+.success-item p { font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+.success-item strong { font-weight:600; }
+.switch { text-align:center; margin-top:22px; font-size:13px; color:var(--muted); }
+.spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; margin-right:8px; vertical-align:middle; }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.fade { animation:fadeUp .32s ease; }
+@media (max-width:860px) { .shell { grid-template-columns:1fr; } .left { display:none; } .right { padding:36px 20px; } }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="shell">
+  <div class="left">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M11 3C11 3 4 7 4 13C4 16.31 7.13 19 11 19C14.87 19 18 16.31 18 13C18 7 11 3 11 3Z" stroke="#C5DFD0" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="11" cy="13" r="2.5" stroke="#C5DFD0" stroke-width="1.3"/>
+          <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">CicloBase</span>
+    </div>
+    <div class="left-body">
+      <h2>Tus residuos industriales tienen <em>precio.</em><br>Nosotros lo cobramos.</h2>
+      <p>Marketplace B2B que conecta generadores de residuos con compradores verificados — con compliance eSIR integrado y datos ESG auditables.</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="val">€44.5B</div><div class="lbl">Mercado residuos industriales Europa 2025</div></div>
+      <div class="stat-card"><div class="val">7,4%</div><div class="lbl">Tasa circularidad España vs 12,2% UE</div></div>
+      <div class="stat-card"><div class="val">€0</div><div class="lbl">Competidores digitales dominantes en España</div></div>
+      <div class="stat-card"><div class="val">Ley<br>7/2022</div><div class="lbl">eSIR obligatorio. CicloBase ya lo integra.</div></div>
+    </div>
+    <div class="left-foot">Confidencial · CicloBase · Barcelona 2026</div>
+  </div>
+
+  <div class="right">
+    <div class="form-wrap">
+      <div class="prog-wrap"><div class="prog-fill" id="progBar" style="width:0%"></div></div>
+      <div class="steps" id="stepDots"></div>
+      <div class="step-labels" id="stepLabels"></div>
+      <div id="screen"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  PASO 1: Pega tus claves de Supabase aquí                   ║
+// ║  Las encuentras en: supabase.com → tu proyecto →            ║
+// ║  Project Settings → API                                     ║
+// ╚══════════════════════════════════════════════════════════════╝
+const SUPABASE_URL = 'https://jusyaleikqsdpvxffnql.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1c3lhbGVpa3FzZHB2eGZmbnFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMDQ5NDEsImV4cCI6MjA4OTc4MDk0MX0.BQALdU3vN0I6ewi0AKdVSGLL61S206jHlEaTSk_xAaY';
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  PASO 2: Crea la tabla profiles en Supabase                 ║
+// ║  Ve a: SQL Editor → New Query → pega y ejecuta:             ║
+// ║                                                             ║
+// ║  create table profiles (                                    ║
+// ║    id             uuid primary key                          ║
+// ║                   references auth.users(id),                ║
+// ║    company_name   text not null,                            ║
+// ║    cif            text not null unique,                     ║
+// ║    nima           text unique,                              ║
+// ║    role           text not null,                            ║
+// ║    sector         text not null,                            ║
+// ║    employee_range text not null,                            ║
+// ║    address        text not null,                            ║
+// ║    municipality   text not null,                            ║
+// ║    province       text not null,                            ║
+// ║    contact_name   text not null,                            ║
+// ║    contact_role   text not null,                            ║
+// ║    phone          text not null,                            ║
+// ║    website        text,                                     ║
+// ║    is_verified    boolean default false,                    ║
+// ║    is_active      boolean default true,                     ║
+// ║    created_at     timestamptz default now()                 ║
+// ║  );                                                         ║
+// ║  alter table profiles enable row level security;            ║
+// ║  create policy "own" on profiles                            ║
+// ║    for all using (auth.uid() = id);                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── ESTADO ──────────────────────────────────────────────────────
+const S = { step:1, tab:'register', data:{}, errors:{} };
+const LABELS = ['Cuenta','Empresa','Perfil','Activación'];
+
+// ─── HELPERS ─────────────────────────────────────────────────────
+const validateCIF  = v => /^[A-HJ-NP-SUVW][0-9]{7}[0-9A-J]$/i.test((v||'').trim());
+const validateNIMA = v => /^\d{10}$/.test((v||'').replace(/\s/g,''));
+const escHTML = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const $      = id => document.getElementById(id);
+const val    = id => { const e=$(id); return e?e.value:''; };
+const chk    = id => { const e=$(id); return e?e.checked:false; };
+
+function pwdStrength(p) {
+  if(!p||p.length<6) return 0;
+  let s=0;
+  if(p.length>=8)s++; if(/[A-Z]/.test(p))s++; if(/[0-9]/.test(p))s++; if(/[^A-Za-z0-9]/.test(p))s++;
+  return s;
+}
+
+function toast(msg, type='error') {
+  const el=$('toast');
+  el.textContent=msg; el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'), 3500);
+}
+
+// ─── INDICADOR ───────────────────────────────────────────────────
+function renderIndicator() {
+  const s=S.step;
+  $('progBar').style.width = s>=4?'100%':((s-1)/3*100)+'%';
+  if(s>=4){ $('stepDots').innerHTML=''; $('stepLabels').innerHTML=''; return; }
+  let dots='', labels='';
+  for(let i=0;i<4;i++) {
+    if(i>0) dots+=`<div class="step-line${i<s-1?' done':''}"></div>`;
+    const cls=i+1<s?'done':i+1===s?'active':'pending';
+    dots+=`<div class="step-dot ${cls}">${i+1<s?'✓':i+1}</div>`;
+    labels+=`<span class="step-lbl${i+1===s?' active':''}">${LABELS[i]}</span>`;
+  }
+  $('stepDots').innerHTML=dots; $('stepLabels').innerHTML=labels;
+}
+
+function render() {
+  renderIndicator();
+  const el=$('screen');
+  el.className='fade'; void el.offsetWidth;
+  el.innerHTML=[null,html_auth,html_empresa,html_perfil,html_success][S.step]();
+  bind();
+}
+
+// ─── STEP 1: AUTH ────────────────────────────────────────────────
+function html_auth() {
+  const {tab,errors:e,data:d}=S;
+  const reg=`
+    <h2 class="form-title">Crear cuenta</h2>
+    <p class="form-sub">Acceso gratuito durante los primeros <strong>6 meses</strong> para early adopters.</p>
+    <div class="field">
+      <label>Email corporativo <span class="req">*</span></label>
+      <input type="email" id="email" class="${e.email?'err':''}" value="${escHTML(d.email||'')}" placeholder="nombre@empresa.com">
+      ${e.email?`<div class="err-msg">${e.email}</div>`:''}
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Contraseña <span class="req">*</span></label>
+        <input type="password" id="pwd" class="${e.pwd?'err':''}" placeholder="Mín. 8 caracteres" oninput="updatePwd(this.value)">
+        <div class="pwd-bars"><div class="pwd-bar" id="pb1"></div><div class="pwd-bar" id="pb2"></div><div class="pwd-bar" id="pb3"></div><div class="pwd-bar" id="pb4"></div></div>
+        <div class="pwd-lbl" id="pwdLbl"></div>
+        ${e.pwd?`<div class="err-msg">${e.pwd}</div>`:''}
+      </div>
+      <div class="field">
+        <label>Confirmar <span class="req">*</span></label>
+        <input type="password" id="confirm" class="${e.confirm?'err':''}" placeholder="Repetir contraseña">
+        ${e.confirm?`<div class="err-msg">${e.confirm}</div>`:''}
+      </div>
+    </div>
+    <div class="chk-row">
+      <input type="checkbox" id="accept" ${d.accept?'checked':''}>
+      <span><label for="accept" style="display:inline;font-size:inherit;font-weight:inherit;text-transform:none;letter-spacing:normal;color:inherit;margin-bottom:0;">
+        Acepto los <a href="#">Términos de servicio</a> y la <a href="#">Política de privacidad</a>. Datos tratados conforme al RGPD.
+      </label></span>
+    </div>
+    ${e.accept?`<div class="err-msg" style="margin:-8px 0 12px">${e.accept}</div>`:''}
+    <button class="btn-p" id="btnReg">Crear cuenta → Completar perfil</button>
+    <div class="switch">¿Ya tienes cuenta? <button class="btn-txt" id="toLogin">Acceder</button></div>`;
+
+  const log=`
+    <h2 class="form-title">Bienvenido de nuevo</h2>
+    <p class="form-sub">Accede a tu cuenta de CicloBase.</p>
+    <div class="field">
+      <label>Email <span class="req">*</span></label>
+      <input type="email" id="email" class="${e.email?'err':''}" value="${escHTML(d.email||'')}" placeholder="nombre@empresa.com">
+      ${e.email?`<div class="err-msg">${e.email}</div>`:''}
+    </div>
+    <div class="field">
+      <label>Contraseña <span class="req">*</span></label>
+      <input type="password" id="pwd" class="${e.pwd?'err':''}" placeholder="Tu contraseña">
+      ${e.pwd?`<div class="err-msg">${e.pwd}</div>`:''}
+    </div>
+    <div style="text-align:right;margin-bottom:22px"><button class="btn-txt">¿Olvidaste tu contraseña?</button></div>
+    <button class="btn-p" id="btnLog">Acceder</button>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <button class="btn-s" id="btnLocal" style="font-size:13px;color:var(--muted)">Acceso local (sin Supabase)</button>
+    </div>
+    <div class="switch">¿Sin cuenta? <button class="btn-txt" id="toReg">Crear cuenta gratis</button></div>`;
+
+  return `
+    <div class="tabs">
+      <button class="tab${tab==='register'?' active':''}" id="tabReg">Crear cuenta</button>
+      <button class="tab${tab==='login'?' active':''}" id="tabLog">Acceder</button>
+    </div>
+    ${tab==='register'?reg:log}`;
+}
+
+function updatePwd(v) {
+  const s=pwdStrength(v), lbls=['','Débil','Mejorable','Buena','Excelente'];
+  const c=s<=1?'#C0392B':s<=2?'#D4730A':'#1A7A4A';
+  for(let i=1;i<=4;i++){const b=$('pb'+i);if(b)b.style.background=i<=s?c:'var(--sand-dark)';}
+  const l=$('pwdLbl');if(l){l.textContent=lbls[s]||'';l.style.color=c;}
+}
+
+// ─── STEP 2: EMPRESA ─────────────────────────────────────────────
+function html_empresa() {
+  const {errors:e,data:d}=S;
+  const cards=[
+    {id:'generator',icon:'🏭',name:'Generador',desc:'Publico residuos para valorizar'},
+    {id:'buyer',    icon:'🔄',name:'Comprador',desc:'Busco materias primas secundarias'},
+    {id:'both',     icon:'⚡',name:'Ambos',    desc:'Genero y también compro'},
+  ].map(r=>`
+    <div class="role-card${d.role===r.id?' sel':''}" data-role="${r.id}">
+      <span class="role-icon">${r.icon}</span>
+      <span class="role-name">${r.name}</span>
+      <span class="role-desc">${r.desc}</span>
+    </div>`).join('');
+
+  return `
+    <h2 class="form-title">Datos de empresa</h2>
+    <p class="form-sub">Usamos esta información para verificar tu empresa y habilitar el módulo eSIR.</p>
+    <div class="field">
+      <label>Razón social <span class="req">*</span></label>
+      <input type="text" id="razonSocial" class="${e.razonSocial?'err':''}" value="${escHTML(d.razonSocial||'')}" placeholder="Metal Ibérica S.L.">
+      ${e.razonSocial?`<div class="err-msg">${e.razonSocial}</div>`:''}
+    </div>
+    <div class="field">
+      <label>CIF <span class="req">*</span></label>
+      <input type="text" id="cif" class="${e.cif?'err':''}" value="${escHTML(d.cif||'')}" placeholder="B12345678" maxlength="9" oninput="this.value=this.value.toUpperCase();liveCheckCIF(this.value)">
+      <div id="cifStatus">${validateCIF(d.cif||'')&&!e.cif?'<div class="ok-msg">✓ CIF válido</div>':(e.cif?`<div class="err-msg">${e.cif}</div>`:'')}</div>
+    </div>
+    <div class="field">
+      <label class="lbl">Rol en CicloBase <span class="req">*</span></label>
+      <div class="role-grid">${cards}</div>
+      ${e.role?`<div class="err-msg">${e.role}</div>`:''}
+    </div>
+    <div style="margin-top:28px"><button class="btn-p" id="btnEmpresa">Continuar →</button></div>`;
+}
+
+function liveCheckCIF(v) {
+  const el=$('cifStatus'); if(!el)return;
+  el.innerHTML=v.length>=9?(validateCIF(v)?'<div class="ok-msg">✓ CIF válido</div>':'<div class="err-msg">Formato incorrecto. Ej: B12345678</div>'):'';
+}
+
+// ─── STEP 3: PERFIL ──────────────────────────────────────────────
+function html_perfil() {
+  const {errors:e,data:d}=S;
+  const isGen=d.role==='generator'||d.role==='both';
+  const provs=['Barcelona','Tarragona','Lleida','Girona','Madrid','Valencia','Sevilla','Zaragoza','Bilbao / Bizkaia','Málaga','Murcia','Alicante','Valladolid','Otra'];
+  const sectores='metalmecanica:Metalmecánica|quimica:Química / Farmacéutica|construccion:Construcción / Demolición|automocion:Automoción|alimentaria:Agroalimentaria|plasticos:Plásticos / Envases|logistica:Logística|electronica:Electrónica / RAEE|textil:Textil|otro:Otro'.split('|').map(x=>{const[v,l]=x.split(':');return`<option value="${v}"${d.sector===v?' selected':''}>${l}</option>`;}).join('');
+  const emps=['1-10','11-50','51-200','201-500','+500'].map(v=>`<option value="${v}"${d.empleados===v?' selected':''}>${v.replace('+',' Más de ').replace('-',' – ')}</option>`).join('');
+
+  return `
+    <h2 class="form-title">Perfil de empresa</h2>
+    <p class="form-sub">Completa los datos para activar el módulo de compliance eSIR.</p>
+
+    ${isGen?`
+    <div class="nima-box">
+      <span style="font-size:18px;flex-shrink:0;margin-top:1px">🏛️</span>
+      <p><strong>¿Tienes número NIMA?</strong> Es el Número de Identificación Medioambiental, asignado por tu CCAA. Lo encuentras en tu autorización de productor o en el registro SIGA (Catalunya).</p>
+    </div>
+    <div class="field">
+      <label>Número NIMA <span class="req">*</span></label>
+      <input type="text" id="nima" class="${e.nima?'err':''}" value="${escHTML(d.nima||'')}" placeholder="1234567890" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'');liveCheckNIMA(this.value)">
+      <div id="nimaStatus">${validateNIMA(d.nima||'')&&!e.nima?'<div class="ok-msg">✓ Formato NIMA correcto</div>':(e.nima?`<div class="err-msg">${e.nima}</div>`:'<div class="hint-msg">10 dígitos exactos.</div>')}</div>
+    </div>`:''}
+
+    <div class="sec-lbl">Clasificación</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Sector <span class="req">*</span></label>
+        <select id="sector" class="${e.sector?'err':''}"><option value="">Seleccionar...</option>${sectores}</select>
+        ${e.sector?`<div class="err-msg">${e.sector}</div>`:''}
+      </div>
+      <div class="field">
+        <label>Nº empleados <span class="req">*</span></label>
+        <select id="empleados" class="${e.empleados?'err':''}"><option value="">Seleccionar...</option>${emps}</select>
+        ${e.empleados?`<div class="err-msg">${e.empleados}</div>`:''}
+      </div>
+    </div>
+
+    <div class="sec-lbl">Ubicación</div>
+    <div class="field">
+      <label>Dirección <span class="req">*</span></label>
+      <input type="text" id="direccion" class="${e.direccion?'err':''}" value="${escHTML(d.direccion||'')}" placeholder="Carrer de la Indústria, 24, 08530">
+      ${e.direccion?`<div class="err-msg">${e.direccion}</div>`:''}
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Municipio <span class="req">*</span></label>
+        <input type="text" id="municipio" class="${e.municipio?'err':''}" value="${escHTML(d.municipio||'')}" placeholder="Granollers">
+        ${e.municipio?`<div class="err-msg">${e.municipio}</div>`:''}
+      </div>
+      <div class="field">
+        <label>Provincia <span class="req">*</span></label>
+        <select id="provincia" class="${e.provincia?'err':''}">
+          <option value="">Seleccionar...</option>
+          ${provs.map(p=>`<option value="${p}"${d.provincia===p?' selected':''}>${p}</option>`).join('')}
+        </select>
+        ${e.provincia?`<div class="err-msg">${e.provincia}</div>`:''}
+      </div>
+    </div>
+
+    <div class="sec-lbl">Persona de contacto</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Nombre y apellidos <span class="req">*</span></label>
+        <input type="text" id="cNombre" class="${e.cNombre?'err':''}" value="${escHTML(d.cNombre||'')}" placeholder="Joan Puig Ferrer">
+        ${e.cNombre?`<div class="err-msg">${e.cNombre}</div>`:''}
+      </div>
+      <div class="field">
+        <label>Cargo <span class="req">*</span></label>
+        <input type="text" id="cCargo" class="${e.cCargo?'err':''}" value="${escHTML(d.cCargo||'')}" placeholder="Resp. Medio Ambiente">
+        ${e.cCargo?`<div class="err-msg">${e.cCargo}</div>`:''}
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Teléfono <span class="req">*</span></label>
+        <input type="tel" id="telefono" class="${e.telefono?'err':''}" value="${escHTML(d.telefono||'')}" placeholder="+34 600 000 000">
+        ${e.telefono?`<div class="err-msg">${e.telefono}</div>`:''}
+      </div>
+      <div class="field">
+        <label>Web <span class="opt">(opcional)</span></label>
+        <input type="url" id="web" value="${escHTML(d.web||'')}" placeholder="https://empresa.com">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-s" id="btnBack">← Atrás</button>
+      <button class="btn-p" id="btnPerfil">Finalizar registro →</button>
+    </div>`;
+}
+
+function liveCheckNIMA(v) {
+  const el=$('nimaStatus'); if(!el)return;
+  el.innerHTML=v.length===10?(validateNIMA(v)?'<div class="ok-msg">✓ Formato NIMA correcto</div>':'<div class="err-msg">Debe tener exactamente 10 dígitos</div>'):'<div class="hint-msg">10 dígitos exactos.</div>';
+}
+
+// ─── STEP 4: SUCCESS ─────────────────────────────────────────────
+function html_success() {
+  const d=S.data;
+  const isGen=d.role==='generator'||d.role==='both';
+  const isBuy=d.role==='buyer'||d.role==='both';
+  return `
+    <div class="success">
+      <div class="success-ico">✅</div>
+      <h3>Cuenta creada con éxito</h3>
+      <p>Hemos enviado un email de verificación a <strong>${escHTML(d.email||'')}</strong>.<br>
+      Tu empresa <strong>${escHTML(d.razonSocial||'')}</strong> está pendiente de verificación manual (24–48h).</p>
+      <div class="success-card">
+        <div class="ttl">Mientras tanto, puedes preparar:</div>
+        ${isGen?`<div class="success-item"><span style="font-size:15px;flex-shrink:0">📋</span><p><strong>Tus listings:</strong> Ten a mano los códigos LER de tus residuos y fotos del material.</p></div>`:''}
+        ${isBuy?`<div class="success-item"><span style="font-size:15px;flex-shrink:0">🔍</span><p><strong>Tus búsquedas:</strong> Define qué materiales necesitas. Acceso a generadores verificados en 60km.</p></div>`:''}
+        <div class="success-item"><span style="font-size:15px;flex-shrink:0">📜</span><p><strong>Módulo eSIR incluido:</strong> CicloBase genera la documentación compatible con Ley 7/2022 en cada transacción.</p></div>
+      </div>
+      <button class="btn-p" style="width:100%" onclick="window.location.href='dashboard.html'">Ir al dashboard →</button>
+    </div>`;
+}
+
+// ─── VALIDACIONES ────────────────────────────────────────────────
+function validate1reg() {
+  const e={}, em=val('email'), pw=val('pwd'), co=val('confirm'), ac=chk('accept');
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) e.email='Email corporativo válido requerido';
+  if(!pw||pw.length<8) e.pwd='Mínimo 8 caracteres';
+  if(pw!==co) e.confirm='Las contraseñas no coinciden';
+  if(!ac) e.accept='Debes aceptar los términos para continuar';
+  Object.assign(S.data,{email:em,pwd:pw,accept:ac}); S.errors=e;
+  return !Object.keys(e).length;
+}
+function validate1log() {
+  const e={}, em=val('email'), pw=val('pwd');
+  if(!em) e.email='Email requerido';
+  if(!pw) e.pwd='Contraseña requerida';
+  Object.assign(S.data,{email:em,pwd:pw}); S.errors=e;
+  return !Object.keys(e).length;
+}
+function validate2() {
+  const e={}, rs=val('razonSocial'), ci=val('cif'), ro=S.data.role||'';
+  if(!rs.trim())       e.razonSocial='Razón social requerida';
+  if(!validateCIF(ci)) e.cif='CIF inválido. Formato: A12345678';
+  if(!ro)              e.role='Selecciona tu rol en la plataforma';
+  Object.assign(S.data,{razonSocial:rs,cif:ci}); S.errors=e;
+  return !Object.keys(e).length;
+}
+function validate3() {
+  const e={}, isGen=S.data.role==='generator'||S.data.role==='both';
+  const f={nima:val('nima'),sector:val('sector'),empleados:val('empleados'),
+    direccion:val('direccion'),municipio:val('municipio'),provincia:val('provincia'),
+    cNombre:val('cNombre'),cCargo:val('cCargo'),telefono:val('telefono'),web:val('web')};
+  if(isGen&&!validateNIMA(f.nima)) e.nima='NIMA debe tener exactamente 10 dígitos';
+  if(!f.sector)    e.sector='Selecciona un sector';
+  if(!f.empleados) e.empleados='Selecciona rango de empleados';
+  if(!f.direccion.trim()) e.direccion='Dirección requerida';
+  if(!f.municipio.trim()) e.municipio='Municipio requerido';
+  if(!f.provincia)        e.provincia='Provincia requerida';
+  if(!f.cNombre.trim())   e.cNombre='Nombre requerido';
+  if(!f.cCargo.trim())    e.cCargo='Cargo requerido';
+  if(!f.telefono.trim())  e.telefono='Teléfono requerido';
+  Object.assign(S.data,f); S.errors=e;
+  return !Object.keys(e).length;
+}
+
+// ─── SUPABASE: REGISTRO ──────────────────────────────────────────
+async function doRegister() {
+  const btn=$('btnReg');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Creando cuenta...';
+
+  const {data,error}=await sb.auth.signUp({
+    email: S.data.email,
+    password: S.data.pwd,
+  });
+
+  if(error){
+    const msgs={'User already registered':'Este email ya tiene una cuenta.','Invalid email':'Email no válido.','Password should be at least 6 characters':'Contraseña demasiado corta.'};
+    S.errors.email=msgs[error.message]||error.message;
+    render(); return;
+  }
+
+  S.data.userId=data.user.id;
+  S.step=2; S.errors={}; render();
+}
+
+// ─── SUPABASE: LOGIN ─────────────────────────────────────────────
+async function doLogin() {
+  const btn=$('btnLog');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Accediendo...';
+
+  const {data,error}=await sb.auth.signInWithPassword({
+    email: S.data.email,
+    password: S.data.pwd,
+  });
+
+  if(error){ S.errors.pwd='Email o contraseña incorrectos.'; render(); return; }
+
+  // Si ya tiene perfil → dashboard; si no → completar perfil
+  const {data:profile}=await sb.from('profiles').select('id').eq('id',data.user.id).maybeSingle();
+  if(profile){
+    toast('Sesión iniciada ✓','ok');
+    setTimeout(()=>window.location.href='dashboard.html',1200);
+  } else {
+    S.data.userId=data.user.id;
+    S.step=2; S.errors={}; render();
+  }
+}
+
+// ─── SUPABASE: GUARDAR PERFIL ────────────────────────────────────
+async function doPerfil() {
+  const btn=$('btnPerfil');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Guardando...';
+
+  const d=S.data, isGen=d.role==='generator'||d.role==='both';
+
+  // Mapear roles internos (inglés) a valores del schema (español)
+  const roleMap = { generator:'generador', buyer:'comprador', both:'ambos' };
+
+  const {error}=await sb.from('profiles').insert({
+    id:             d.userId,
+    email:          d.email,
+    company_name:   d.razonSocial,
+    cif:            d.cif,
+    nima:           isGen?d.nima:null,
+    role:           roleMap[d.role] || d.role,
+    sector:         d.sector,
+    employees:      d.empleados,
+    address:        d.direccion,
+    municipality:   d.municipio,
+    province:       d.provincia,
+    contact_person: d.cNombre + ' · ' + d.cCargo,
+    phone:          d.telefono,
+    website:        d.web||null,
+    verified:       false,
+  });
+
+  if(error){
+    const msg=error.code==='23505'?'Ya existe una empresa con ese CIF o NIMA.':'Error al guardar: '+error.message;
+    toast(msg);
+    btn.disabled=false; btn.innerHTML='Finalizar registro →';
+    return;
+  }
+
+  S.step=4; S.errors={}; render();
+  toast('¡Cuenta creada! Revisa tu email.','ok');
+}
+
+// ─── BIND EVENTS ─────────────────────────────────────────────────
+function bind() {
+  const on=(id,fn)=>{ const el=$(id); if(el) el.onclick=fn; };
+
+  on('tabReg',()=>{ S.tab='register'; S.errors={}; render(); });
+  on('tabLog',()=>{ S.tab='login';    S.errors={}; render(); });
+  on('toLogin',()=>{ S.tab='login';   S.errors={}; render(); });
+  on('toReg',  ()=>{ S.tab='register';S.errors={}; render(); });
+
+  on('btnReg',()=>{ if(validate1reg()) doRegister(); else render(); });
+  on('btnLog',()=>{ if(validate1log()) doLogin();    else render(); });
+  on('btnLocal',()=>{ localStorage.setItem('cb_local_mode','1'); window.location.href='dashboard.html'; });
+
+  document.querySelectorAll('.role-card').forEach(c=>{
+    c.onclick=()=>{
+      S.data.role=c.dataset.role;
+      document.querySelectorAll('.role-card').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+    };
+  });
+
+  on('btnEmpresa',()=>{ if(validate2()){ S.step=3; S.errors={}; render(); } else render(); });
+  on('btnBack',   ()=>{ S.step=2; S.errors={}; render(); });
+  on('btnPerfil', ()=>{ if(validate3()) doPerfil(); else render(); });
+}
+
+render();
+</script>
+</body>
+</html>

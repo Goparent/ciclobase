@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CicloBase · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green-deep: #0D3D2B; --green-mid: #1A7A4A; --green-soft: #C5DFD0; --green-pale: #EBF5EF;
+  --sand: #F5F0E8; --sand-dark: #E8E0D0; --ink: #1A1A18; --ink-soft: #3D3D38;
+  --muted: #7A7A72; --border: #D4CFC4; --white: #FAFAF7;
+  --amber: #D4730A; --amber-pale: #FDF3E7; --red: #C0392B; --red-pale: #FDECEA;
+  --r: 10px; --r-lg: 16px;
+  --shadow: 0 2px 12px rgba(13,61,43,0.08), 0 1px 3px rgba(13,61,43,0.05);
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--ink); min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--green-deep); display: flex; flex-direction: column;
+  padding: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 120% 50% at 0% 80%, rgba(26,122,74,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+.sidebar > * { position: relative; z-index: 1; }
+
+.sidebar-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 28px 24px 24px; border-bottom: 1px solid rgba(197,223,208,0.1);
+}
+.brand-mark {
+  width: 34px; height: 34px; background: var(--green-mid);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.brand-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); letter-spacing: -.02em; }
+
+.sidebar-user {
+  padding: 20px 24px 16px; border-bottom: 1px solid rgba(197,223,208,0.1);
+}
+.user-company { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: rgba(197,223,208,0.55); font-weight: 400; }
+.user-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 8px; padding: 3px 8px; border-radius: 20px;
+  background: rgba(197,223,208,0.12); border: 1px solid rgba(197,223,208,0.2);
+  font-size: 10.5px; color: var(--green-soft); font-weight: 500;
+}
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); }
+.badge-dot.verified { background: #4ade80; }
+
+.nav { padding: 16px 0; flex: 1; }
+.nav-section { padding: 0 16px; margin-bottom: 4px; }
+.nav-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(197,223,208,0.35); padding: 8px 8px 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 8px; border-radius: 8px; cursor: pointer;
+  font-size: 13.5px; font-weight: 500; color: rgba(197,223,208,0.65);
+  transition: all .18s; text-decoration: none; margin-bottom: 2px;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.nav-item.active { background: rgba(255,255,255,0.1); color: var(--white); }
+.nav-item .ico { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
+.nav-item .badge-count {
+  margin-left: auto; background: var(--green-mid); color: white;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+}
+
+.sidebar-footer {
+  padding: 16px 24px 24px; border-top: 1px solid rgba(197,223,208,0.1);
+}
+.btn-logout {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: rgba(197,223,208,0.4); background: none;
+  border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 400;
+  transition: color .18s; padding: 0;
+}
+.btn-logout:hover { color: rgba(197,223,208,0.8); }
+
+/* ── MAIN ── */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 36px; height: 64px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 10;
+}
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 20px; letter-spacing: -.02em; color: var(--ink); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.btn-primary {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 18px; background: var(--green-deep); color: white;
+  border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .18s;
+  text-decoration: none;
+}
+.btn-primary:hover { background: #0a2e20; }
+
+.btn-secondary {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; background: transparent; color: var(--ink-soft);
+  border: 1.5px solid var(--border); border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all .18s;
+}
+.btn-secondary:hover { border-color: var(--ink-soft); }
+
+/* ── PAGE CONTENT ── */
+.page { padding: 36px; flex: 1; }
+.page.hidden { display: none; }
+
+/* ── WELCOME BANNER ── */
+.welcome-banner {
+  background: var(--green-deep); border-radius: var(--r-lg);
+  padding: 28px 32px; margin-bottom: 32px; position: relative; overflow: hidden;
+}
+.welcome-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 100% 50%, rgba(26,122,74,0.4) 0%, transparent 60%);
+}
+.welcome-banner > * { position: relative; z-index: 1; }
+.welcome-banner h2 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 6px; letter-spacing: -.02em; }
+.welcome-banner h2 em { font-style: italic; color: var(--green-soft); }
+.welcome-banner p { font-size: 13.5px; color: rgba(197,223,208,0.7); font-weight: 300; max-width: 480px; line-height: 1.55; }
+.pending-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px; padding: 6px 12px; background: rgba(212,115,10,0.2);
+  border: 1px solid rgba(212,115,10,0.4); border-radius: 20px;
+  font-size: 12px; color: #f5a623; font-weight: 500;
+}
+
+/* ── STATS GRID ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px 22px;
+  box-shadow: var(--shadow); transition: transform .18s;
+}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+.stat-card .stat-value { font-family: 'DM Serif Display', serif; font-size: 30px; letter-spacing: -.03em; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+.stat-card .stat-value.green { color: var(--green-mid); }
+.stat-card .stat-sub { font-size: 12px; color: var(--muted); font-weight: 300; }
+.stat-card .stat-icon { font-size: 22px; margin-bottom: 12px; }
+
+/* ── SECTION HEADER ── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: 18px; letter-spacing: -.02em; color: var(--ink); }
+.section-link { font-size: 13px; color: var(--green-mid); font-weight: 500; text-decoration: none; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; }
+.section-link:hover { color: var(--green-deep); }
+
+/* ── CONTENT GRID ── */
+.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+.content-grid.full { grid-template-columns: 1fr; }
+
+/* ── CARD ── */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
+.card-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.card-body { padding: 4px 0; }
+.card-empty { padding: 40px 22px; text-align: center; }
+.card-empty .empty-ico { font-size: 32px; margin-bottom: 12px; opacity: .5; }
+.card-empty p { font-size: 13.5px; color: var(--muted); font-weight: 300; margin-bottom: 16px; line-height: 1.55; }
+
+/* ── LIST ITEM ── */
+.list-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 22px; border-bottom: 1px solid var(--border);
+  transition: background .15s; cursor: pointer;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: var(--sand); }
+.list-item .item-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0; background: var(--green-pale);
+}
+.list-item .item-icon.amber { background: var(--amber-pale); }
+.list-item .item-icon.red { background: var(--red-pale); }
+.list-item .item-info { flex: 1; min-width: 0; }
+.list-item .item-name { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-item .item-meta { font-size: 12px; color: var(--muted); font-weight: 300; }
+.list-item .item-right { text-align: right; flex-shrink: 0; }
+.list-item .item-value { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.item-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10.5px; font-weight: 600; padding: 2px 8px;
+  border-radius: 20px; text-transform: uppercase; letter-spacing: .05em;
+}
+.item-status.active { background: var(--green-pale); color: var(--green-mid); }
+.item-status.pending { background: var(--amber-pale); color: var(--amber); }
+.item-status.review { background: #EEF2FF; color: #4F46E5; }
+.item-status.closed { background: var(--sand-dark); color: var(--muted); }
+
+/* ── IMPACT CARD ── */
+.impact-card {
+  background: linear-gradient(135deg, var(--green-deep) 0%, #0a5c38 100%);
+  border-radius: var(--r-lg); padding: 24px 26px; color: white;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.impact-card::before {
+  content: ''; position: absolute;
+  right: -20px; top: -20px; width: 120px; height: 120px;
+  background: rgba(197,223,208,0.08); border-radius: 50%;
+}
+.impact-card::after {
+  content: ''; position: absolute;
+  right: 20px; bottom: -30px; width: 80px; height: 80px;
+  background: rgba(197,223,208,0.05); border-radius: 50%;
+}
+.impact-card > * { position: relative; z-index: 1; }
+.impact-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: rgba(197,223,208,0.6); margin-bottom: 16px; }
+.impact-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.impact-item .impact-val { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--white); letter-spacing: -.03em; line-height: 1; margin-bottom: 4px; }
+.impact-item .impact-lbl { font-size: 11.5px; color: rgba(197,223,208,0.6); font-weight: 300; }
+.impact-divider { width: 1px; background: rgba(197,223,208,0.15); }
+
+/* ── QUICK ACTIONS ── */
+.quick-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 32px; }
+.qa-card {
+  background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r-lg);
+  padding: 18px; cursor: pointer; transition: all .18s; text-align: center;
+}
+.qa-card:hover { border-color: var(--green-soft); background: var(--green-pale); transform: translateY(-2px); }
+.qa-card .qa-icon { font-size: 26px; margin-bottom: 10px; }
+.qa-card .qa-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.qa-card .qa-desc { font-size: 11.5px; color: var(--muted); font-weight: 300; line-height: 1.4; }
+
+/* ── ESIR ALERT ── */
+.esir-alert {
+  background: var(--amber-pale); border: 1px solid rgba(212,115,10,0.25);
+  border-radius: var(--r-lg); padding: 16px 20px; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.esir-alert .alert-icon { font-size: 20px; flex-shrink: 0; }
+.esir-alert .alert-text { flex: 1; }
+.esir-alert .alert-title { font-size: 13.5px; font-weight: 600; color: var(--amber); margin-bottom: 3px; }
+.esir-alert .alert-desc { font-size: 12.5px; color: var(--ink-soft); font-weight: 300; line-height: 1.45; }
+.esir-alert .alert-btn {
+  padding: 7px 14px; background: var(--amber); color: white; border: none;
+  border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── LOADER ── */
+.loader { display: flex; align-items: center; justify-content: center; padding: 60px; }
+.spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--green-mid); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: var(--r); font-size: 13.5px; font-weight: 500; opacity: 0; transition: all .3s ease; z-index: 999; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--green-mid); }
+.toast.error { background: var(--red); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.fade { animation: fadeUp .3s ease; }
+
+@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .content-grid { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: 1fr 1fr; }
+  .page { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="app" id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 22 22" fill="none">
+          <path d="M11 3C11 3 4 7 4 13C4 16.31 7.13 19 11 19C14.87 19 18 16.31 18 13C18 7 11 3 11 3Z" stroke="#C5DFD0" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="11" cy="13" r="2.5" stroke="#C5DFD0" stroke-width="1.3"/>
+          <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">CicloBase</span>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-company" id="sidebarCompany">Cargando...</div>
+      <div class="user-role" id="sidebarRole">—</div>
+      <div class="user-badge" id="verifiedBadge">
+        <span class="badge-dot" id="verifiedDot"></span>
+        <span id="verifiedText">Pendiente de verificación</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-lbl">Principal</div>
+        <button class="nav-item" id="navDashboard" onclick="showPage('dashboard')"><span class="ico">📊</span> Dashboard</button>
+        <button class="nav-item" onclick="window.location.href='nuevo-listing.html'"><span class="ico">📦</span> Mis listings</button>
+        <button class="nav-item" onclick="window.location.href='buscar.html'"><span class="ico">🔍</span> Buscar material</button>
+        <button class="nav-item" onclick="window.location.href='mensajeria_1.html'"><span class="ico">💬</span> Mensajes</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Compliance</div>
+        <button class="nav-item" id="navEsir" onclick="showPage('esir')"><span class="ico">📜</span> Módulo eSIR</button>
+        <button class="nav-item" id="navImpacto" onclick="showPage('impacto')"><span class="ico">🌱</span> Impacto ESG</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-lbl">Cuenta</div>
+        <button class="nav-item" id="navPerfil" onclick="showPage('perfil')"><span class="ico">🏭</span> Perfil empresa</button>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="btnLogout">↩ Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-right" id="topbarActions"></div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="pageLoader" class="loader"><div class="spinner"></div></div>
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page hidden fade" id="pageDashboard">
+
+      <div class="welcome-banner" id="welcomeBanner">
+        <h2>Bienvenido, <em id="welcomeName">—</em></h2>
+        <p id="welcomeDesc">Tu cuenta está siendo verificada por el equipo CicloBase. En 24-48h estará activa y podrás publicar listings.</p>
+        <div class="pending-chip" id="pendingChip">
+          <span>⏳</span> Verificación pendiente
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <!-- se rellena dinámicamente -->
+      </div>
+
+      <div class="quick-actions" id="quickActions">
+        <!-- se rellena dinámicamente -->
+      </div>
+
+      <div class="content-grid" id="contentGrid">
+        <!-- se rellena dinámicamente -->
+      </div>
+
+    </div>
+
+    <!-- LISTINGS PAGE -->
+    <div class="page hidden fade" id="pageListings">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Mis listings</span>
+          <button class="btn-primary" onclick="window.location.href='nuevo-listing.html'">+ Nuevo listing</button>
+        </div>
+        <div class="card-empty">
+          <div class="empty-ico">📦</div>
+          <p>Todavía no tienes listings publicados.<br>Publica tu primer residuo y empieza a recibir ofertas.</p>
+          <button class="btn-primary" style="margin:0 auto" onclick="window.location.href='nuevo-listing.html'">Publicar primer listing →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUSCAR PAGE -->
+    <div class="page hidden fade" id="pageBuscar">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Buscar material</span></div>
+        <div class="card-empty">
+          <div class="empty-ico">🔍</div>
+          <p>El catálogo de materiales disponibles aparecerá aquí.<br>Pronto tendrás acceso a generadores verificados en tu zona.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENSAJES PAGE -->
+    <div class="page hidden fade" id="pageMensajes">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Mensajes</span></div>
+        <div class="card-empty">
+          <div class="empty-ico">💬</div>
+          <p>Aquí aparecerán tus conversaciones con generadores y compradores una vez inicies una negociación.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESIR PAGE -->
+    <div class="page hidden fade" id="pageEsir">
+      <div class="esir-alert" style="margin-bottom:24px">
+        <span class="alert-icon">📋</span>
+        <div class="alert-text">
+          <div class="alert-title">Módulo eSIR — Ley 7/2022</div>
+          <div class="alert-desc">CicloBase genera automáticamente la documentación de comunicación previa compatible con eSIR al cerrar cada transacción. Descarga el documento y preséntalo en el portal de tu CCAA (SIGA en Catalunya · GERIA en Madrid).</div>
+        </div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+        <div class="stat-card">
+          <div class="stat-icon">📜</div>
+          <div class="stat-label">Documentos generados</div>
+          <div class="stat-value" id="esirCount">—</div>
+          <div class="stat-sub">Total histórico</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚖️</div>
+          <div class="stat-label">Toneladas documentadas</div>
+          <div class="stat-value green" id="esirTons">—</div>
+          <div class="stat-sub">Toneladas métricas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💶</div>
+          <div class="stat-label">Valor total transaccionado</div>
+          <div class="stat-value" id="esirValue">—</div>
+          <div class="stat-sub">Suma de transacciones</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Historial de documentos eSIR</span>
+          <select id="esirFilter" onchange="loadEsirDocs()" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--ink);background:var(--white);outline:none;appearance:none">
+            <option value="">Todos</option>
+            <option value="generator">Como generador</option>
+            <option value="buyer">Como comprador</option>
+          </select>
+        </div>
+        <div id="esirList">
+          <div class="loader"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPACTO PAGE -->
+    <div class="page hidden fade" id="pageImpacto">
+      <div class="impact-card" style="margin-bottom:24px">
+        <div class="impact-title">Tu impacto ambiental acumulado</div>
+        <div class="impact-row">
+          <div class="impact-item">
+            <div class="impact-val" id="impactTon">0 t</div>
+            <div class="impact-lbl">Toneladas intermediadas</div>
+          </div>
+          <div class="impact-divider"></div>
+          <div class="impact-item">
+            <div class="impact-val" id="impactCO2">0 t</div>
+            <div class="impact-lbl">CO₂ evitado estimado</div>
+          </div>
+          <div class="impact-divider"></div>
+          <div class="impact-item">
+            <div class="impact-val" id="impactTx">0</div>
+            <div class="impact-lbl">Transacciones cerradas</div>
+          </div>
+          <div class="impact-divider"></div>
+          <div class="impact-item">
+            <div class="impact-val" id="impactValue">€0</div>
+            <div class="impact-lbl">Valor total transaccionado</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <span class="card-title">Factores de emisión aplicados</span>
+          <span style="font-size:11.5px;color:var(--muted)">Fuente: BEDEC / ICE Database</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border)">
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center">
+            <div style="font-size:22px;margin-bottom:8px">⚙️</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px">Chatarra ferrosa</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green-mid)">1,9 tCO₂/t</div>
+          </div>
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center">
+            <div style="font-size:22px;margin-bottom:8px">🔩</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px">Aluminio</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green-mid)">8,0 tCO₂/t</div>
+          </div>
+          <div style="padding:16px 20px;border-right:1px solid var(--border);text-align:center">
+            <div style="font-size:22px;margin-bottom:8px">🔌</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px">Cobre</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green-mid)">3,3 tCO₂/t</div>
+          </div>
+          <div style="padding:16px 20px;text-align:center">
+            <div style="font-size:22px;margin-bottom:8px">🧴</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px">Plástico mixto</div>
+            <div style="font-size:13px;font-weight:700;color:var(--green-mid)">1,8 tCO₂/t</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Desglose por material</span></div>
+          <div id="esgByMaterial">
+            <div class="card-empty"><div class="empty-ico">🌱</div><p>Aparecerá cuando cierres tu primera transacción.</p></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Actividad mensual</span></div>
+          <div id="esgMonthly">
+            <div class="card-empty"><div class="empty-ico">📈</div><p>Aparecerá cuando cierres tu primera transacción.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Resumen ESG — Compatible CSRD / ESRS E5</span></div>
+        <div style="padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px">Certificado de impacto ambiental</div>
+            <div style="font-size:13px;color:var(--muted);max-width:480px;line-height:1.55">Descarga el resumen de tu actividad con toneladas desviadas de vertedero, CO₂ evitado y tasa de valorización. Compatible con ESRS E5 para tu informe CSRD.</div>
+          </div>
+          <button onclick="downloadEsgReport()" id="btnDownloadEsg"
+            style="padding:10px 20px;background:var(--green-deep);color:white;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">
+            📥 Descargar resumen ESG
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL PAGE -->
+    <div class="page hidden fade" id="pagePerfil">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Perfil de empresa</span></div>
+        <div class="card-body" id="perfilContent" style="padding:22px">
+          <div class="loader"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  Mismas claves que en ciclobase-auth.html                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+const SUPABASE_URL = 'https://jusyaleikqsdpvxffnql.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1c3lhbGVpa3FzZHB2eGZmbnFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMDQ5NDEsImV4cCI6MjA4OTc4MDk0MX0.BQALdU3vN0I6ewi0AKdVSGLL61S206jHlEaTSk_xAaY';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── STATE ───────────────────────────────────────────────────────
+let currentProfile = null;
+let currentPage = 'dashboard';
+
+// ─── UTILS ───────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const escHTML = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function toast(msg, type='error') {
+  const el=$('toast');
+  el.textContent=msg; el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+const ROLE_LABELS = { generador:'Generador', comprador:'Comprador', ambos:'Generador & Comprador' };
+const SECTOR_LABELS = {
+  metalmecanica:'Metalmecánica', quimica:'Química / Farmacéutica',
+  construccion:'Construcción', automocion:'Automoción',
+  alimentaria:'Agroalimentaria', plasticos:'Plásticos / Envases',
+  logistica:'Logística', electronica:'Electrónica / RAEE', textil:'Textil', otro:'Otro'
+};
+
+// ─── NAVIGATION ──────────────────────────────────────────────────
+function showPage(name) {
+  const pages = ['dashboard','listings','buscar','mensajes','esir','impacto','perfil'];
+  const titles = { dashboard:'Dashboard', listings:'Mis listings', buscar:'Buscar material', mensajes:'Mensajes', esir:'Módulo eSIR', impacto:'Impacto ESG', perfil:'Perfil empresa' };
+  const actions = {
+    dashboard: currentProfile?.role !== 'comprador' ? '<button class="btn-primary" onclick="showPage(\'listings\')">+ Publicar listing</button>' : '',
+    listings: '<button class="btn-primary" onclick="window.location.href=\'nuevo-listing.html\'">+ Nuevo listing</button>',
+    buscar: '',
+    mensajes: '', esir: '', impacto: '', perfil: '',
+  };
+
+  pages.forEach(p => {
+    const el = $('page' + p.charAt(0).toUpperCase() + p.slice(1));
+    if(el) { el.classList.add('hidden'); el.classList.remove('fade'); }
+    const nav = $('nav' + p.charAt(0).toUpperCase() + p.slice(1));
+    if(nav) nav.classList.remove('active');
+  });
+
+  const target = $('page' + name.charAt(0).toUpperCase() + name.slice(1));
+  if(target) { target.classList.remove('hidden'); void target.offsetWidth; target.classList.add('fade'); }
+  const navTarget = $('nav' + name.charAt(0).toUpperCase() + name.slice(1));
+  if(navTarget) navTarget.classList.add('active');
+
+  $('topbarTitle').textContent = titles[name] || name;
+  $('topbarActions').innerHTML = actions[name] || '';
+  currentPage = name;
+
+  if(name === 'perfil') renderPerfil();
+  if(name === 'impacto') loadEsgData();
+  if(name === 'esir') loadEsirDocs();
+  if(name === 'esir') loadEsirDocs();
+}
+
+// ─── RENDER DASHBOARD ────────────────────────────────────────────
+async function renderDashboard(profile) {
+  const isGen = profile.role === 'generador' || profile.role === 'ambos';
+  const isBuy = profile.role === 'comprador' || profile.role === 'ambos';
+
+  // Welcome
+  $('welcomeName').textContent = profile.company_name;
+  if(profile.verified) {
+    $('welcomeDesc').textContent = `Tu cuenta está activa. ${isGen ? 'Publica tu primer listing para empezar a recibir ofertas.' : 'Explora el catálogo de materiales disponibles en tu zona.'}`;
+    $('pendingChip').innerHTML = '<span>✅</span> Cuenta verificada';
+    $('pendingChip').style.background = 'rgba(26,122,74,0.2)';
+    $('pendingChip').style.borderColor = 'rgba(26,122,74,0.4)';
+    $('pendingChip').style.color = '#4ade80';
+  }
+
+  // Cargar datos reales de Supabase
+  let listingsActivos = 0, totalTons = 0, totalCO2 = 0, totalTx = 0;
+
+  if(isGen) {
+    const { data: listings } = await sb.from('listings')
+      .select('id, status, quantity, unit')
+      .eq('profile_id', profile.id)
+      .eq('status', 'active');
+    listingsActivos = listings?.length || 0;
+
+    const { data: txs } = await sb.from('transactions')
+      .select('final_quantity_tons')
+      .eq('generator_id', profile.id);
+    totalTx = txs?.length || 0;
+    totalTons = txs?.reduce((a, t) => a + (t.final_quantity_tons || 0), 0) || 0;
+    totalCO2 = Math.round(totalTons * 1.9);
+  }
+
+  if(isBuy && !isGen) {
+    const { data: txs } = await sb.from('transactions')
+      .select('final_quantity_tons')
+      .eq('buyer_id', profile.id);
+    totalTx = txs?.length || 0;
+    totalTons = txs?.reduce((a, t) => a + (t.final_quantity_tons || 0), 0) || 0;
+    totalCO2 = Math.round(totalTons * 1.9);
+  }
+
+  // Stats cards
+  const stats = isGen ? [
+    { icon:'📦', label:'Listings activos', value: listingsActivos.toString(), sub:'Residuos publicados' },
+    { icon:'🤝', label:'Transacciones', value: totalTx.toString(), sub:'Historial de ventas' },
+    { icon:'⚖️', label:'Toneladas vendidas', value: totalTons.toFixed(1)+' t', sub:'Volumen total intermediado', green:true },
+    { icon:'🌱', label:'CO₂ evitado', value: totalCO2+' t', sub:'Impacto ambiental estimado', green:true },
+  ] : [
+    { icon:'🔍', label:'Búsquedas guardadas', value:'0', sub:'Alertas de nuevos materiales' },
+    { icon:'🤝', label:'Transacciones', value: totalTx.toString(), sub:'Historial de compras' },
+    { icon:'⚖️', label:'Toneladas compradas', value: totalTons.toFixed(1)+' t', sub:'Volumen total adquirido', green:true },
+    { icon:'🌱', label:'CO₂ evitado', value: totalCO2+' t', sub:'Impacto ambiental estimado', green:true },
+  ];
+
+  $('statsGrid').innerHTML = stats.map(s=>`
+    <div class="stat-card">
+      <div class="stat-icon">${s.icon}</div>
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value${s.green?' green':''}">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+    </div>`).join('');
+
+  // Quick actions
+  const qaGen = [
+    { icon:'📸', name:'Publicar listing', desc:'Sube tu residuo con fotos y precio', action:"window.location.href='nuevo-listing.html'" },
+    { icon:'🔍', name:'Ver catálogo', desc:'Explora materiales disponibles', action:"showPage('buscar')" },
+    { icon:'📜', name:'Módulo eSIR', desc:'Gestiona tu documentación legal', action:"showPage('esir')" },
+  ];
+  const qaBuy = [
+    { icon:'🔍', name:'Buscar material', desc:'Encuentra residuos verificados', action:"showPage('buscar')" },
+    { icon:'🔔', name:'Crear alerta', desc:'Notificaciones de nuevos materiales', action:"toast('Próximamente','ok')" },
+    { icon:'📜', name:'Módulo eSIR', desc:'Gestiona tu documentación legal', action:"showPage('esir')" },
+  ];
+
+  $('quickActions').innerHTML = (isGen ? qaGen : qaBuy).map(q=>`
+    <div class="qa-card" onclick="${q.action}">
+      <div class="qa-icon">${q.icon}</div>
+      <div class="qa-name">${q.name}</div>
+      <div class="qa-desc">${q.desc}</div>
+    </div>`).join('');
+
+  // Últimos listings
+  let listingsHtml = '';
+  if(isGen) {
+    const { data: recent } = await sb.from('listings')
+      .select('id, subcategory, category, quantity, unit, status, municipality, province, created_at')
+      .eq('profile_id', profile.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    const statusLabel = { active:'Activo', pending_review:'En revisión', paused:'Pausado', sold:'Vendido' };
+    const statusColor = { active:'var(--green-mid)', pending_review:'var(--amber)', paused:'var(--muted)', sold:'var(--ink-soft)' };
+
+    listingsHtml = recent?.length ? recent.map(l => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-size:13.5px;font-weight:600;color:var(--ink)">${escHTML(l.subcategory||l.category)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${l.quantity} ${l.unit} · ${escHTML(l.municipality)}, ${escHTML(l.province)}</div>
+        </div>
+        <span style="font-size:11.5px;font-weight:600;color:${statusColor[l.status]||'var(--muted)'};background:${statusColor[l.status]||'var(--muted)'}18;padding:3px 10px;border-radius:20px">${statusLabel[l.status]||l.status}</span>
+      </div>`).join('') :
+      '<div class="card-empty"><div class="empty-ico">📦</div><p>Publica tu primer listing para empezar a recibir contactos.</p><button class="btn-primary" style="margin:16px auto 0" onclick="location.href=\'nuevo-listing.html\'">+ Publicar listing</button></div>';
+  } else {
+    listingsHtml = '<div class="card-empty"><div class="empty-ico">🔍</div><p>El catálogo de materiales disponibles aparecerá aquí pronto.</p></div>';
+  }
+
+  $('contentGrid').innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">${isGen ? 'Últimos listings' : 'Materiales recientes'}</span>
+        <button class="section-link" onclick="showPage('${isGen?'listings':'buscar'}')">Ver todos →</button>
+      </div>
+      ${listingsHtml}
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Actividad reciente</span>
+      </div>
+      <div class="card-empty">
+        <div class="empty-ico">🕐</div>
+        <p>Tu historial de transacciones y mensajes aparecerá aquí.</p>
+      </div>
+    </div>`;
+}
+
+// ─── RENDER PERFIL ───────────────────────────────────────────────
+function renderPerfil() {
+  if(!currentProfile) return;
+  const p = currentProfile;
+  $('perfilContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      ${[
+        ['Razón social', p.company_name],
+        ['CIF', p.cif],
+        ['NIMA', p.nima || '—'],
+        ['Rol', ROLE_LABELS[p.role] || p.role],
+        ['Sector', SECTOR_LABELS[p.sector] || p.sector],
+        ['Empleados', p.employees],
+        ['Municipio', p.municipality],
+        ['Provincia', p.province],
+        ['Contacto', p.contact_person],
+        ['Teléfono', p.phone],
+        ['Web', p.website || '—'],
+        ['Estado', p.verified ? '✅ Verificado' : '⏳ Pendiente verificación'],
+      ].map(([label,value])=>`
+        <div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px">${label}</div>
+          <div style="font-size:14px;color:var(--ink)">${escHTML(value)}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ─── PERFIL MOCK (modo local) ─────────────────────────────────────
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
+const LOCAL_PROFILE = {
+  id: 'local-demo',
+  company_name: 'Metal Ibérica S.L.',
+  cif: 'B12345678',
+  nima: '0812345678',
+  role: 'ambos',
+  sector: 'metalmecanica',
+  employees: '11-50',
+  address: 'Carrer de la Indústria, 24',
+  municipality: 'Granollers',
+  province: 'Barcelona',
+  contact_person: 'Joan Puig · Resp. Medio Ambiente',
+  phone: '+34 600 000 000',
+  website: 'https://metaliberica.com',
+  verified: true,
+  is_active: true,
+  created_at: new Date().toISOString(),
+};
+
+// ─── INIT ────────────────────────────────────────────────────────
+async function init() {
+  // Modo local: saltar Supabase
+  if(IS_LOCAL) {
+    currentProfile = LOCAL_PROFILE;
+    $('sidebarCompany').textContent = LOCAL_PROFILE.company_name;
+    $('sidebarRole').textContent = ROLE_LABELS[LOCAL_PROFILE.role] || LOCAL_PROFILE.role;
+    $('verifiedDot').className = 'badge-dot verified';
+    $('verifiedText').textContent = 'Cuenta verificada';
+    $('impactTon').textContent = '12.5 t';
+    $('impactCO2').textContent = '24 t';
+    $('impactTx').textContent = '3';
+    renderDashboard(LOCAL_PROFILE);
+    $('pageLoader').style.display = 'none';
+    showPage('dashboard');
+    toast(`Modo local · ${LOCAL_PROFILE.company_name.split(' ')[0]}`, 'ok');
+    return;
+  }
+
+  // Comprobar sesión activa
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session) {
+    window.location.href = 'ciclobase-auth.html';
+    return;
+  }
+
+  // Cargar perfil
+  const { data: profile, error } = await sb.from('profiles')
+    .select('*').eq('id', session.user.id).single();
+
+  if(error || !profile) {
+    // Tiene auth pero no perfil → completar onboarding
+    window.location.href = 'ciclobase-auth.html';
+    return;
+  }
+
+  currentProfile = profile;
+
+  // Sidebar
+  $('sidebarCompany').textContent = profile.company_name;
+  $('sidebarRole').textContent = ROLE_LABELS[profile.role] || profile.role;
+  if(profile.verified) {
+    $('verifiedDot').className = 'badge-dot verified';
+    $('verifiedText').textContent = 'Cuenta verificada';
+  }
+
+  // Mostrar/ocultar nav según rol
+  const isGen = profile.role === 'generador' || profile.role === 'ambos';
+  const isBuy = profile.role === 'comprador' || profile.role === 'ambos';
+  // nav items siempre visibles
+
+  // Datos impacto desde Supabase
+  const { data: txsImpact } = await sb.from('transactions')
+    .select('final_quantity_tons')
+    .or(`generator_id.eq.${profile.id},buyer_id.eq.${profile.id}`);
+  const tonsImpact = txsImpact?.reduce((a,t) => a+(t.final_quantity_tons||0), 0) || 0;
+  $('impactTon').textContent = tonsImpact.toFixed(1)+' t';
+  $('impactCO2').textContent = Math.round(tonsImpact*1.9)+' t';
+  $('impactTx').textContent = (txsImpact?.length || 0).toString();
+
+  // Render
+  renderDashboard(profile);
+  $('pageLoader').style.display = 'none';
+  showPage('dashboard');
+
+  toast(`Bienvenido, ${profile.company_name.split(' ')[0]}`, 'ok');
+}
+
+// ─── LOGOUT ──────────────────────────────────────────────────────
+
+// ── MÓDULO eSIR ───────────────────────────────────────────────────
+async function loadEsirDocs() {
+  const list = $('esirList');
+  if(!list || !currentProfile) return;
+
+  list.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+
+  const filter = ($('esirFilter')||{value:''}).value;
+  const SELECT = `id, final_quantity_tons, final_price_per_ton, total_amount,
+    transfer_date, valorization_code, transporter_name,
+    esir_pdf_url, payment_status, created_at,
+    generator:generator_id(id, company_name, cif),
+    buyer:buyer_id(id, company_name, cif),
+    listing:listing_id(ler_code, subcategory, category)`;
+
+  let txs = [];
+
+  try {
+    if(filter === 'generator') {
+      const {data, error} = await sb.from('transactions').select(SELECT)
+        .eq('generator_id', currentProfile.id).order('created_at', {ascending:false});
+      if(error) throw error;
+      txs = data || [];
+    } else if(filter === 'buyer') {
+      const {data, error} = await sb.from('transactions').select(SELECT)
+        .eq('buyer_id', currentProfile.id).order('created_at', {ascending:false});
+      if(error) throw error;
+      txs = data || [];
+    } else {
+      const [r1, r2] = await Promise.all([
+        sb.from('transactions').select(SELECT).eq('generator_id', currentProfile.id).order('created_at', {ascending:false}),
+        sb.from('transactions').select(SELECT).eq('buyer_id', currentProfile.id).order('created_at', {ascending:false}),
+      ]);
+      if(r1.error) throw r1.error;
+      if(r2.error) throw r2.error;
+      const seen = new Set();
+      txs = [...(r1.data||[]), ...(r2.data||[])].filter(t => {
+        if(seen.has(t.id)) return false;
+        seen.add(t.id); return true;
+      }).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+  } catch(err) {
+    console.error('eSIR error:', err);
+    list.innerHTML = `<div class="card-empty"><div class="empty-ico">⚠️</div><p>Error al cargar: ${err.message}</p></div>`;
+    return;
+  }
+
+  // Stats
+  const totalTons  = txs.reduce((a,t) => a+(t.final_quantity_tons||0), 0);
+  const totalValue = txs.reduce((a,t) => a+(t.total_amount||0), 0);
+  const ec=$('esirCount'); if(ec) ec.textContent = txs.length;
+  const et=$('esirTons');  if(et) et.textContent = totalTons.toFixed(1)+' t';
+  const ev=$('esirValue'); if(ev) ev.textContent = '€'+totalValue.toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0});
+
+  if(!txs.length) {
+    list.innerHTML = `
+      <div class="card-empty">
+        <div class="empty-ico">📜</div>
+        <p>No hay documentos eSIR todavía.<br>Cierra tu primera transacción en mensajería para generar el primer documento.</p>
+        <button class="btn-primary" style="margin:16px auto 0" onclick="window.location.href='mensajeria_1.html'">Ir a mensajes →</button>
+      </div>`;
+    return;
+  }
+
+  const PAY_LABELS = {pending:'Pendiente', invoiced:'Facturado', paid:'Pagado'};
+  const PAY_COLOR  = {pending:'pending', invoiced:'review', paid:'active'};
+
+  list.innerHTML = txs.map(tx => {
+    const isGen   = tx.generator?.id === currentProfile.id;
+    const other   = isGen ? tx.buyer : tx.generator;
+    const dateStr = new Date(tx.transfer_date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
+    const creStr  = new Date(tx.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
+    const mat     = tx.listing?.subcategory || tx.listing?.category || '—';
+    const ler     = tx.listing?.ler_code || '—';
+    const comm    = ((tx.total_amount||0)*0.07).toFixed(2);
+    return `
+      <div class="list-item" style="flex-wrap:wrap;gap:8px;padding:16px 22px;cursor:default">
+        <div class="item-icon">📜</div>
+        <div class="item-info" style="min-width:180px">
+          <div class="item-name">${escHTML(mat)} · LER ${escHTML(ler)}</div>
+          <div class="item-meta">${isGen?'→ Vendido a':'← Comprado de'} ${escHTML(other?.company_name||'—')} · Traslado: ${dateStr} · ${tx.valorization_code}</div>
+          <div class="item-meta">Generado: ${creStr}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;margin-left:auto">
+          <div style="font-size:15px;font-weight:700;color:var(--ink)">${tx.final_quantity_tons} ton · €${(tx.total_amount||0).toLocaleString('es-ES',{minimumFractionDigits:0})}</div>
+          <div style="font-size:11.5px;color:var(--muted)">Comisión CicloBase: €${comm}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+            <span class="item-status ${PAY_COLOR[tx.payment_status]||'pending'}">${PAY_LABELS[tx.payment_status]||tx.payment_status}</span>
+            ${tx.esir_pdf_url
+              ? `<a href="${escHTML(tx.esir_pdf_url)}" target="_blank" rel="noopener"
+                   style="padding:5px 12px;background:var(--green-deep);color:white;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none">
+                   📥 Descargar eSIR
+                 </a>`
+              : `<span style="font-size:12px;color:var(--muted);font-style:italic">Sin documento</span>`}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+
+// ── MÓDULO eSIR ───────────────────────────────────────────────────
+async function loadEsirDocs() {
+  const list = $('esirList');
+  if(!list || !currentProfile) return;
+  list.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+  const filter = ($('esirFilter')||{value:''}).value;
+  const SELECT = `id, final_quantity_tons, final_price_per_ton, total_amount,
+    transfer_date, valorization_code, esir_pdf_url, payment_status, created_at,
+    generator:generator_id(id, company_name, cif),
+    buyer:buyer_id(id, company_name, cif),
+    listing:listing_id(ler_code, subcategory, category)`;
+  let txs = [];
+  try {
+    if(filter === 'generator') {
+      const {data,error} = await sb.from('transactions').select(SELECT).eq('generator_id',currentProfile.id).order('created_at',{ascending:false});
+      if(error) throw error; txs = data||[];
+    } else if(filter === 'buyer') {
+      const {data,error} = await sb.from('transactions').select(SELECT).eq('buyer_id',currentProfile.id).order('created_at',{ascending:false});
+      if(error) throw error; txs = data||[];
+    } else {
+      const [r1,r2] = await Promise.all([
+        sb.from('transactions').select(SELECT).eq('generator_id',currentProfile.id).order('created_at',{ascending:false}),
+        sb.from('transactions').select(SELECT).eq('buyer_id',currentProfile.id).order('created_at',{ascending:false}),
+      ]);
+      if(r1.error) throw r1.error; if(r2.error) throw r2.error;
+      const seen=new Set();
+      txs=[...(r1.data||[]),...(r2.data||[])].filter(t=>{if(seen.has(t.id))return false;seen.add(t.id);return true;});
+      txs.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    }
+  } catch(err) {
+    list.innerHTML=`<div class="card-empty"><p>Error: ${err.message}</p></div>`; return;
+  }
+  const totalTons=txs.reduce((a,t)=>a+(t.final_quantity_tons||0),0);
+  const totalVal=txs.reduce((a,t)=>a+(t.total_amount||0),0);
+  const ec=$('esirCount');if(ec)ec.textContent=txs.length;
+  const et=$('esirTons');if(et)et.textContent=totalTons.toFixed(1)+' t';
+  const ev=$('esirValue');if(ev)ev.textContent='€'+totalVal.toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0});
+  if(!txs.length){
+    list.innerHTML=`<div class="card-empty"><div class="empty-ico">📜</div><p>No hay documentos eSIR todavía.<br>Cierra tu primera transacción en mensajería.</p><button class="btn-primary" style="margin:16px auto 0" onclick="window.location.href='mensajeria_1.html'">Ir a mensajes →</button></div>`;
+    return;
+  }
+  const PL={pending:'Pendiente',invoiced:'Facturado',paid:'Pagado'};
+  const PC={pending:'pending',invoiced:'review',paid:'active'};
+  list.innerHTML=txs.map(tx=>{
+    const isGen=tx.generator?.id===currentProfile.id;
+    const other=isGen?tx.buyer:tx.generator;
+    const dateStr=new Date(tx.transfer_date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
+    const mat=tx.listing?.subcategory||tx.listing?.category||'—';
+    const ler=tx.listing?.ler_code||'—';
+    const comm=((tx.total_amount||0)*0.07).toFixed(2);
+    return `<div class="list-item" style="flex-wrap:wrap;gap:8px;padding:16px 22px;cursor:default">
+      <div class="item-icon">📜</div>
+      <div class="item-info" style="min-width:180px">
+        <div class="item-name">${escHTML(mat)} · LER ${escHTML(ler)}</div>
+        <div class="item-meta">${isGen?'→ Vendido a':'← Comprado de'} ${escHTML(other?.company_name||'—')} · Traslado: ${dateStr} · ${tx.valorization_code}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;margin-left:auto">
+        <div style="font-size:15px;font-weight:700;color:var(--ink)">${tx.final_quantity_tons} ton · €${(tx.total_amount||0).toLocaleString('es-ES',{minimumFractionDigits:0})}</div>
+        <div style="font-size:11.5px;color:var(--muted)">Comisión: €${comm}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="item-status ${PC[tx.payment_status]||'pending'}">${PL[tx.payment_status]||tx.payment_status}</span>
+          ${tx.esir_pdf_url?`<a href="${escHTML(tx.esir_pdf_url)}" target="_blank" rel="noopener" style="padding:5px 12px;background:var(--green-deep);color:white;border-radius:7px;font-size:12px;font-weight:600;text-decoration:none">📥 Descargar eSIR</a>`:`<span style="font-size:12px;color:var(--muted);font-style:italic">Sin documento</span>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── MÓDULO IMPACTO ESG ────────────────────────────────────────────
+const CO2_FACTORS = {metales:1.9,aluminio:8.0,cobre:3.3,plasticos:1.8,aceites:2.1,quimicos:1.5,papel:1.1,otros:1.5};
+function getCO2Factor(cat){ return CO2_FACTORS[cat]||1.5; }
+
+async function loadEsgData() {
+  if(!currentProfile) return;
+  const [r1,r2] = await Promise.all([
+    sb.from('transactions').select('id,final_quantity_tons,total_amount,transfer_date,created_at,listing:listing_id(category,subcategory)').eq('generator_id',currentProfile.id),
+    sb.from('transactions').select('id,final_quantity_tons,total_amount,transfer_date,created_at,listing:listing_id(category,subcategory)').eq('buyer_id',currentProfile.id),
+  ]);
+  const seen=new Set();
+  const txs=[...(r1.data||[]),...(r2.data||[])].filter(t=>{if(seen.has(t.id))return false;seen.add(t.id);return true;});
+  let totalTons=0,totalCO2=0,totalValue=0;
+  txs.forEach(tx=>{const tons=tx.final_quantity_tons||0,cat=tx.listing?.category||'otros';totalTons+=tons;totalCO2+=tons*getCO2Factor(cat);totalValue+=tx.total_amount||0;});
+  const it=$('impactTon');if(it)it.textContent=totalTons.toFixed(1)+' t';
+  const ic=$('impactCO2');if(ic)ic.textContent=totalCO2.toFixed(1)+' t';
+  const ix=$('impactTx');if(ix)ix.textContent=txs.length;
+  const iv=$('impactValue');if(iv)iv.textContent='€'+totalValue.toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0});
+  if(!txs.length) return;
+  const byMat={};
+  txs.forEach(tx=>{const cat=tx.listing?.category||'otros',mat=tx.listing?.subcategory||cat,tons=tx.final_quantity_tons||0;if(!byMat[cat])byMat[cat]={mat,tons:0,co2:0};byMat[cat].tons+=tons;byMat[cat].co2+=tons*getCO2Factor(cat);});
+  const matEl=$('esgByMaterial');
+  if(matEl){
+    const sorted=Object.values(byMat).sort((a,b)=>b.tons-a.tons);
+    const maxT=sorted[0]?.tons||1;
+    matEl.innerHTML=sorted.map(m=>`<div style="padding:12px 22px;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--ink)">${escHTML(m.mat)}</span><span style="font-size:13px;color:var(--muted)">${m.tons.toFixed(1)} t · ${m.co2.toFixed(1)} tCO₂</span></div><div style="height:6px;background:var(--sand-dark);border-radius:3px;overflow:hidden"><div style="height:100%;width:${(m.tons/maxT*100).toFixed(1)}%;background:var(--green-mid);border-radius:3px"></div></div></div>`).join('');
+  }
+  const byMonth={};
+  txs.forEach(tx=>{const d=new Date(tx.transfer_date||tx.created_at),key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),label=d.toLocaleDateString('es-ES',{month:'short',year:'numeric'});if(!byMonth[key])byMonth[key]={label,tons:0,count:0};byMonth[key].tons+=tx.final_quantity_tons||0;byMonth[key].count+=1;});
+  const monthEl=$('esgMonthly');
+  if(monthEl){
+    const months=Object.values(byMonth).sort((a,b)=>a.label.localeCompare(b.label));
+    const maxM=Math.max(...months.map(m=>m.tons),1);
+    monthEl.innerHTML='<div style="padding:16px 22px">'+months.map(m=>`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:12.5px;font-weight:600;color:var(--ink)">${m.label}</span><span style="font-size:12px;color:var(--muted)">${m.tons.toFixed(1)} t · ${m.count} tx</span></div><div style="height:8px;background:var(--sand-dark);border-radius:4px;overflow:hidden"><div style="height:100%;width:${(m.tons/maxM*100).toFixed(1)}%;background:linear-gradient(90deg,var(--green-mid),var(--green-deep));border-radius:4px"></div></div></div>`).join('')+'</div>';
+  }
+}
+
+async function downloadEsgReport() {
+  if(!currentProfile) return;
+  const btn=$('btnDownloadEsg');
+  if(btn){btn.disabled=true;btn.textContent='Generando...';}
+  const [r1,r2]=await Promise.all([
+    sb.from('transactions').select('id,final_quantity_tons,total_amount,transfer_date,listing:listing_id(category,subcategory,ler_code)').eq('generator_id',currentProfile.id),
+    sb.from('transactions').select('id,final_quantity_tons,total_amount,transfer_date,listing:listing_id(category,subcategory,ler_code)').eq('buyer_id',currentProfile.id),
+  ]);
+  const seen=new Set();
+  const txs=[...(r1.data||[]),...(r2.data||[])].filter(t=>{if(seen.has(t.id))return false;seen.add(t.id);return true;});
+  let totalTons=0,totalCO2=0,totalValue=0;
+  txs.forEach(tx=>{const tons=tx.final_quantity_tons||0,cat=tx.listing?.category||'otros';totalTons+=tons;totalCO2+=tons*getCO2Factor(cat);totalValue+=tx.total_amount||0;});
+  const now=new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+  const year=new Date().getFullYear();
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:11pt;color:#1a1a18;padding:32px;max-width:800px;margin:0 auto}.header{display:flex;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #0D3D2B}.brand{font-size:20px;font-weight:700;color:#0D3D2B}h2{font-size:14pt;color:#0D3D2B;margin:24px 0 8px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0}.metric{background:#EBF5EF;border-radius:8px;padding:16px;text-align:center}.metric .val{font-size:20pt;font-weight:700;color:#1A7A4A;margin-bottom:4px}.metric .lbl{font-size:9pt;color:#7A7A72;text-transform:uppercase}table{width:100%;border-collapse:collapse;margin:16px 0}th{background:#0D3D2B;color:white;padding:8px 12px;font-size:9.5pt;text-align:left}td{padding:8px 12px;border-bottom:1px solid #D4CFC4;font-size:10pt}tr:nth-child(even)td{background:#F5F0E8}.footer{margin-top:32px;padding-top:16px;border-top:1px solid #D4CFC4;font-size:9pt;color:#7A7A72}</style></head><body>
+<div class="header"><div><div class="brand">CicloBase</div><div style="font-size:10pt;color:#7A7A72">Plataforma B2B de Residuos Industriales</div></div><div style="text-align:right"><div style="font-size:12pt;font-weight:700;color:#0D3D2B">Resumen de Impacto ESG</div><div style="font-size:10pt;color:#7A7A72">Compatible CSRD · ESRS E5</div><div style="font-size:9.5pt;color:#7A7A72;margin-top:4px">Generado: ${now}</div></div></div>
+<h2>Empresa</h2><p><strong>${escHTML(currentProfile.company_name)}</strong> · CIF: ${escHTML(currentProfile.cif)} · ${escHTML(currentProfile.municipality)}, ${escHTML(currentProfile.province)}</p><p>Período: ${year}</p>
+<h2>Métricas de Impacto</h2><div class="metrics"><div class="metric"><div class="val">${totalTons.toFixed(1)} t</div><div class="lbl">Toneladas valorizadas</div></div><div class="metric"><div class="val">${totalCO2.toFixed(1)} t</div><div class="lbl">CO₂ evitado</div></div><div class="metric"><div class="val">${txs.length}</div><div class="lbl">Transacciones</div></div></div>
+<h2>Detalle de Transacciones</h2><table><tr><th>Fecha</th><th>Material</th><th>LER</th><th>Cantidad (t)</th><th>CO₂ evitado (t)</th><th>Valor (€)</th></tr>${txs.map(tx=>{const tons=tx.final_quantity_tons||0,cat=tx.listing?.category||'otros',co2=(tons*getCO2Factor(cat)).toFixed(2),date=new Date(tx.transfer_date||tx.created_at).toLocaleDateString('es-ES');return`<tr><td>${date}</td><td>${escHTML(tx.listing?.subcategory||cat)}</td><td>${escHTML(tx.listing?.ler_code||'—')}</td><td>${tons}</td><td>${co2}</td><td>${(tx.total_amount||0).toFixed(0)}</td></tr>`;}).join('')}</table>
+<div class="footer">Factores de emisión: BEDEC / ICE Database. Este documento puede utilizarse como evidencia de circularidad en informes CSRD bajo ESRS E5.</div>
+</body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`CicloBase_ESG_${currentProfile.company_name.replace(/\s+/g,'_')}_${year}.html`;
+  a.click();URL.revokeObjectURL(url);
+  if(btn){btn.disabled=false;btn.textContent='📥 Descargar resumen ESG';}
+}
+
+$('btnLogout').onclick = async () => {
+  await sb.auth.signOut();
+  window.location.href = 'ciclobase-auth.html';
+};
+
+// ─── START ───────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

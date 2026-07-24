@@ -1,0 +1,40 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { transaction_id } = await req.json();
+    if (!transaction_id) return Response.json({ error: "transaction_id requerido" }, { status: 400 });
+    const { data: tx, error: txError } = await supabase
+      .from("transactions")
+      .select("*, listings(id,ler_code,category,subcategory,quantity,unit,municipality,province,description,profiles:profile_id(company_name,cif,nima,address,municipality,province,contact_person,phone)),buyer:buyer_id(company_name,cif,nima,address,municipality,province,contact_person,phone)")
+      .eq("id", transaction_id)
+      .single();
+    if (txError || !tx) return Response.json({ error: "Transaccion no encontrada" }, { status: 404 });
+    await supabase.from("transactions").update({ status: "confirmed", confirmed_at: new Date().toISOString() }).eq("id", transaction_id);
+    const now = new Date();
+    const ref = "NP-" + now.getFullYear() + "-" + tx.id.slice(0,8).toUpperCase();
+    const transferDate = tx.transfer_date ?? now.toISOString().split("T")[0];
+    const g = tx.listings.profiles;
+    const b = tx.buyer;
+    const l = tx.listings;
+    const esc = (s) => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?><E3L version="3.3"><NotificacionPrevia><Referencia>${ref}</Referencia><FechaEmision>${now.toISOString().split("T")[0]}</FechaEmision><FechaTraslado>${transferDate}</FechaTraslado><Productor><RazonSocial>${esc(g.company_name)}</RazonSocial><CIF>${esc(g.cif)}</CIF><NIMA>${esc(g.nima)}</NIMA><Municipio>${esc(g.municipality)}</Municipio></Productor><Residuo><CodigoLER>${esc(l.ler_code)}</CodigoLER><Descripcion>${esc(l.description||l.subcategory)}</Descripcion><Cantidad>${tx.final_quantity_tons||l.quantity}</Cantidad><Unidad>${l.unit||"t"}</Unidad></Residuo><GestorDestino><RazonSocial>${esc(b.company_name)}</RazonSocial><CIF>${esc(b.cif)}</CIF><NIMA>${esc(b.nima)}</NIMA></GestorDestino><Transportista><Nombre>${esc(tx.transporter_name)}</Nombre><Matricula>${esc(tx.transporter_plate)}</Matricula></Transportista></NotificacionPrevia></E3L>`;
+    const { data: esirDoc, error: esirError } = await supabase.from("esir_documents").insert({ transaction_id, doc_type: "notificacion_previa", ler_code: l.ler_code, e3l_payload: xml, status: "draft" }).select().single();
+    if (esirError) return Response.json({ error: esirError.message }, { status: 500 });
+    await supabase.from("esir_events").insert({ esir_doc_id: esirDoc.id, event_type: "drafted", payload: { generated_at: now.toISOString() } });
+    return Response.json({ ok: true, esir_document_id: esirDoc.id, ler_code: l.ler_code }, { headers: corsHeaders });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
+});
