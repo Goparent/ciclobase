@@ -735,6 +735,19 @@ async function renderDashboard(profile) {
 function renderPerfil() {
   if(!currentProfile) return;
   const p = currentProfile;
+
+  // Inject edit button into card header
+  const hdr = document.querySelector('#pagePerfil .card-header');
+  if(hdr && !hdr.querySelector('#btnEditPerfil')) {
+    const btn = document.createElement('button');
+    btn.id = 'btnEditPerfil';
+    btn.className = 'btn-secondary';
+    btn.style.cssText = 'font-size:13px;padding:7px 14px';
+    btn.innerHTML = '✏️ Editar';
+    btn.onclick = renderPerfilEdit;
+    hdr.appendChild(btn);
+  }
+
   $('perfilContent').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
       ${[
@@ -743,7 +756,8 @@ function renderPerfil() {
         ['NIMA', p.nima || '—'],
         ['Rol', ROLE_LABELS[p.role] || p.role],
         ['Sector', SECTOR_LABELS[p.sector] || p.sector],
-        ['Empleados', p.employees],
+        ['Empleados', p.employees || '—'],
+        ['Dirección', p.address || '—'],
         ['Municipio', p.municipality],
         ['Provincia', p.province],
         ['Contacto', p.contact_person],
@@ -756,6 +770,136 @@ function renderPerfil() {
           <div style="font-size:14px;color:var(--ink)">${escHTML(value)}</div>
         </div>`).join('')}
     </div>`;
+}
+
+function renderPerfilEdit() {
+  if(!currentProfile) return;
+  const p = currentProfile;
+
+  // Swap button to Cancel
+  const hdr = document.querySelector('#pagePerfil .card-header');
+  const btn = $('btnEditPerfil');
+  if(btn) { btn.innerHTML = '✕ Cancelar'; btn.onclick = renderPerfil; }
+
+  const fieldStyle = 'width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);font-family:"DM Sans",sans-serif;font-size:13.5px;color:var(--ink);background:var(--white);outline:none;transition:border-color .18s';
+  const labelStyle = 'display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:5px';
+
+  const sel = (name, val, opts) =>
+    `<select name="${name}" style="${fieldStyle}">
+      ${opts.map(([v,l])=>`<option value="${v}"${val===v?' selected':''}>${l}</option>`).join('')}
+    </select>`;
+
+  $('perfilContent').innerHTML = `
+    <form id="formPerfil" onsubmit="savePerfilEdit(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 20px">
+        <div>
+          <label style="${labelStyle}">Razón social</label>
+          <input name="company_name" value="${escHTML(p.company_name)}" required style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">CIF</label>
+          <input name="cif" value="${escHTML(p.cif)}" required style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">NIMA</label>
+          <input name="nima" value="${escHTML(p.nima||'')}" placeholder="—" style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">Rol</label>
+          ${sel('role', p.role, [['generador','Generador'],['comprador','Comprador'],['ambos','Generador & Comprador']])}
+        </div>
+        <div>
+          <label style="${labelStyle}">Sector</label>
+          ${sel('sector', p.sector, [
+            ['metalmecanica','Metalmecánica'],['quimica','Química / Farmacéutica'],
+            ['construccion','Construcción'],['automocion','Automoción'],
+            ['alimentaria','Agroalimentaria'],['plasticos','Plásticos / Envases'],
+            ['logistica','Logística'],['electronica','Electrónica / RAEE'],
+            ['textil','Textil'],['otro','Otro']
+          ])}
+        </div>
+        <div>
+          <label style="${labelStyle}">Empleados</label>
+          ${sel('employees', p.employees, [['1-10','1–10'],['11-50','11–50'],['51-200','51–200'],['201+','201+']])}
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="${labelStyle}">Dirección</label>
+          <input name="address" value="${escHTML(p.address||'')}" placeholder="Calle, número..." style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">Municipio</label>
+          <input name="municipality" value="${escHTML(p.municipality||'')}" style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">Provincia</label>
+          <input name="province" value="${escHTML(p.province||'')}" style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">Persona de contacto</label>
+          <input name="contact_person" value="${escHTML(p.contact_person||'')}" style="${fieldStyle}">
+        </div>
+        <div>
+          <label style="${labelStyle}">Teléfono</label>
+          <input name="phone" value="${escHTML(p.phone||'')}" style="${fieldStyle}">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="${labelStyle}">Web</label>
+          <input name="website" value="${escHTML(p.website||'')}" placeholder="https://..." style="${fieldStyle}">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)">
+        <button type="button" class="btn-secondary" onclick="renderPerfil()">Cancelar</button>
+        <button type="submit" class="btn-primary" id="btnSavePerfil">Guardar cambios</button>
+      </div>
+    </form>`;
+
+  // Focus effect on inputs
+  $('perfilContent').querySelectorAll('input,select').forEach(el => {
+    el.addEventListener('focus', () => el.style.borderColor = 'var(--green-mid)');
+    el.addEventListener('blur',  () => el.style.borderColor = 'var(--border)');
+  });
+}
+
+async function savePerfilEdit(e) {
+  e.preventDefault();
+  const form = $('formPerfil');
+  const btn  = $('btnSavePerfil');
+  const fd   = new FormData(form);
+
+  const updates = {
+    company_name:   fd.get('company_name').trim(),
+    cif:            fd.get('cif').trim(),
+    nima:           fd.get('nima').trim() || null,
+    role:           fd.get('role'),
+    sector:         fd.get('sector'),
+    employees:      fd.get('employees'),
+    address:        fd.get('address').trim() || null,
+    municipality:   fd.get('municipality').trim(),
+    province:       fd.get('province').trim(),
+    contact_person: fd.get('contact_person').trim(),
+    phone:          fd.get('phone').trim(),
+    website:        fd.get('website').trim() || null,
+    updated_at:     new Date().toISOString(),
+  };
+
+  btn.disabled = true; btn.textContent = 'Guardando...';
+
+  const { error } = await sb.from('profiles')
+    .update(updates)
+    .eq('id', currentProfile.id);
+
+  if(error) {
+    toast('Error al guardar: ' + error.message);
+    btn.disabled = false; btn.textContent = 'Guardar cambios';
+    return;
+  }
+
+  Object.assign(currentProfile, updates);
+  $('sidebarCompany').textContent = currentProfile.company_name;
+  $('sidebarRole').textContent = ROLE_LABELS[currentProfile.role] || currentProfile.role;
+
+  toast('Perfil actualizado', 'ok');
+  renderPerfil();
 }
 
 // ─── PERFIL MOCK (modo local) ─────────────────────────────────────
