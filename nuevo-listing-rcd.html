@@ -18,26 +18,39 @@
 body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; }
 
 /* ── LAYOUT ── */
-.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+.app { display:grid; grid-template-columns:264px 1fr; min-height:100vh; }
 
 /* ── SIDEBAR (igual que dashboard) ── */
-.sidebar { background:var(--green-deep); display:flex; flex-direction:column; padding:0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.sidebar {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(20,183,122,0.22), transparent 24%),
+    linear-gradient(180deg, #073122 0%, #06271d 100%);
+  display:flex; flex-direction:column; padding:0; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
 .sidebar::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 120% 50% at 0% 80%,rgba(26,122,74,.3) 0%,transparent 70%); pointer-events:none; }
 .sidebar>* { position:relative; z-index:1; }
-.sidebar-brand { display:flex; align-items:center; gap:10px; padding:28px 24px 24px; border-bottom:1px solid rgba(197,223,208,.1); }
-.brand-mark { width:34px; height:34px; background:var(--green-mid); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sidebar-brand { display:flex; align-items:center; gap:12px; padding:28px 24px 18px; border-bottom:1px solid rgba(197,223,208,.08); }
+.brand-mark { width:42px; height:42px; background:linear-gradient(135deg,#15af74,#0f5a42); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: inset 0 1px 0 rgba(255,255,255,.15); }
+.brand-copy { display:flex; flex-direction:column; gap:4px; min-width:0; }
 .brand-name { font-family:'DM Serif Display',serif; font-size:18px; color:var(--white); letter-spacing:-.02em; }
-.sidebar-user { padding:20px 24px 16px; border-bottom:1px solid rgba(197,223,208,.1); }
+.brand-sub { font-size:10px; text-transform:uppercase; letter-spacing:.24em; color:rgba(197,223,208,.55); white-space:nowrap; }
+.sidebar-user { padding:18px 24px 14px; border-bottom:1px solid rgba(197,223,208,.08); }
 .user-company { font-size:13px; font-weight:600; color:var(--white); margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.user-role { font-size:11px; color:rgba(197,223,208,.55); }
-.nav { padding:16px 0; flex:1; }
+.user-role { font-size:11px; color:rgba(197,223,208,.55); margin-bottom:10px; }
+.user-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); font-size:11px; color:rgba(255,255,255,.78); }
+.user-badge-dot { width:7px; height:7px; border-radius:50%; background:#14b77a; box-shadow:0 0 0 4px rgba(20,183,122,.15); }
+.nav { padding:18px 0; flex:1; }
 .nav-section { padding:0 16px; margin-bottom:4px; }
 .nav-lbl { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(197,223,208,.35); padding:8px 8px 6px; }
-.nav-item { display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:8px; cursor:pointer; font-size:13.5px; font-weight:500; color:rgba(197,223,208,.65); transition:all .18s; text-decoration:none; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:'DM Sans',sans-serif; }
-.nav-item:hover { background:rgba(255,255,255,.07); color:var(--white); }
-.nav-item.active { background:rgba(255,255,255,.1); color:var(--white); }
+.nav-item { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:14px; cursor:pointer; font-size:13.5px; font-weight:500; color:rgba(197,223,208,.65); transition:all .18s; text-decoration:none; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:'DM Sans',sans-serif; }
+.nav-item:hover { background:rgba(255,255,255,.07); color:var(--white); transform: translateX(2px); }
+.nav-item.active { background:linear-gradient(90deg, rgba(20,183,122,.24), rgba(20,183,122,.09)); color:var(--white); box-shadow: inset 4px 0 0 #14b77a; }
 .nav-item .ico { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
 .sidebar-footer { padding:16px 24px 24px; border-top:1px solid rgba(197,223,208,.1); }
+.sidebar-profile-card { display:flex; align-items:center; gap:14px; width:100%; margin-bottom:16px; text-decoration:none; }
+.sidebar-profile-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#2b8c67,#145340); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; border:2px solid rgba(255,255,255,.08); box-shadow: inset 0 0 0 3px rgba(255,255,255,.06); }
+.sidebar-profile-name { font-size:16px; font-weight:800; color:#fff; line-height:1.15; text-align:left; }
+.sidebar-profile-role { font-size:11px; color:rgba(197,223,208,.6); margin-top:4px; text-align:left; }
 .btn-logout { display:flex; align-items:center; gap:8px; font-size:12.5px; color:rgba(197,223,208,.4); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .18s; padding:0; }
 .btn-logout:hover { color:rgba(197,223,208,.8); }
 
@@ -223,11 +236,15 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
           <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
         </svg>
       </div>
-      <span class="brand-name">CicloBase</span>
+      <div class="brand-copy">
+        <span class="brand-name">CicloBase</span>
+        <span class="brand-sub">Mensajería circular</span>
+      </div>
     </div>
     <div class="sidebar-user">
       <div class="user-company" id="sidebarCompany">Cargando...</div>
       <div class="user-role" id="sidebarRole">—</div>
+      <div class="user-badge"><span class="user-badge-dot"></span><span>Sesión activa</span></div>
     </div>
     <nav class="nav">
       <div class="nav-section">
@@ -244,6 +261,13 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
       </div>
     </nav>
     <div class="sidebar-footer">
+      <a class="sidebar-profile-card" href="dashboard.html#perfil">
+        <div class="sidebar-profile-avatar" id="sidebarProfileAvatar">CB</div>
+        <div>
+          <div class="sidebar-profile-name" id="sidebarProfileName">CicloBase Admin</div>
+          <div class="sidebar-profile-role">Operador verificado</div>
+        </div>
+      </a>
       <button class="btn-logout" id="btnLogout">↩ Cerrar sesión</button>
     </div>
   </div>
@@ -427,6 +451,25 @@ function getLerForTipo(familia, tipo) {
   if(!familia||!tipo) return '';
   const t = (MATERIAL_TYPES_RCD[familia]?.tipos||[]).find(x=>x.tipo===tipo);
   return t?.ler||'';
+}
+
+function normalizeCategoryId(category) {
+  return category === 'petros' ? 'petreos' : category;
+}
+
+function getCategoryConfig(category) {
+  return MATERIAL_TYPES_RCD[category] || MATERIAL_TYPES_RCD[category === 'petreos' ? 'petros' : category];
+}
+
+function getLegacyCategoryId(category) {
+  const normalized = normalizeCategoryId(category);
+  return {
+    petreos: 'otros',
+    metales: 'metales',
+    madera: 'otros',
+    elementos: 'otros',
+    vidrio: 'otros',
+  }[normalized] || 'otros';
 }
 
 const FREQ_INFO = [
@@ -771,7 +814,7 @@ function bindStepEvents() {
     on('btnPublish',()=>{
       formData.hasWeighingSlip=chk('hasWeighingSlip');
       formData.hasCompositionAnalysis=chk('hasCompositionAnalysis');
-      if(formData.photos.length<2 && !IS_LOCAL){ $('photoErr').innerHTML='<div class="err-msg">Añade al menos 2 fotos del material</div>'; return; }
+      if(formData.photos.length<2){ $('photoErr').innerHTML='<div class="err-msg">Añade al menos 2 fotos del material</div>'; return; }
       publishListing();
     });
   }
@@ -884,23 +927,6 @@ async function publishListing() {
   btn.disabled=true;
   btn.innerHTML='<span class="spinner"></span>Publicando...';
 
-  // Modo local: simular publicación sin Supabase
-  if(IS_LOCAL) {
-    const mockListing = {
-      id: 'local-' + Date.now(),
-      category: formData.familia || 'rcd',
-      subcategory: formData.tipo || 'Material demo RCD',
-      ler_code: '17 01 01',
-      quantity: parseFloat(formData.quantity)||0,
-      unit: formData.unit || 't',
-      frequency: formData.frequency || 'mensual',
-      min_price: formData.minPrice || null,
-      price_unit: formData.priceUnit || 'EUR/t',
-    };
-    showSuccess(mockListing);
-    return;
-  }
-
   // Subir fotos a Supabase Storage
   const photoUrls=[];
   for(let i=0;i<formData.photos.length;i++){
@@ -915,9 +941,10 @@ async function publishListing() {
 
   // Insertar listing con esquema actualizado RCD
   const lerActual = getLerForTipo(formData.familia, formData.tipo);
-  const {data:listing,error:listingErr}=await sb.from('listings').insert({
+  const listingPayload = {
     profile_id:       profile.id,
-    category:         formData.familia,
+    generator_id:     profile.id,
+    category:         normalizeCategoryId(formData.familia),
     subcategory:      formData.tipo,
     ler_code:         lerActual,
     quantity:         parseFloat(formData.quantity),
@@ -934,7 +961,14 @@ async function publishListing() {
     docs_analisis:    formData.hasCompositionAnalysis,
     specs:            formData.specs,
     status:           'pending_review',
-  }).select().single();
+  };
+
+  let {data:listing,error:listingErr}=await sb.from('listings').insert(listingPayload).select().single();
+
+  if(listingErr && listingErr.message?.includes('listings_category_check')) {
+    listingPayload.category = getLegacyCategoryId(formData.familia);
+    ({data:listing,error:listingErr}=await sb.from('listings').insert(listingPayload).select().single());
+  }
 
   if(listingErr){ toast('Error al publicar: '+listingErr.message); btn.disabled=false; btn.innerHTML='Enviar para revisión →'; return; }
 
@@ -954,7 +988,7 @@ async function publishListing() {
 function showSuccess(listing) {
   $('formShell').style.display='none';
   $('successScreen').classList.add('show');
-  const fam=MATERIAL_TYPES_RCD[listing.category];
+  const fam=getCategoryConfig(listing.category);
   const freq=FREQ_INFO.find(f=>f.id===listing.frequency);
   $('successCard').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -985,20 +1019,7 @@ function resetForm() {
 }
 
 // ─── INIT ────────────────────────────────────────────────────────
-const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
-
 async function init() {
-  if(IS_LOCAL) {
-    profile = { id:'local-demo', company_name:'Metal Ibérica S.L.', role:'ambos', cif:'B12345678', nima:'0812345678', verified:true };
-    $('sidebarCompany').textContent = profile.company_name;
-    $('sidebarRole').textContent = 'Generador & Comprador';
-    $('pageLoader').style.display='none';
-    $('formShell').style.display='block';
-    renderStep();
-    $('btnLogout').onclick = () => { window.location.href='ciclobase-auth.html'; };
-    return;
-  }
-
   const {data:{session}}=await sb.auth.getSession();
   if(!session){ window.location.href='ciclobase-auth.html'; return; }
 
@@ -1011,6 +1032,8 @@ async function init() {
 
   $('sidebarCompany').textContent=p.company_name;
   $('sidebarRole').textContent=p.role==='generador'?'Generador':'Generador & Comprador';
+  $('sidebarProfileAvatar').textContent=(p.company_name||'CB').split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase();
+  $('sidebarProfileName').textContent=p.company_name;
 
   $('pageLoader').style.display='none';
   $('formShell').style.display='block';

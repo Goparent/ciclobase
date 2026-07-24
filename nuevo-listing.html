@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CicloBase · Publicar listing RCD</title>
+<title>CicloBase · Publicar material RCD</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -15,71 +15,85 @@
   --amber:#D4730A; --amber-pale:#FDF3E7; --r:10px; --r-lg:16px;
   --shadow:0 2px 12px rgba(13,61,43,0.08),0 1px 3px rgba(13,61,43,0.05);
 }
-body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; }
+body { font-family:'DM Sans',sans-serif; background:#f3f5f7; color:var(--ink); min-height:100vh; }
 
 /* ── LAYOUT ── */
-.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+.app { display:grid; grid-template-columns:264px 1fr; min-height:100vh; }
 
-/* ── SIDEBAR (igual que dashboard) ── */
-.sidebar { background:var(--green-deep); display:flex; flex-direction:column; padding:0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+/* ── SIDEBAR ── */
+.sidebar {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(20,183,122,0.22), transparent 24%),
+    linear-gradient(180deg, #073122 0%, #06271d 100%);
+  display:flex; flex-direction:column; padding:0; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
 .sidebar::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 120% 50% at 0% 80%,rgba(26,122,74,.3) 0%,transparent 70%); pointer-events:none; }
 .sidebar>* { position:relative; z-index:1; }
-.sidebar-brand { display:flex; align-items:center; gap:10px; padding:28px 24px 24px; border-bottom:1px solid rgba(197,223,208,.1); }
-.brand-mark { width:34px; height:34px; background:var(--green-mid); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sidebar-brand { display:flex; align-items:center; gap:12px; padding:28px 24px 18px; border-bottom:1px solid rgba(197,223,208,.08); }
+.brand-mark { width:42px; height:42px; background:linear-gradient(135deg,#15af74,#0f5a42); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow: inset 0 1px 0 rgba(255,255,255,.15); }
+.brand-copy { display:flex; flex-direction:column; gap:4px; min-width:0; }
 .brand-name { font-family:'DM Serif Display',serif; font-size:18px; color:var(--white); letter-spacing:-.02em; }
-.sidebar-user { padding:20px 24px 16px; border-bottom:1px solid rgba(197,223,208,.1); }
+.brand-sub { font-size:10px; text-transform:uppercase; letter-spacing:.24em; color:rgba(197,223,208,.55); white-space:nowrap; }
+.sidebar-user { padding:18px 24px 14px; border-bottom:1px solid rgba(197,223,208,.08); }
 .user-company { font-size:13px; font-weight:600; color:var(--white); margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.user-role { font-size:11px; color:rgba(197,223,208,.55); }
-.nav { padding:16px 0; flex:1; }
+.user-role { font-size:11px; color:rgba(197,223,208,.55); margin-bottom:10px; }
+.user-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); font-size:11px; color:rgba(255,255,255,.78); }
+.user-badge-dot { width:7px; height:7px; border-radius:50%; background:#14b77a; box-shadow:0 0 0 4px rgba(20,183,122,.15); }
+.nav { padding:18px 0; flex:1; }
 .nav-section { padding:0 16px; margin-bottom:4px; }
 .nav-lbl { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(197,223,208,.35); padding:8px 8px 6px; }
-.nav-item { display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:8px; cursor:pointer; font-size:13.5px; font-weight:500; color:rgba(197,223,208,.65); transition:all .18s; text-decoration:none; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:'DM Sans',sans-serif; }
-.nav-item:hover { background:rgba(255,255,255,.07); color:var(--white); }
-.nav-item.active { background:rgba(255,255,255,.1); color:var(--white); }
+.nav-item { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:14px; cursor:pointer; font-size:13.5px; font-weight:500; color:rgba(197,223,208,.65); transition:all .18s; text-decoration:none; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:'DM Sans',sans-serif; }
+.nav-item:hover { background:rgba(255,255,255,.07); color:var(--white); transform: translateX(2px); }
+.nav-item.active { background:linear-gradient(90deg, rgba(20,183,122,.24), rgba(20,183,122,.09)); color:var(--white); box-shadow: inset 4px 0 0 #14b77a; }
 .nav-item .ico { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
 .sidebar-footer { padding:16px 24px 24px; border-top:1px solid rgba(197,223,208,.1); }
+.sidebar-profile-card { display:flex; align-items:center; gap:14px; width:100%; margin-bottom:16px; text-decoration:none; }
+.sidebar-profile-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#2b8c67,#145340); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; border:2px solid rgba(255,255,255,.08); box-shadow: inset 0 0 0 3px rgba(255,255,255,.06); }
+.sidebar-profile-name { font-size:16px; font-weight:800; color:#fff; line-height:1.15; text-align:left; }
+.sidebar-profile-role { font-size:11px; color:rgba(197,223,208,.6); margin-top:4px; text-align:left; }
 .btn-logout { display:flex; align-items:center; gap:8px; font-size:12.5px; color:rgba(197,223,208,.4); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .18s; padding:0; }
 .btn-logout:hover { color:rgba(197,223,208,.8); }
 
 /* ── MAIN ── */
 .main { display:flex; flex-direction:column; min-height:100vh; }
-.topbar { background:var(--white); border-bottom:1px solid var(--border); padding:0 36px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+.topbar { background:var(--white); border-bottom:1px solid #e7e9ea; padding:0 32px; height:74px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
 .topbar-left { display:flex; align-items:center; gap:12px; }
-.back-btn { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:color .18s; padding:0; }
-.back-btn:hover { color:var(--ink); }
-.topbar-title { font-family:'DM Serif Display',serif; font-size:20px; letter-spacing:-.02em; color:var(--ink); }
+.back-btn { display:none; }
+.topbar-title { font-size:13px; font-weight:600; color:#37403a; }
+.topbar-action { display:flex; align-items:center; gap:8px; font-size:14px; color:#2f3731; background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600; }
 
 /* ── FORM LAYOUT ── */
-.form-shell { display:grid; grid-template-columns:1fr 380px; gap:28px; padding:36px; align-items:start; }
+.form-shell { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:30px; padding:46px 32px 48px; align-items:start; max-width:1280px; width:100%; margin:0 auto; }
 
 /* ── STEP PROGRESS ── */
-.step-progress { display:flex; align-items:center; gap:0; margin-bottom:32px; }
-.sp-dot { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex-shrink:0; transition:all .25s; }
+.step-progress { display:flex; align-items:center; gap:16px; margin-bottom:36px; }
+.step-item { display:flex; align-items:center; gap:14px; min-width:0; }
+.sp-dot { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; flex-shrink:0; transition:all .25s; }
 .sp-dot.done { background:var(--green-mid); color:#fff; }
-.sp-dot.active { background:var(--green-deep); color:#fff; box-shadow:0 0 0 4px rgba(26,122,74,.15); }
-.sp-dot.pending { background:var(--sand-dark); color:var(--muted); }
-.sp-line { flex:1; height:2px; background:var(--sand-dark); margin:0 4px; transition:background .25s; }
-.sp-line.done { background:var(--green-mid); }
-.sp-labels { display:flex; justify-content:space-between; margin-bottom:32px; }
-.sp-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); text-align:center; flex:1; }
-.sp-lbl.active { color:var(--green-deep); }
+.sp-dot.active { background:var(--green-deep); color:#fff; box-shadow:none; }
+.sp-dot.pending { background:#e9eef1; color:#8a9391; }
+.sp-step-label { font-size:14px; font-weight:600; color:#9aa19f; white-space:nowrap; }
+.sp-step-label.active, .sp-step-label.done { color:#103f2d; }
+.sp-line { flex:1; height:1px; min-width:58px; background:#d8dddd; transition:background .25s; }
+.sp-line.done { background:#8cbca7; }
+.sp-labels { display:none; }
 
 /* ── FORM CARD ── */
-.form-card { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow); overflow:hidden; }
-.form-card-header { padding:22px 28px 18px; border-bottom:1px solid var(--border); }
-.form-card-title { font-family:'DM Serif Display',serif; font-size:20px; letter-spacing:-.02em; color:var(--ink); margin-bottom:4px; }
-.form-card-sub { font-size:13px; color:var(--muted); font-weight:300; line-height:1.5; }
-.form-card-body { padding:24px 28px; }
+.form-card { background:transparent; border:none; border-radius:0; box-shadow:none; overflow:visible; }
+.form-card-header { padding:0 0 22px; border-bottom:none; }
+.form-card-title { font-size:36px; letter-spacing:-.05em; color:#1d2328; margin-bottom:12px; line-height:1.05; font-weight:800; }
+.form-card-sub { font-size:16px; color:#56615d; font-weight:400; line-height:1.7; max-width:740px; }
+.form-card-body { padding:0; }
 
 /* ── FIELDS ── */
 .field { margin-bottom:22px; }
 .field-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px; }
 .field-row .field { margin-bottom:0; }
-.field label { display:block; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); margin-bottom:7px; }
+.field label { display:block; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:#3f4843; margin-bottom:9px; }
 .req { color:var(--green-mid); margin-left:2px; }
 .opt { color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; margin-left:4px; }
 input[type=text],input[type=number],input[type=date],input[type=url],select,textarea {
-  width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:var(--r);
+  width:100%; padding:15px 16px; border:1.5px solid #dbe1df; border-radius:18px;
   font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); background:var(--white);
   transition:border-color .18s,box-shadow .18s; outline:none; appearance:none; -webkit-appearance:none;
 }
@@ -138,24 +152,28 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 .freq-card .freq-name { font-size:11.5px; font-weight:600; color:var(--ink); }
 
 /* ── CATEGORY SELECTOR ── */
-.cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; }
-.cat-card { border:1.5px solid var(--border); border-radius:var(--r); padding:12px; cursor:pointer; transition:all .18s; background:var(--white); user-select:none; display:flex; align-items:center; gap:10px; }
-.cat-card:hover { border-color:var(--green-soft); background:var(--green-pale); }
-.cat-card.sel { border-color:var(--green-mid); background:var(--green-pale); box-shadow:0 0 0 3px rgba(26,122,74,.1); }
-.cat-card .cat-icon { font-size:20px; flex-shrink:0; }
-.cat-card .cat-name { font-size:13px; font-weight:600; color:var(--ink); }
+.cat-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:8px 0 24px; }
+.cat-card { position:relative; border:1.5px solid #e2e7e5; border-radius:22px; padding:22px 24px; cursor:pointer; transition:all .18s; background:var(--white); user-select:none; display:flex; flex-direction:column; align-items:flex-start; gap:14px; min-height:194px; box-shadow: 0 8px 18px rgba(13,61,43,0.04); }
+.cat-card:hover { border-color:#c3ddd0; transform:translateY(-2px); }
+.cat-card.sel { border-color:#0d5a3e; box-shadow: inset 0 0 0 1px #0d5a3e; }
+.cat-card.sel::after { content:'✓'; position:absolute; top:14px; right:14px; width:22px; height:22px; border-radius:50%; background:#0d5a3e; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+.cat-card .cat-icon { width:48px; height:48px; border-radius:16px; background:#eef3f1; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.cat-copy { display:flex; flex-direction:column; gap:10px; }
+.cat-card .cat-name { font-size:17px; font-weight:800; color:#1c2328; letter-spacing:-.03em; }
+.cat-desc { font-size:13px; color:#5b6460; line-height:1.55; }
 
 /* ── PREVIEW PANEL ── */
 .preview-panel { position:sticky; top:88px; }
-.preview-card { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow); overflow:hidden; }
-.preview-header { padding:16px 20px; border-bottom:1px solid var(--border); }
-.preview-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
-.preview-photo { width:100%; aspect-ratio:4/3; background:var(--sand-dark); display:flex; align-items:center; justify-content:center; font-size:36px; color:var(--muted); overflow:hidden; }
+.preview-card { background:var(--white); border:1px solid #e1e6e3; border-radius:24px; box-shadow:0 10px 24px rgba(13,61,43,0.04); overflow:hidden; }
+.preview-header { padding:18px 18px 16px; border-bottom:none; display:flex; align-items:center; justify-content:space-between; }
+.preview-title { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; color:#4d5854; }
+.preview-status { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; background:#eef0ef; color:#353d38; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.preview-photo { width:calc(100% - 18px); margin:0 auto; aspect-ratio:4/3; background:#9a9a9a; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:center; font-size:36px; color:#d9d9d9; overflow:hidden; }
 .preview-photo img { width:100%; height:100%; object-fit:cover; }
-.preview-body { padding:16px 20px; }
+.preview-body { padding:18px 20px 14px; }
 .preview-cat { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--green-mid); background:var(--green-pale); padding:3px 8px; border-radius:20px; margin-bottom:10px; }
-.preview-name { font-family:'DM Serif Display',serif; font-size:17px; letter-spacing:-.02em; color:var(--ink); margin-bottom:6px; line-height:1.25; }
-.preview-meta { font-size:12.5px; color:var(--muted); font-weight:300; margin-bottom:12px; line-height:1.55; }
+.preview-name { font-size:16px; letter-spacing:-.03em; color:var(--ink); margin-bottom:8px; line-height:1.25; font-weight:800; }
+.preview-meta { font-size:12.5px; color:var(--muted); font-weight:400; margin-bottom:12px; line-height:1.55; }
 .preview-price { font-family:'DM Serif Display',serif; font-size:22px; color:var(--green-mid); letter-spacing:-.02em; }
 .preview-price span { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--muted); font-weight:400; margin-left:4px; }
 .preview-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--border); margin-top:12px; }
@@ -163,17 +181,21 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 .preview-row .val { font-size:12.5px; color:var(--ink); font-weight:600; }
 
 /* ── TIPS ── */
-.tips-card { background:var(--green-pale); border:1px solid var(--green-soft); border-radius:var(--r-lg); padding:18px 20px; margin-top:16px; }
-.tips-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--green-deep); margin-bottom:12px; }
-.tip-item { display:flex; gap:8px; align-items:flex-start; margin-bottom:8px; font-size:12.5px; color:var(--ink-soft); line-height:1.45; }
+.tips-card { background:linear-gradient(180deg,#0f5e42 0%, #0d563d 100%); border:none; border-radius:24px; padding:22px 22px; margin-bottom:18px; color:#fff; }
+.tips-title { font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.16em; color:#fff; margin-bottom:16px; line-height:1.45; }
+.tip-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; font-size:13px; color:rgba(223,243,234,.88); line-height:1.7; }
 .tip-item:last-child { margin-bottom:0; }
-.tip-ico { flex-shrink:0; font-size:14px; margin-top:1px; }
+.tip-ico { flex-shrink:0; font-size:14px; margin-top:1px; opacity:.8; }
+.support-card { background:rgba(255,255,255,0.72); border:1px solid #e1e6e3; border-radius:24px; padding:20px 22px; }
+.support-title { font-size:13px; font-weight:800; color:#1f272c; margin-bottom:8px; }
+.support-text { font-size:13px; line-height:1.7; color:#5a6460; margin-bottom:12px; }
+.support-link { color:#0d5a3e; font-size:13px; font-weight:800; text-decoration:none; }
 
 /* ── BUTTONS ── */
-.btn-primary { display:flex; align-items:center; justify-content:center; gap:7px; padding:13px 20px; background:var(--green-deep); color:white; border:none; border-radius:var(--r); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background .18s; width:100%; }
+.btn-primary { display:flex; align-items:center; justify-content:center; gap:7px; padding:16px 24px; background:var(--green-deep); color:white; border:none; border-radius:18px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:background .18s; width:100%; }
 .btn-primary:hover { background:#0a2e20; }
 .btn-primary:disabled { opacity:.55; cursor:not-allowed; }
-.btn-secondary { display:flex; align-items:center; justify-content:center; gap:7px; padding:12px 20px; background:transparent; color:var(--ink-soft); border:1.5px solid var(--border); border-radius:var(--r); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; cursor:pointer; transition:all .18s; width:100%; margin-top:10px; }
+.btn-secondary { display:flex; align-items:center; justify-content:center; gap:7px; padding:14px 20px; background:transparent; color:var(--ink-soft); border:1.5px solid var(--border); border-radius:18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all .18s; width:100%; margin-top:10px; }
 .btn-secondary:hover { border-color:var(--ink-soft); }
 .btn-row { display:flex; gap:10px; margin-top:28px; }
 .btn-row .btn-primary { flex:2; }
@@ -204,8 +226,12 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 .page-loader { display:flex; align-items:center; justify-content:center; min-height:300px; }
 .page-spinner { width:28px; height:28px; border:2.5px solid var(--border); border-top-color:var(--green-mid); border-radius:50%; animation:spin .7s linear infinite; }
 
-@media (max-width:900px) { .form-shell { grid-template-columns:1fr; } .preview-panel { display:none; } }
-@media (max-width:768px) { .app { grid-template-columns:1fr; } .sidebar { display:none; } .form-shell { padding:20px; } }
+.page-footer { margin-top:auto; padding:18px 32px; border-top:1px solid #e2e6e7; background:#f6f6f6; display:flex; align-items:center; justify-content:space-between; gap:16px; font-size:12px; color:#4d5753; }
+.page-footer-links { display:flex; align-items:center; gap:28px; }
+.page-footer-links a { color:#4d5753; text-decoration:none; }
+
+@media (max-width:1100px) { .cat-grid { grid-template-columns:1fr 1fr; } .form-shell { grid-template-columns:1fr; } .preview-panel { position:static; } }
+@media (max-width:768px) { .app { grid-template-columns:1fr; } .sidebar { display:none; } .topbar { padding:0 20px; } .form-shell { padding:24px 20px 36px; } .cat-grid { grid-template-columns:1fr; } .page-footer { padding:16px 20px; flex-direction:column; align-items:flex-start; } }
 </style>
 </head>
 <body>
@@ -213,7 +239,6 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 <div class="toast" id="toast"></div>
 
 <div class="app">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-mark">
@@ -223,31 +248,38 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
           <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
         </svg>
       </div>
-      <span class="brand-name">CicloBase</span>
+      <div class="brand-copy">
+        <span class="brand-name">CicloBase</span>
+        <span class="brand-sub">Mensajería circular</span>
+      </div>
     </div>
     <div class="sidebar-user">
       <div class="user-company" id="sidebarCompany">Cargando...</div>
       <div class="user-role" id="sidebarRole">—</div>
+      <div class="user-badge"><span class="user-badge-dot"></span><span>Sesión activa</span></div>
     </div>
     <nav class="nav">
       <div class="nav-section">
         <div class="nav-lbl">Principal</div>
-        <button class="nav-item " onclick="window.location.href='dashboard.html'"><span class="ico">📊</span> Dashboard</button>
-        <button class="nav-item active" onclick="window.location.href='nuevo-listing.html'"><span class="ico">📦</span> Mis listings</button>
-        <button class="nav-item " onclick="window.location.href='buscar.html'"><span class="ico">🔍</span> Buscar material</button>
-        <button class="nav-item " onclick="window.location.href='mensajeria_1.html'"><span class="ico">💬</span> Mensajes</button>
+        <button class="nav-item" onclick="window.location.href='dashboard.html'"><span class="ico">📊</span> Dashboard</button>
+        <button class="nav-item active" onclick="window.location.href='nuevo-listing.html'"><span class="ico">📦</span> Mis materiales</button>
+        <button class="nav-item" onclick="window.location.href='buscar.html'"><span class="ico">🔍</span> Buscar material</button>
+        <button class="nav-item" onclick="window.location.href='mensajeria_1.html'"><span class="ico">💬</span> Mensajes</button>
       </div>
       <div class="nav-section">
         <div class="nav-lbl">Compliance</div>
         <button class="nav-item" onclick="window.location.href='dashboard.html#esir'"><span class="ico">📜</span> Módulo eSIR</button>
         <button class="nav-item" onclick="window.location.href='dashboard.html#impacto'"><span class="ico">🌱</span> Impacto ESG</button>
       </div>
-      <div class="nav-section">
-        <div class="nav-lbl">Cuenta</div>
-        <button class="nav-item" onclick="window.location.href='dashboard.html#perfil'"><span class="ico">🏭</span> Perfil empresa</button>
-      </div>
     </nav>
     <div class="sidebar-footer">
+      <a class="sidebar-profile-card" href="dashboard.html#perfil">
+        <div class="sidebar-profile-avatar" id="sidebarProfileAvatar">CB</div>
+        <div>
+          <div class="sidebar-profile-name" id="sidebarProfileName">CicloBase Admin</div>
+          <div class="sidebar-profile-role">Operador verificado</div>
+        </div>
+      </a>
       <button class="btn-logout" id="btnLogout">↩ Cerrar sesión</button>
     </div>
   </div>
@@ -256,10 +288,12 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <button class="back-btn" onclick="window.location.href='dashboard.html'">← Volver</button>
-        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
-        <div class="topbar-title">Publicar listing RCD</div>
+        <div class="brand-copy">
+          <span class="brand-name">CicloBase</span>
+          <span class="brand-sub">Publicar Listing</span>
+        </div>
       </div>
+      <button class="topbar-action" onclick="window.location.href='dashboard.html'">✕ Guardar y salir</button>
     </div>
 
     <!-- LOADER -->
@@ -280,8 +314,17 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
 
         <!-- RIGHT: PREVIEW -->
         <div class="preview-panel">
+          <div class="tips-card">
+            <div class="tips-title">💡 Consejos para más ofertas</div>
+            <div class="tip-item"><span class="tip-ico">01.</span><span>Indica si el material está paletizado o a granel para facilitar la logística.</span></div>
+            <div class="tip-item"><span class="tip-ico">02.</span><span>La proximidad es clave: asegúrate de geolocalizar la obra correctamente.</span></div>
+            <div class="tip-item"><span class="tip-ico">03.</span><span>Especifica el volumen en m³ o toneladas para dar precisión técnica.</span></div>
+          </div>
           <div class="preview-card">
-            <div class="preview-header"><div class="preview-title">Vista previa del listing</div></div>
+            <div class="preview-header">
+              <div class="preview-title">Vista previa del material</div>
+              <div class="preview-status">Borrador</div>
+            </div>
             <div class="preview-photo" id="previewPhoto">📷</div>
             <div class="preview-body">
               <div class="preview-cat" id="previewCat" style="display:none"></div>
@@ -306,12 +349,10 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
               </div>
             </div>
           </div>
-          <div class="tips-card">
-            <div class="tips-title">💡 Consejos para más ofertas</div>
-            <div class="tip-item"><span class="tip-ico">📸</span><span>Mínimo 2 fotos claras del material. Los listings con fotos reciben 3x más contactos.</span></div>
-            <div class="tip-item"><span class="tip-ico">📋</span><span>El código LER se genera automáticamente — es obligatorio para el eSIR.</span></div>
-            <div class="tip-item"><span class="tip-ico">💰</span><span>Añadir precio mínimo filtra compradores serios y acelera el cierre.</span></div>
-            <div class="tip-item"><span class="tip-ico">🔄</span><span>Residuos de frecuencia continua generan relaciones comerciales estables.</span></div>
+          <div class="support-card">
+            <div class="support-title">🎧 ¿Necesitas ayuda técnica?</div>
+            <div class="support-text">Nuestros gestores ambientales pueden ayudarte a catalogar tus residuos y optimizar la ficha del material.</div>
+            <a class="support-link" href="mensajeria_1.html">Contactar con soporte</a>
           </div>
         </div>
 
@@ -322,14 +363,23 @@ select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.or
     <div class="success-screen" id="successScreen">
       <div class="success-ico">🎉</div>
       <h2>Listing enviado para revisión</h2>
-      <p>El equipo CicloBase revisará tu listing en las próximas horas. Una vez aprobado, será visible para compradores verificados en tu zona. El documento eSIR se generará automáticamente al confirmar la primera transacción.</p>
+      <p>El equipo CicloBase revisará tu material en las próximas horas. Una vez aprobado, será visible para compradores verificados en tu zona. El documento eSIR se generará automáticamente al confirmar la primera transacción.</p>
       <div class="success-listing-card" id="successCard"></div>
       <div style="display:flex;gap:12px;width:100%;max-width:400px">
         <button class="btn-secondary" style="flex:1;margin-top:0" onclick="window.location.href='dashboard.html'">← Dashboard</button>
-        <button class="btn-primary" style="flex:1" onclick="resetForm()">+ Otro listing</button>
+        <button class="btn-primary" style="flex:1" onclick="resetForm()">+ Otro material</button>
       </div>
     </div>
 
+  </div>
+</div>
+
+<div class="page-footer">
+  <div>© 2024 CicloBase Industrial. Todos los derechos reservados.</div>
+  <div class="page-footer-links">
+    <a href="dashboard.html#impacto">Normativa ESG</a>
+    <a href="dashboard.html">Términos de Servicio</a>
+    <a href="dashboard.html#perfil">Privacidad</a>
   </div>
 </div>
 
@@ -348,11 +398,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let profile = null;
 let currentStep = 1;
 const TOTAL_STEPS = 3;
-const STEP_LABELS = ['Material RCD', 'Detalles', 'Fotos & Docs'];
+const STEP_LABELS = ['Material', 'Detalles', 'Fotos & Docs'];
 
 let formData = {
-  listingType: '', familia: '', tipo: '', lerCode: '',
-  quantity: '', unit: 't', frequency: '',
+  familia: '', tipo: '', lerCode: '',
+  quantity: '', unit: 't', condition: '', frequency: '',
   description: '', minPrice: '', priceUnit: 'EUR/t',
   municipality: '', province: '',
   availableFrom: '', procedencia: '',
@@ -361,43 +411,70 @@ let formData = {
   photos: []
 };
 
-// ─── CATÁLOGOS ────────────────────────────────────────────────────
-const MATERIA_PRIMA_CATS = {
-  petros:  { icon:'🪨', name:'Pétreos y áridos',     color:'#639922', ler:'17 01 01' },
-  metales: { icon:'🔩', name:'Metales estructurales', color:'#185FA5', ler:'17 04 05' },
-  madera:  { icon:'🪵', name:'Madera de obra',        color:'#854F0B', ler:'17 02 01' },
-  vidrio:  { icon:'🪟', name:'Vidrio plano',           color:'#5F5E5A', ler:'17 02 02' },
-};
-
-const REUTILIZABLE_CATS = {
-  cemento:       { icon:'🏗️', name:'Cemento',                   color:'#7A7A72', ler:'17 01 01' },
-  ladrillo:      { icon:'🧱', name:'Ladrillo',                   color:'#C0503A', ler:'17 01 02' },
-  maderas:       { icon:'🪵', name:'Maderas',                    color:'#854F0B', ler:'17 02 01' },
-  pladour:       { icon:'◻️', name:'Pladur',                    color:'#9A9A92', ler:'17 06 05' },
-  azulejos:      { icon:'🟦', name:'Azulejos',                   color:'#2E6DA4', ler:'17 01 03' },
-  pintura:       { icon:'🎨', name:'Pintura',                    color:'#D4730A', ler:'08 01 12' },
-  ferreteria:    { icon:'🔧', name:'Ferretería',                 color:'#555550', ler:'17 04 05' },
-  instalaciones: { icon:'⚡', name:'Electricidad / Fontanería',  color:'#C9B800', ler:'17 04 11' },
-  herramientas:  { icon:'🪛', name:'Herramientas',               color:'#3D3D38', ler:'16 02 14' },
-  elementos:     { icon:'🚪', name:'Elementos',                  color:'#993556', ler:'17 09 04',
-    subtipos: [
-      { id:'sanitarios',   name:'Sanitarios',            ler:'17 09 04' },
-      { id:'cerramientos', name:'Cerramientos',           ler:'17 04 02' },
-      { id:'cocina',       name:'Cocina',                 ler:'17 09 04' },
-      { id:'climatizacion',name:'Climatización',          ler:'16 02 11' },
-      { id:'luminaria',    name:'Luminaria',              ler:'20 01 21' },
-      { id:'decorativos',  name:'Elementos decorativos',  ler:'17 09 04' },
+// ─── CATÁLOGO RCD con LER autogenerado ───────────────────────────
+const MATERIAL_TYPES_RCD = {
+  reutilizables: {
+    icon: '🏗️', name: 'Material reutilizable', color: '#1A7A4A',
+    tipos: [
+      { tipo: 'Cemento y morteros', ler: '17 01 01' },
+      { tipo: 'Ladrillos / tochana / cerámica', ler: '17 01 02' },
+      { tipo: 'Maderas y tableros', ler: '17 02 01' },
+      { tipo: 'Pladur / yeso laminado', ler: '17 08 02' },
+      { tipo: 'Azulejos y pavimentos', ler: '17 01 03' },
+      { tipo: 'Pintura y revestimientos', ler: '17 09 04' },
+      { tipo: 'Ferretería', ler: '17 04 05' },
+      { tipo: 'Electricidad / fontanería', ler: '17 09 04' },
+      { tipo: 'Herramientas / maquinaria', ler: '17 09 04' },
+    ]
+  },
+  elementos: {
+    icon: '🚪', name: 'Elementos reutilizables', color: '#993556',
+    tipos: [
+      { tipo: 'Sanitarios y baño', ler: '17 09 04' },
+      { tipo: 'Cerramientos: puertas, ventanas y persianas', ler: '17 04 02' },
+      { tipo: 'Cocina: mobiliario, mármoles y fregaderas', ler: '17 09 04' },
+      { tipo: 'Climatización: radiadores, calentadores y A/A', ler: '17 09 04' },
+      { tipo: 'Luminaria', ler: '17 09 04' },
+      { tipo: 'Elementos decorativos y remates', ler: '17 09 04' },
+    ]
+  },
+  aridos: {
+    icon: '🪨', name: 'Materia prima: áridos', color: '#639922',
+    tipos: [
+      { tipo: 'Hormigón reciclado (árido ZA25)', ler: '17 01 01' },
+      { tipo: 'Hormigón reciclado (árido ZA40)', ler: '17 01 01' },
+      { tipo: 'Árido cerámico triturado', ler: '17 01 03' },
+      { tipo: 'Tierra limpia de excavación', ler: '17 05 04' },
+    ]
+  },
+  metales: {
+    icon: '🔩', name: 'Metales estructurales', color: '#185FA5',
+    tipos: [
+      { tipo: 'Perfil HEA/HEB reutilizable', ler: '17 04 05' },
+      { tipo: 'Perfil IPE reutilizable',      ler: '17 04 05' },
+      { tipo: 'Ferralla y redondo',           ler: '17 04 05' },
+      { tipo: 'Chapa metálica',               ler: '17 04 05' },
+      { tipo: 'Acero inoxidable',             ler: '17 04 05' },
+    ]
+  },
+  madera: {
+    icon: '🪵', name: 'Materia prima: maderas', color: '#854F0B',
+    tipos: [
+      { tipo: 'Madera maciza', ler: '17 02 01' },
+      { tipo: 'Madera laminada', ler: '17 02 01' },
+      { tipo: 'Tableros / contrachapado', ler: '17 02 01' },
+      { tipo: 'Palets y embalaje de madera', ler: '17 02 01' },
+    ]
+  },
+  vidrio: {
+    icon: '🪟', name: 'Vidrio plano', color: '#5F5E5A',
+    tipos: [
+      { tipo: 'Vidrio monolítico plano',     ler: '17 02 02' },
+      { tipo: 'Doble acristalamiento (DVH)', ler: '17 02 02' },
+      { tipo: 'Vidrio laminado / templado',  ler: '17 02 02' },
     ]
   },
 };
-
-// lookup unificado familia → datos
-function getFamData(familia) {
-  return MATERIA_PRIMA_CATS[familia] || REUTILIZABLE_CATS[familia] || null;
-}
-
-// Backward-compat alias usado en renderStep3 / showSuccess
-const MATERIAL_TYPES_RCD = { ...MATERIA_PRIMA_CATS, ...REUTILIZABLE_CATS };
 
 const PROCEDENCIAS = [
   { id: 'demolicion',   name: 'Obra de demolición' },
@@ -407,26 +484,40 @@ const PROCEDENCIAS = [
 ];
 
 const UNITS = [
-  { id:'t',   name:'Toneladas (t)' },
-  { id:'m3',  name:'Metros cúbicos (m³)' },
-  { id:'m2',  name:'Metros cuadrados (m²)' },
-  { id:'ml',  name:'Metros lineales (ml)' },
-  { id:'kg',  name:'Kilos (kg)' },
-  { id:'ud',  name:'Unidades (ud.)' },
+  { id:'t',  name:'Toneladas (t)' },
+  { id:'kg', name:'Kilogramos (kg)' },
+  { id:'m3', name:'Metros cúbicos (m³)' },
+  { id:'m2', name:'Metros cuadrados (m²)' },
+  { id:'ml', name:'Metros lineales (ml)' },
+  { id:'ud', name:'Unidades (ud.)' },
 ];
 
-const PRICE_UNITS = ['EUR/t','EUR/m³','EUR/ud','EUR total'];
+const PRICE_UNITS = ['EUR/t','EUR/kg','EUR/m³','EUR/m²','EUR/ml','EUR/ud','EUR total'];
+const CONDITION_OPTIONS = ['Nuevo','Seminuevo','Usado buen estado','Usado deteriorado','Para revisar'];
 
 function getLerForTipo(familia, tipo) {
-  if(!familia) return '';
-  const fam = getFamData(familia);
-  if(!fam) return '';
-  // Elementos reutilizables con sub-tipo
-  if(fam.subtipos && tipo) {
-    const sub = fam.subtipos.find(s => s.id === tipo || s.name === tipo);
-    return sub?.ler || fam.ler || '';
-  }
-  return fam.ler || '';
+  if(!familia||!tipo) return '';
+  const t = (MATERIAL_TYPES_RCD[familia]?.tipos||[]).find(x=>x.tipo===tipo);
+  return t?.ler||'';
+}
+
+function normalizeCategoryId(category) {
+  return category === 'petros' ? 'petreos' : category;
+}
+
+function getCategoryConfig(category) {
+  return MATERIAL_TYPES_RCD[category] || MATERIAL_TYPES_RCD[category === 'petreos' ? 'aridos' : category];
+}
+
+function getLegacyCategoryId(category) {
+  const normalized = normalizeCategoryId(category);
+  return {
+    petreos: 'otros',
+    metales: 'metales',
+    madera: 'otros',
+    elementos: 'otros',
+    vidrio: 'otros',
+  }[normalized] || 'otros';
 }
 
 const FREQ_INFO = [
@@ -453,15 +544,18 @@ function toast(msg, type='error') {
 // ─── STEP INDICATOR ──────────────────────────────────────────────
 function renderIndicator() {
   const s = currentStep;
-  let dots='', labels='';
+  let dots='';
   for(let i=0;i<TOTAL_STEPS;i++) {
-    if(i>0) dots+=`<div class="sp-line${i<s-1?' done':''}"></div>`;
+    if(i>0) dots+=`<div class="sp-line${i<s?' done':''}"></div>`;
     const cls=i+1<s?'done':i+1===s?'active':'pending';
-    dots+=`<div class="sp-dot ${cls}">${i+1<s?'✓':i+1}</div>`;
-    labels+=`<span class="sp-lbl${i+1===s?' active':''}">${STEP_LABELS[i]}</span>`;
+    dots+=`
+      <div class="step-item">
+        <div class="sp-dot ${cls}">${i+1}</div>
+        <div class="sp-step-label ${cls}">${STEP_LABELS[i]}</div>
+      </div>`;
   }
   $('stepDots').innerHTML=dots;
-  $('stepLabels').innerHTML=labels;
+  $('stepLabels').innerHTML='';
 }
 
 // ─── RENDER STEP ─────────────────────────────────────────────────
@@ -474,25 +568,29 @@ function renderStep() {
   bindStepEvents();
 }
 
-// ─── STEP 1: TIPO DE MATERIAL ────────────────────────────────────
+// ─── STEP 1: MATERIAL RCD ────────────────────────────────────────
 function renderStep1() {
-  const lt = formData.listingType;
+  const cats = Object.entries(MATERIAL_TYPES_RCD).map(([id,c])=>`
+    <div class="cat-card${formData.familia===id?' sel':''}" data-cat="${id}">
+      <span class="cat-icon">${c.icon}</span>
+      <div class="cat-copy">
+        <span class="cat-name">${c.name}</span>
+        <span class="cat-desc">${
+          id==='reutilizables' ? 'Material de construcción listo para usar: obra, ferretería, instalaciones y herramientas.'
+          : id==='elementos' ? 'Sanitarios, cerramientos, cocina, climatización, luminaria y elementos decorativos.'
+          : id==='aridos' ? 'Áridos, hormigón, cerámica triturada y tierras limpias para valorización.'
+          : id==='metales' ? 'Acero corrugado, perfiles metálicos, aluminio y chatarras férricas.'
+          : id==='madera' ? 'Madera maciza, laminada, tableros, palets y embalajes.'
+          : 'Vidrio plano, acristalamientos y paneles de vidrio laminado.'
+        }</span>
+      </div>
+    </div>`).join('');
 
-  // Opciones materia prima
-  const mpOpts = Object.entries(MATERIA_PRIMA_CATS).map(([id,c])=>
-    `<option value="${id}"${formData.familia===id?' selected':''}>${c.icon} ${c.name}</option>`
-  ).join('');
-
-  // Opciones reutilizables
-  const reutOpts = Object.entries(REUTILIZABLE_CATS).map(([id,c])=>
-    `<option value="${id}"${formData.familia===id?' selected':''}>${c.icon} ${c.name}</option>`
-  ).join('');
-
-  // Sub-tipos de Elementos
-  const famData = getFamData(formData.familia);
-  const subtiposOpts = (famData?.subtipos||[]).map(s=>
-    `<option value="${s.id}"${formData.tipo===s.id?' selected':''}>${s.name}</option>`
-  ).join('');
+  const tiposOpts = formData.familia
+    ? MATERIAL_TYPES_RCD[formData.familia].tipos.map(t=>
+        `<option value="${t.tipo}"${formData.tipo===t.tipo?' selected':''}>${t.tipo}</option>`
+      ).join('')
+    : '';
 
   const lerActual = getLerForTipo(formData.familia, formData.tipo);
   const lerChip = lerActual
@@ -507,66 +605,35 @@ function renderStep1() {
     <div class="form-card">
       <div class="form-card-header">
         <div class="form-card-title">Tipo de material</div>
-        <div class="form-card-sub">El código LER se genera automáticamente. Es el identificador legal para el documento eSIR.</div>
+        <div class="form-card-sub">Primero diferencia si es un material listo para usar o materia prima/desecho. Después elige la categoría amplia que mejor lo describa.</div>
       </div>
       <div class="form-card-body">
-
         <div class="field">
-          <label>Categoría <span class="req">*</span></label>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="cat-card${lt==='materia_prima'?' sel':''}" data-lt="materia_prima" style="text-align:center;padding:18px 12px">
-              <span class="cat-icon">⛏️</span>
-              <span class="cat-name">Materia prima</span>
-            </div>
-            <div class="cat-card${lt==='reutilizable'?' sel':''}" data-lt="reutilizable" style="text-align:center;padding:18px 12px">
-              <span class="cat-icon">♻️</span>
-              <span class="cat-name">Material reutilizable</span>
-            </div>
-          </div>
+          <div class="cat-grid" id="catGrid">${cats}</div>
           <div id="catErr"></div>
         </div>
-
-        ${lt === 'materia_prima' ? `
+        ${formData.familia ? `
         <div class="field">
-          <label>Tipo de materia prima <span class="req">*</span></label>
-          <select id="familiaSel">
-            <option value="">— Selecciona —</option>
-            ${mpOpts}
+          <label>Tipo específico <span class="req">*</span></label>
+          <select id="tipoSel">
+            <option value="">— Selecciona el tipo —</option>
+            ${tiposOpts}
           </select>
           ${lerChip}
-        </div>
+        </div>` : `
+        <div style="background:var(--sand);border-radius:var(--r);padding:16px;text-align:center;color:var(--muted);font-size:13px;font-weight:300">
+          Selecciona una familia para ver los tipos disponibles
+        </div>`}
         <div class="field">
           <label>Procedencia <span class="req">*</span></label>
           <select id="procedenciaSel">
-            <option value="">— Selecciona la procedencia —</option>
+            <option value="">Seleccionar origen de la obra</option>
             ${procOpts}
           </select>
-        </div>` : ''}
-
-        ${lt === 'reutilizable' ? `
-        <div class="field">
-          <label>Tipo de material <span class="req">*</span></label>
-          <select id="familiaSel">
-            <option value="">— Selecciona —</option>
-            ${reutOpts}
-          </select>
-          ${famData && !famData.subtipos ? lerChip : ''}
         </div>
-        ${formData.familia === 'elementos' ? `
-        <div class="field">
-          <label>Subcategoría <span class="req">*</span></label>
-          <select id="subtipoSel">
-            <option value="">— Selecciona —</option>
-            ${subtiposOpts}
-          </select>
-          ${lerChip}
-        </div>` : ''}` : ''}
-
-        ${lt ? `
         <div class="btn-row" style="margin-top:28px">
-          <button class="btn-primary" id="btnStep1">Continuar → Detalles</button>
-        </div>` : ''}
-
+          <button class="btn-primary" id="btnStep1" style="max-width:186px">Continuar →</button>
+        </div>
       </div>
     </div>`;
 }
@@ -587,7 +654,7 @@ function renderStep2() {
   return `
     <div class="form-card">
       <div class="form-card-header">
-        <div class="form-card-title">Detalles del listing</div>
+        <div class="form-card-title">Detalles del material</div>
         <div class="form-card-sub">Cuanta más información, más rápido recibirás ofertas de compradores serios.</div>
       </div>
       <div class="form-card-body">
@@ -611,6 +678,14 @@ function renderStep2() {
           <label>Frecuencia de generación <span class="req">*</span></label>
           <div class="freq-grid">${freqCards}</div>
           <div id="freqErr"></div>
+        </div>
+
+        <div class="field">
+          <label>Estado del material <span class="req">*</span></label>
+          <select id="conditionSel">
+            <option value="">Seleccionar estado...</option>
+            ${CONDITION_OPTIONS.map(c=>`<option value="${c}"${formData.condition===c?' selected':''}>${c}</option>`).join('')}
+          </select>
         </div>
 
         <div class="field">
@@ -671,7 +746,7 @@ function renderStep3() {
     <div class="form-card">
       <div class="form-card-header">
         <div class="form-card-title">Fotos y documentación</div>
-        <div class="form-card-sub">Mínimo 2 fotos obligatorias. Los listings con 3+ fotos reciben el doble de contactos.</div>
+        <div class="form-card-sub">Mínimo 2 fotos obligatorias. Las fichas con 3+ fotos reciben el doble de contactos.</div>
       </div>
       <div class="form-card-body">
 
@@ -705,13 +780,14 @@ function renderStep3() {
 
         <!-- RESUMEN -->
         <div style="background:var(--green-pale);border:1px solid var(--green-soft);border-radius:var(--r);padding:16px 18px;margin-bottom:4px">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green-deep);margin-bottom:12px">Resumen del listing</div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green-deep);margin-bottom:12px">Resumen del material</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:var(--ink-soft)">
             <div>${fam?.icon||'📦'} <strong>${formData.tipo||'—'}</strong></div>
             <div>⚖️ <strong>${formData.quantity||'—'} ${formData.unit}</strong></div>
             <div>📍 <strong>${formData.municipality||'—'}, ${formData.province||'—'}</strong></div>
             <div>🔄 <strong>${freq?.name||'—'}</strong></div>
-            <div>💰 <strong>${formData.minPrice ? '€'+formData.minPrice+'/t' : 'A convenir'}</strong></div>
+            <div>🏷️ <strong>${formData.condition||'—'}</strong></div>
+            <div>💰 <strong>${formData.minPrice ? '€'+formData.minPrice+' '+formData.priceUnit : 'A convenir'}</strong></div>
             <div>📋 <strong>LER ${formData.lerCode||'—'}</strong></div>
           </div>
         </div>
@@ -729,37 +805,26 @@ function bindStepEvents() {
   const on = (id,fn) => { const el=$(id); if(el) el.onclick=fn; };
 
   if(currentStep===1) {
-    // Selección de categoría principal
-    document.querySelectorAll('[data-lt]').forEach(c=>{
+    document.querySelectorAll('.cat-card').forEach(c=>{
       c.onclick=()=>{
-        formData.listingType=c.dataset.lt;
-        formData.familia=''; formData.tipo=''; formData.lerCode=''; formData.procedencia='';
+        formData.familia=c.dataset.cat;
+        formData.tipo=''; formData.lerCode='';
         updatePreview(); renderStep();
       };
     });
-    // Dropdown familia
-    const famSel=$('familiaSel');
-    if(famSel) famSel.onchange=()=>{
-      formData.familia=famSel.value;
-      formData.tipo=''; formData.lerCode='';
+    const tipoSel=$('tipoSel');
+    if(tipoSel) tipoSel.onchange=()=>{
+      formData.tipo=tipoSel.value;
+      formData.lerCode=getLerForTipo(formData.familia,formData.tipo);
       updatePreview(); renderStep();
     };
-    // Dropdown sub-tipo (solo Elementos)
-    const subSel=$('subtipoSel');
-    if(subSel) subSel.onchange=()=>{
-      formData.tipo=subSel.value;
-      formData.lerCode=getLerForTipo(formData.familia,formData.tipo);
-      updatePreview();
-    };
-    // Procedencia (solo materia prima)
     const procSel=$('procedenciaSel');
     if(procSel) procSel.onchange=()=>{ formData.procedencia=procSel.value; };
     on('btnStep1',()=>{
-      if(!formData.listingType){ $('catErr').innerHTML='<div class="err-msg">Selecciona una categoría</div>'; return; }
-      if(!formData.familia){ toast('Selecciona el tipo de material'); return; }
-      if(formData.familia==='elementos' && !formData.tipo){ toast('Selecciona la subcategoría de Elementos'); return; }
-      if(formData.listingType==='materia_prima' && !formData.procedencia){ toast('Selecciona la procedencia del material'); return; }
-      currentStep=2; updatePreview(); renderStep();
+      if(!formData.familia){ $('catErr').innerHTML='<div class="err-msg">Selecciona una familia de material</div>'; return; }
+      if(!formData.tipo){ toast('Selecciona el tipo específico de material'); return; }
+      if(!formData.procedencia){ toast('Selecciona la procedencia del material'); return; }
+      currentStep=2; updatePreview(); renderStep(); window.scrollTo({top:0,behavior:'smooth'});
     });
   }
 
@@ -784,6 +849,8 @@ function bindStepEvents() {
     // Live preview
     const unitSel=$('unitSel');
     if(unitSel) unitSel.onchange=()=>{ formData.unit=unitSel.value; updatePreview(); };
+    const conditionSel=$('conditionSel');
+    if(conditionSel) conditionSel.onchange=()=>{ formData.condition=conditionSel.value; updatePreview(); };
     const priceSel=$('priceUnitSel');
     if(priceSel) priceSel.onchange=()=>{ formData.priceUnit=priceSel.value; updatePreview(); };
     ['quantity','minPrice','municipality'].forEach(id=>{
@@ -793,13 +860,14 @@ function bindStepEvents() {
 
     on('btnBack2', ()=>{ currentStep=1; renderStep(); });
     on('btnStep2', ()=>{
-      const q=val('quantity'), f=formData.frequency, d=val('description'), m=val('municipality'), p=val('province'), af=val('availableFrom');
+      const q=val('quantity'), f=formData.frequency, c=val('conditionSel'), d=val('description'), m=val('municipality'), p=val('province'), af=val('availableFrom');
       if(!q||parseFloat(q)<=0){ toast('Indica la cantidad disponible'); return; }
+      if(!c){ toast('Selecciona el estado del material'); return; }
       if(!f){ $('freqErr').innerHTML='<div class="err-msg">Selecciona la frecuencia</div>'; return; }
       if(!d.trim()){ toast('Añade una descripción del material'); return; }
       if(!m.trim()){ toast('Indica el municipio de recogida'); return; }
       if(!p){ toast('Selecciona la provincia'); return; }
-      Object.assign(formData,{quantity:q,description:d,municipality:m,province:p,minPrice:val('minPrice'),availableFrom:af});
+      Object.assign(formData,{quantity:q,condition:c,description:d,municipality:m,province:p,minPrice:val('minPrice'),availableFrom:af});
       currentStep=3; updatePreview(); renderStep();
     });
   }
@@ -818,7 +886,7 @@ function bindStepEvents() {
     on('btnPublish',()=>{
       formData.hasWeighingSlip=chk('hasWeighingSlip');
       formData.hasCompositionAnalysis=chk('hasCompositionAnalysis');
-      if(formData.photos.length<2 && !IS_LOCAL){ $('photoErr').innerHTML='<div class="err-msg">Añade al menos 2 fotos del material</div>'; return; }
+      if(formData.photos.length<2){ $('photoErr').innerHTML='<div class="err-msg">Añade al menos 2 fotos del material</div>'; return; }
       publishListing();
     });
   }
@@ -863,7 +931,7 @@ function updatePhotoPreviews() {
 
 // ─── LIVE PREVIEW ────────────────────────────────────────────────
 function updatePreview() {
-  const fam=getFamData(formData.familia);
+  const fam=MATERIAL_TYPES_RCD[formData.familia];
   const freq=FREQ_INFO.find(f=>f.id===formData.frequency);
   const lerActual=getLerForTipo(formData.familia,formData.tipo);
 
@@ -883,11 +951,8 @@ function updatePreview() {
   }
 
   // Name
-  const displayName = formData.tipo
-    ? (getFamData(formData.familia)?.subtipos?.find(s=>s.id===formData.tipo)?.name || formData.tipo)
-    : (fam?.name || '');
-  if(displayName){
-    $('previewName').textContent=displayName;
+  if(formData.tipo){
+    $('previewName').textContent=formData.tipo;
     $('previewName').style.color='var(--ink)';
     $('previewName').style.fontFamily="'DM Serif Display',serif";
     $('previewName').style.fontSize='17px';
@@ -907,7 +972,7 @@ function updatePreview() {
   // Price
   if(formData.minPrice){
     $('previewPrice').style.display='block';
-    $('previewPrice').innerHTML=`€${formData.minPrice}<span>/ ${UNITS.find(u=>u.id===formData.unit)?.name||formData.unit}</span>`;
+    $('previewPrice').innerHTML=`€${formData.minPrice}<span>/${formData.priceUnit.replace('EUR/','')}</span>`;
   } else if(formData.quantity){
     $('previewPrice').style.display='block';
     $('previewPrice').innerHTML=`<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted)">A convenir</span>`;
@@ -934,23 +999,6 @@ async function publishListing() {
   btn.disabled=true;
   btn.innerHTML='<span class="spinner"></span>Publicando...';
 
-  // Modo local: simular publicación sin Supabase
-  if(IS_LOCAL) {
-    const mockListing = {
-      id: 'local-' + Date.now(),
-      category: formData.familia || 'metalicos',
-      subcategory: formData.tipo || 'Material demo',
-      ler_code: '17 04 05',
-      quantity: parseFloat(formData.quantity)||0,
-      unit: formData.unit || 't',
-      frequency: formData.frequency || 'mensual',
-      min_price: formData.minPrice || null,
-      price_unit: formData.priceUnit || 'EUR/t',
-    };
-    showSuccess(mockListing);
-    return;
-  }
-
   // Subir fotos a Supabase Storage
   const photoUrls=[];
   for(let i=0;i<formData.photos.length;i++){
@@ -965,9 +1013,10 @@ async function publishListing() {
 
   // Insertar listing con esquema actualizado RCD
   const lerActual = getLerForTipo(formData.familia, formData.tipo);
-  const {data:listing,error:listingErr}=await sb.from('listings').insert({
+  const listingPayload = {
     profile_id:       profile.id,
-    category:         formData.familia,
+    generator_id:     profile.id,
+    category:         normalizeCategoryId(formData.familia),
     subcategory:      formData.tipo,
     ler_code:         lerActual,
     quantity:         parseFloat(formData.quantity),
@@ -982,9 +1031,16 @@ async function publishListing() {
     disponible_desde: formData.availableFrom||null,
     docs_albaran:     formData.hasWeighingSlip,
     docs_analisis:    formData.hasCompositionAnalysis,
-    specs:            formData.specs,
+    specs:            {...formData.specs, estado: formData.condition},
     status:           'pending_review',
-  }).select().single();
+  };
+
+  let {data:listing,error:listingErr}=await sb.from('listings').insert(listingPayload).select().single();
+
+  if(listingErr && listingErr.message?.includes('listings_category_check')) {
+    listingPayload.category = getLegacyCategoryId(formData.familia);
+    ({data:listing,error:listingErr}=await sb.from('listings').insert(listingPayload).select().single());
+  }
 
   if(listingErr){ toast('Error al publicar: '+listingErr.message); btn.disabled=false; btn.innerHTML='Enviar para revisión →'; return; }
 
@@ -1004,7 +1060,7 @@ async function publishListing() {
 function showSuccess(listing) {
   $('formShell').style.display='none';
   $('successScreen').classList.add('show');
-  const fam=MATERIAL_TYPES_RCD[listing.category];
+  const fam=getCategoryConfig(listing.category);
   const freq=FREQ_INFO.find(f=>f.id===listing.frequency);
   $('successCard').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -1027,29 +1083,15 @@ function showSuccess(listing) {
 
 // ─── RESET ───────────────────────────────────────────────────────
 function resetForm() {
-  formData={listingType:'',familia:'',tipo:'',lerCode:'',quantity:'',unit:'t',frequency:'',description:'',minPrice:'',priceUnit:'EUR/t',municipality:'',province:'',availableFrom:'',procedencia:'',specs:{},hasWeighingSlip:false,hasCompositionAnalysis:false,photos:[]};
+  formData={familia:'',tipo:'',lerCode:'',quantity:'',unit:'t',condition:'',frequency:'',description:'',minPrice:'',priceUnit:'EUR/t',municipality:'',province:'',availableFrom:'',procedencia:'',specs:{},hasWeighingSlip:false,hasCompositionAnalysis:false,photos:[]};
   currentStep=1;
   $('successScreen').classList.remove('show');
   $('formShell').style.display='block';
   renderStep(); updatePreview();
 }
 
-// ─── LOCAL DEV ───────────────────────────────────────────────────
-const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
-
 // ─── INIT ────────────────────────────────────────────────────────
 async function init() {
-  if(IS_LOCAL) {
-    profile = { id:'local-demo', company_name:'Metal Ibérica S.L.', role:'ambos', cif:'B12345678', nima:'0812345678', verified:true };
-    $('sidebarCompany').textContent = profile.company_name;
-    $('sidebarRole').textContent = 'Generador & Comprador';
-    $('pageLoader').style.display='none';
-    $('formShell').style.display='block';
-    renderStep();
-    $('btnLogout').onclick = () => { window.location.href='ciclobase-auth.html'; };
-    return;
-  }
-
   const {data:{session}}=await sb.auth.getSession();
   if(!session){ window.location.href='ciclobase-auth.html'; return; }
 
@@ -1058,16 +1100,23 @@ async function init() {
   profile=p;
 
   // Solo generadores
-  if(p.role==='comprador'){ toast('Solo los generadores pueden publicar listings'); setTimeout(()=>window.location.href='dashboard.html',2000); return; }
+  if(p.role==='comprador'){ toast('Solo los generadores pueden publicar materiales'); setTimeout(()=>window.location.href='dashboard.html',2000); return; }
 
-  $('sidebarCompany').textContent=p.company_name;
-  $('sidebarRole').textContent=p.role==='generador'?'Generador':'Generador & Comprador';
+  const sidebarCompany = $('sidebarCompany');
+  const sidebarRole = $('sidebarRole');
+  const sidebarAvatar = $('sidebarProfileAvatar');
+  const sidebarName = $('sidebarProfileName');
+  const logoutBtn = $('btnLogout');
+  if(sidebarCompany) sidebarCompany.textContent=p.company_name;
+  if(sidebarRole) sidebarRole.textContent=p.role==='generador'?'Generador':'Generador & Comprador';
+  if(sidebarAvatar) sidebarAvatar.textContent=(p.company_name||'CB').split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase();
+  if(sidebarName) sidebarName.textContent=p.company_name;
 
   $('pageLoader').style.display='none';
   $('formShell').style.display='block';
   renderStep();
 
-  $('btnLogout').onclick=async()=>{ await sb.auth.signOut(); window.location.href='ciclobase-auth.html'; };
+  if(logoutBtn) logoutBtn.onclick=async()=>{ await sb.auth.signOut(); window.location.href='ciclobase-auth.html'; };
 }
 
 init();

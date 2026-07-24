@@ -9,22 +9,33 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --green-deep: #0D3D2B; --green-mid: #1A7A4A; --green-soft: #C5DFD0; --green-pale: #EBF5EF;
-  --sand: #F5F0E8; --sand-dark: #E8E0D0; --ink: #1A1A18; --ink-soft: #3D3D38;
-  --muted: #7A7A72; --border: #D4CFC4; --white: #FAFAF7;
-  --amber: #D4730A; --amber-pale: #FDF3E7; --red: #C0392B; --red-pale: #FDECEA;
-  --r: 10px; --r-lg: 16px;
-  --shadow: 0 2px 12px rgba(13,61,43,0.08), 0 1px 3px rgba(13,61,43,0.05);
+  --green-deep: #083728; --green-mid: #0f5a42; --green-bright: #14b77a; --green-soft: #b9edd8; --green-pale: #edf8f2;
+  --sand: #f3efe6; --sand-dark: #e4dccb; --ink: #16231e; --ink-soft: #465751;
+  --muted: #7c8d86; --border: #d9e2dc; --white: #fbfcfa; --panel: #f7faf8; --slate: #33475f;
+  --amber: #d4730a; --amber-pale: #fff0e1; --red: #c0392b; --red-pale: #fdecea; --blue-pale: #eaf0ff;
+  --r: 14px; --r-lg: 24px; --r-xl: 30px;
+  --shadow: 0 20px 40px rgba(8,55,40,0.08), 0 6px 18px rgba(8,55,40,0.06);
 }
-body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(--ink); min-height: 100vh; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(20,183,122,0.12), transparent 22%),
+    linear-gradient(180deg, #f6f2ea 0%, #f2f6f3 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
 
 /* ── LAYOUT ── */
-.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.app { display: grid; grid-template-columns: 264px 1fr; min-height: 100vh; }
 
 /* ── SIDEBAR ── */
 .sidebar {
-  background: var(--green-deep); display: flex; flex-direction: column;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(20,183,122,0.22), transparent 24%),
+    linear-gradient(180deg, #073122 0%, #06271d 100%);
+  display: flex; flex-direction: column;
   position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  padding-bottom: 24px;
 }
 .sidebar::before {
   content: ''; position: absolute; inset: 0;
@@ -33,38 +44,67 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 }
 .sidebar > * { position: relative; z-index: 1; }
 .sidebar-brand {
-  display: flex; align-items: center; gap: 10px;
-  padding: 28px 24px 24px; border-bottom: 1px solid rgba(197,223,208,0.1);
+  display: flex; align-items: center; gap: 12px;
+  padding: 28px 24px 18px; border-bottom: 1px solid rgba(197,223,208,0.08);
 }
 .brand-mark {
-  width: 34px; height: 34px; background: var(--green-mid);
-  border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 42px; height: 42px; background: linear-gradient(135deg, #15af74, #0f5a42);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
 }
+.brand-copy { display:flex; flex-direction:column; gap:4px; min-width:0; }
 .brand-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--white); letter-spacing: -.02em; }
-.sidebar-user { padding: 20px 24px 16px; border-bottom: 1px solid rgba(197,223,208,0.1); }
+.brand-sub { font-size: 10px; text-transform: uppercase; letter-spacing: .24em; color: rgba(197,223,208,0.55); white-space: nowrap; }
+.sidebar-user { padding: 18px 24px 14px; border-bottom: 1px solid rgba(197,223,208,0.08); }
 .user-company { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-role { font-size: 11px; color: rgba(197,223,208,0.55); }
-.nav { padding: 16px 0; flex: 1; }
+.user-role { font-size: 11px; color: rgba(197,223,208,0.55); margin-bottom: 10px; }
+.user-badge {
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px;
+  border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.08);
+  font-size:11px; color:rgba(255,255,255,0.78);
+}
+.user-badge-dot { width:7px; height:7px; border-radius:50%; background:var(--green-bright); box-shadow:0 0 0 4px rgba(20,183,122,0.15); }
+.nav { padding: 18px 0; flex: 1; }
 .nav-section { padding: 0 16px; margin-bottom: 4px; }
 .nav-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(197,223,208,0.35); padding: 8px 8px 6px; }
 .nav-item {
   display: flex; align-items: center; gap: 10px;
-  padding: 9px 8px; border-radius: 8px; cursor: pointer;
+  padding: 12px 14px; border-radius: 14px; cursor: pointer;
   font-size: 13.5px; font-weight: 500; color: rgba(197,223,208,0.65);
   transition: all .18s; border: none; background: none; width: 100%; text-align: left; margin-bottom: 2px;
   text-decoration: none;
 }
-.nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
-.nav-item.active { background: rgba(255,255,255,0.1); color: var(--white); }
+.nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); transform: translateX(2px); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(20,183,122,0.24), rgba(20,183,122,0.09));
+  color: var(--white);
+  box-shadow: inset 4px 0 0 var(--green-bright);
+}
 .nav-item .ico { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
 .nav-item .badge-count {
-  margin-left: auto; background: var(--green-mid); color: white;
-  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+  margin-left: auto; background: var(--green-bright); color: white;
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
 }
-.sidebar-footer { padding: 16px 24px 24px; border-top: 1px solid rgba(197,223,208,0.1); }
+.sidebar-footer { padding: 16px 20px 0; border-top: 1px solid rgba(197,223,208,0.08); }
+.sidebar-cta {
+  width:100%; margin-bottom:18px; padding:14px 18px; border:none; border-radius:18px; cursor:pointer;
+  background: linear-gradient(135deg, #18c684 0%, #13a86f 100%); color:#04281d; font-weight:800; font-size:13px;
+  letter-spacing:.08em; text-transform:uppercase; box-shadow:0 14px 24px rgba(20,183,122,0.18);
+}
+.sidebar-account {
+  display:flex; align-items:center; gap:12px; padding:14px 4px 0; color:rgba(255,255,255,0.9);
+}
+.sidebar-avatar {
+  width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#1c7f5e,#113f31);
+  display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.08);
+}
+.sidebar-account-name { font-size:13px; font-weight:700; color:#fff; }
+.sidebar-account-role { font-size:11px; color:rgba(197,223,208,0.55); margin-top:2px; }
+.sidebar-account-link { text-decoration:none; color:inherit; display:block; }
 .btn-logout {
   display: flex; align-items: center; gap: 8px;
-  font-size: 12.5px; color: rgba(197,223,208,0.4); background: none;
+  margin-top:14px; font-size: 12.5px; color: rgba(197,223,208,0.4); background: none;
   border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: color .18s; padding: 0;
 }
 .btn-logout:hover { color: rgba(197,223,208,0.8); }
@@ -72,18 +112,36 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 /* ── MAIN ── */
 .main { display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
 .topbar {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 0 36px; height: 64px; display: flex; align-items: center;
-  justify-content: space-between; position: sticky; top: 0; z-index: 10; flex-shrink: 0;
+  background: rgba(251,252,250,0.82); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(217,226,220,0.8);
+  padding: 14px 26px; display: grid; grid-template-columns: minmax(260px, 420px) 1fr auto;
+  align-items: center; gap: 18px; position: sticky; top: 0; z-index: 10; flex-shrink: 0;
 }
-.topbar-title { font-family: 'DM Serif Display', serif; font-size: 20px; letter-spacing: -.02em; }
+.topbar-search {
+  display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:999px;
+  background: linear-gradient(180deg,#ffffff,#f3f6f4); border:1px solid rgba(217,226,220,0.95);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.topbar-search input {
+  width:100%; border:none; background:transparent; outline:none; font-size:14px; color:var(--ink);
+}
+.topbar-search input::placeholder { color:#97a59f; }
+.topbar-center { display:flex; flex-direction:column; gap:2px; }
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 28px; letter-spacing: -.03em; }
+.topbar-subtitle { font-size: 12px; color: var(--muted); }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+.icon-btn {
+  width:40px; height:40px; border-radius:14px; border:1px solid var(--border); background:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:var(--ink-soft); font-size:17px;
+}
+.icon-btn:hover { border-color:#b7c9c0; color:var(--green-mid); }
 .btn-primary {
   display: flex; align-items: center; gap: 7px;
-  padding: 9px 18px; background: var(--green-deep); color: white;
-  border: none; border-radius: var(--r); font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .18s;
+  padding: 12px 20px; background: linear-gradient(135deg, var(--green-mid), #0a4734); color: white;
+  border: none; border-radius: 999px; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: transform .18s, box-shadow .18s, background .18s;
+  text-transform: uppercase; letter-spacing: .08em; box-shadow: 0 16px 28px rgba(15,90,66,0.18);
 }
-.btn-primary:hover { background: #0a2e20; }
+.btn-primary:hover { background: #0a2e20; transform: translateY(-1px); }
 .btn-secondary {
   display: flex; align-items: center; gap: 7px;
   padding: 9px 16px; background: transparent; color: var(--ink-soft);
@@ -96,72 +154,82 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 /* ── MENSAJERÍA LAYOUT ── */
 .msg-layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 338px 1fr;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 64px);
+  min-height: 0;
 }
 
 /* ── LISTA DE CONVERSACIONES ── */
 .conv-list {
-  border-right: 1px solid var(--border);
-  background: var(--white);
+  border-right: 1px solid rgba(217,226,220,0.85);
+  background: linear-gradient(180deg, #f9fbf9 0%, #f6faf8 100%);
   display: flex; flex-direction: column;
   overflow: hidden;
 }
 .conv-list-header {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 28px 22px 18px;
+  border-bottom: 1px solid rgba(217,226,220,0.85);
   flex-shrink: 0;
 }
 .conv-list-header h3 {
   font-family: 'DM Serif Display', serif;
-  font-size: 17px; letter-spacing: -.02em; margin-bottom: 12px;
+  font-size: 21px; letter-spacing: -.03em; margin-bottom: 6px;
 }
+.conv-list-header p { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
 .search-conv {
-  width: 100%; padding: 8px 12px;
-  border: 1.5px solid var(--border); border-radius: var(--r);
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--border); border-radius: 16px;
   font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink);
-  background: var(--sand); outline: none; transition: border-color .18s;
+  background: #fff; outline: none; transition: border-color .18s, box-shadow .18s;
 }
-.search-conv:focus { border-color: var(--green-mid); }
+.search-conv:focus { border-color: var(--green-mid); box-shadow: 0 0 0 4px rgba(15,90,66,0.08); }
 
-.conv-items { overflow-y: auto; flex: 1; }
+.conv-items { overflow-y: auto; flex: 1; padding: 8px 12px 18px; }
 .conv-item {
-  padding: 14px 20px; border-bottom: 1px solid var(--border);
-  cursor: pointer; transition: background .15s;
+  padding: 16px; border: 1px solid transparent;
+  cursor: pointer; transition: all .18s;
   display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 8px; border-radius: 20px; background: transparent;
 }
-.conv-item:hover { background: var(--sand); }
-.conv-item.active { background: var(--green-pale); border-left: 3px solid var(--green-mid); }
+.conv-item:hover { background: rgba(255,255,255,0.84); border-color: rgba(217,226,220,0.9); transform: translateY(-1px); }
+.conv-item.active {
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%);
+  border-color: rgba(20,183,122,0.18);
+  box-shadow: 0 16px 32px rgba(8,55,40,0.08);
+}
 .conv-item.unread .conv-subject { font-weight: 700; color: var(--ink); }
 .conv-avatar {
-  width: 38px; height: 38px; border-radius: 50%; background: var(--green-mid);
+  width: 46px; height: 46px; border-radius: 16px; background: linear-gradient(135deg, #0f5a42, #17a973);
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  font-size: 14px; font-weight: 800; color: white; flex-shrink: 0;
+  box-shadow: 0 10px 20px rgba(15,90,66,0.18);
 }
 .conv-meta { flex: 1; min-width: 0; }
 .conv-subject {
-  font-size: 13px; font-weight: 500; color: var(--ink-soft);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+  font-size: 15px; font-weight: 700; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
 }
 .conv-preview {
-  font-size: 12px; color: var(--muted); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
+  font-size: 12.5px; color: var(--green-mid); font-weight: 600; margin-bottom: 8px;
 }
-.conv-footer { display: flex; justify-content: space-between; align-items: center; }
+.conv-excerpt {
+  font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:10px;
+}
+.conv-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .conv-time { font-size: 11px; color: var(--muted); }
 .conv-status {
-  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; padding: 5px 9px; border-radius: 999px;
   text-transform: uppercase; letter-spacing: .05em;
 }
 .status-active { background: var(--green-pale); color: var(--green-mid); }
-.status-negotiating { background: var(--amber-pale); color: var(--amber); }
+.status-negotiating { background: #cff5df; color: #0d7f58; }
 .status-closed { background: var(--sand-dark); color: var(--muted); }
-.status-archived { background: var(--sand-dark); color: var(--muted); }
+.status-archived { background: #edf1f0; color: #7a8b84; }
 .unread-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--green-mid);
-  flex-shrink: 0; margin-top: 4px;
+  width: 10px; height: 10px; border-radius: 50%; background: var(--green-bright);
+  flex-shrink: 0; margin-top: 8px; box-shadow: 0 0 0 5px rgba(20,183,122,0.12);
 }
 
 .conv-empty {
@@ -175,32 +243,87 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 /* ── PANEL DE CHAT ── */
 .chat-panel {
   display: flex; flex-direction: column; overflow: hidden;
-  background: var(--sand);
+  background: linear-gradient(180deg, #f7f9f8 0%, #eef4f1 100%);
 }
 .chat-empty {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   height: 100%; text-align: center; padding: 40px;
 }
-.chat-empty .ico { font-size: 48px; margin-bottom: 16px; }
-.chat-empty h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 10px; color: var(--ink-soft); }
+.chat-empty .ico { font-size: 58px; margin-bottom: 18px; }
+.chat-empty h3 { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 10px; color: var(--ink-soft); }
 .chat-empty p { font-size: 14px; color: var(--muted); max-width: 320px; line-height: 1.6; }
+.chat-shell {
+  display: grid; grid-template-columns: minmax(0, 1fr) 292px; min-height: 0; height: 100%;
+}
+.chat-main {
+  display:flex; flex-direction:column; min-width:0; min-height:0; border-right:1px solid rgba(217,226,220,0.85);
+}
+.chat-aside {
+  background: linear-gradient(180deg, #fcfdfc 0%, #f7faf8 100%);
+  padding: 22px 20px; overflow-y:auto;
+}
+.detail-label {
+  font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#7b8a84; margin-bottom:12px;
+}
+.listing-hero {
+  width:100%; aspect-ratio: 1 / 0.72; border-radius:24px; overflow:hidden; margin-bottom:18px;
+  background:
+    linear-gradient(160deg, rgba(8,55,40,0.15), rgba(8,55,40,0.04)),
+    radial-gradient(circle at 20% 30%, rgba(20,183,122,0.35), transparent 24%),
+    linear-gradient(135deg, #29493d 0%, #132824 35%, #29594f 100%);
+  position:relative;
+}
+.listing-hero::after {
+  content:''; position:absolute; inset:auto 12% 12% 12%; height:32%;
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.16) 0 14%, transparent 15%) 0 0/22px 22px,
+    radial-gradient(circle, rgba(255,255,255,0.1) 0 14%, transparent 15%) 11px 11px/24px 24px;
+  opacity:.7; border-radius:18px;
+}
+.detail-title { font-size:30px; font-family:'DM Serif Display', serif; letter-spacing:-.03em; margin-bottom:6px; }
+.detail-subtitle { color:var(--muted); font-size:13px; margin-bottom:18px; }
+.detail-card {
+  background:#fff; border:1px solid rgba(217,226,220,0.9); border-radius:22px; padding:16px 18px;
+  box-shadow: 0 14px 28px rgba(8,55,40,0.05); margin-bottom:14px;
+}
+.detail-card-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; color:#7b8a84; margin-bottom:8px; }
+.detail-card-value { font-size:16px; font-weight:800; color:var(--ink); }
+.detail-card-value strong { font-size:34px; font-family:'DM Serif Display', serif; letter-spacing:-.04em; }
+.detail-card-note { font-size:13px; color:var(--muted); }
+.tag-row { display:flex; flex-wrap:wrap; gap:8px; margin: 4px 0 20px; }
+.spec-tag {
+  display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:999px;
+  font-size:12px; font-weight:700; background:#eef2f1; color:#5f7069;
+}
+.spec-tag.primary { background:#cff5df; color:#0d7f58; }
+.spec-tag.soft { background:#edf2ff; color:#6d78aa; }
+.aside-action {
+  width:100%; padding:14px 16px; border-radius:999px; border:2px solid var(--green-mid); background:transparent;
+  color:var(--green-mid); font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+}
+.aside-footnote { margin-top:12px; text-align:center; font-size:12px; color:var(--muted); font-style:italic; }
 
 /* Chat header */
 .chat-header {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.82); border-bottom: 1px solid rgba(217,226,220,0.85);
+  padding: 20px 26px; display: flex; align-items: center; justify-content: space-between;
   flex-shrink: 0;
 }
-.chat-header-left { display: flex; flex-direction: column; gap: 3px; }
-.chat-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+.chat-header-left { display: flex; align-items: center; gap: 14px; min-width:0; }
+.chat-contact-avatar {
+  width:48px; height:48px; border-radius:16px; background:linear-gradient(135deg,#0f5a42,#16aa74);
+  color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; box-shadow:0 12px 20px rgba(15,90,66,0.16);
+}
+.chat-contact-meta { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.chat-title { font-size: 24px; font-family:'DM Serif Display', serif; letter-spacing:-.03em; color: var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .chat-subtitle { font-size: 12px; color: var(--muted); }
 .chat-header-actions { display: flex; gap: 8px; }
 .btn-sm {
-  padding: 6px 12px; border-radius: 7px; font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 500; cursor: pointer; transition: all .18s; border: none;
+  padding: 10px 13px; border-radius: 14px; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all .18s; border: none;
 }
 .btn-sm-outline {
-  background: transparent; border: 1.5px solid var(--border); color: var(--ink-soft);
+  background: #fff; border: 1px solid var(--border); color: var(--ink-soft);
 }
 .btn-sm-outline:hover { border-color: var(--ink-soft); }
 .btn-sm-green { background: var(--green-deep); color: white; }
@@ -210,22 +333,28 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 
 /* Listing pill */
 .listing-pill {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 10px 24px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  background: rgba(255,255,255,0.76); border-bottom: 1px solid rgba(217,226,220,0.85);
+  padding: 14px 26px; display: flex; align-items: center; gap: 14px; flex-shrink: 0;
 }
-.listing-pill-ico { font-size: 20px; }
+.listing-pill-ico {
+  width:40px; height:40px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  background:#ebf7f1; color:var(--green-mid); font-size: 20px;
+}
 .listing-pill-info { flex: 1; min-width: 0; }
-.listing-pill-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.listing-pill-name { font-size: 14px; font-weight: 700; color: var(--ink); }
 .listing-pill-meta { font-size: 11.5px; color: var(--muted); }
 .listing-pill-price {
-  font-size: 13px; font-weight: 700; color: var(--green-mid);
+  font-size: 13px; font-weight: 800; color: var(--green-mid);
   white-space: nowrap;
 }
 
 /* Messages area */
 .messages-area {
-  flex: 1; overflow-y: auto; padding: 20px 24px;
+  flex: 1; overflow-y: auto; padding: 28px 28px 34px;
   display: flex; flex-direction: column; gap: 12px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12)),
+    radial-gradient(circle at top, rgba(20,183,122,0.07), transparent 28%);
 }
 
 .msg-group { display: flex; flex-direction: column; gap: 4px; }
@@ -238,18 +367,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 }
 
 .msg-bubble {
-  max-width: 68%; padding: 10px 14px;
-  border-radius: 16px; font-size: 13.5px; line-height: 1.55;
+  max-width: 72%; padding: 14px 18px;
+  border-radius: 24px; font-size: 15px; line-height: 1.65;
   word-break: break-word;
+  box-shadow: 0 10px 22px rgba(8,55,40,0.06);
 }
 .msg-group.mine .msg-bubble {
-  background: var(--green-deep); color: white;
-  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, #0e5a42, #0a4634); color: white;
+  border-bottom-right-radius: 8px;
 }
 .msg-group.theirs .msg-bubble {
   background: var(--white); color: var(--ink);
-  border: 1px solid var(--border);
-  border-bottom-left-radius: 4px;
+  border: 1px solid rgba(217,226,220,0.9);
+  border-bottom-left-radius: 8px;
 }
 
 .msg-time {
@@ -282,8 +412,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
 
 /* Input area */
 .chat-input-area {
-  background: var(--white); border-top: 1px solid var(--border);
-  padding: 16px 24px; flex-shrink: 0;
+  background: rgba(255,255,255,0.88); border-top: 1px solid rgba(217,226,220,0.85);
+  padding: 18px 24px 22px; flex-shrink: 0;
 }
 .closed-notice {
   text-align: center; padding: 14px;
@@ -291,31 +421,31 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
   font-size: 13px; color: var(--muted);
 }
 .input-row {
-  display: flex; gap: 10px; align-items: flex-end;
+  display: flex; gap: 12px; align-items: center;
 }
 .input-wrap { flex: 1; position: relative; }
 .msg-input {
-  width: 100%; padding: 10px 42px 10px 14px;
-  border: 1.5px solid var(--border); border-radius: var(--r);
+  width: 100%; padding: 16px 54px 16px 16px;
+  border: 1px solid var(--border); border-radius: 20px;
   font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
-  background: var(--sand); outline: none; resize: none;
+  background: #fff; outline: none; resize: none;
   transition: border-color .18s; max-height: 120px; min-height: 42px;
   line-height: 1.5;
 }
-.msg-input:focus { border-color: var(--green-mid); background: var(--white); }
+.msg-input:focus { border-color: var(--green-mid); background: var(--white); box-shadow: 0 0 0 4px rgba(15,90,66,0.08); }
 .attach-btn {
-  position: absolute; right: 10px; bottom: 10px;
+  position: absolute; right: 14px; bottom: 14px;
   background: none; border: none; cursor: pointer;
   font-size: 18px; color: var(--muted); transition: color .18s; padding: 0;
 }
 .attach-btn:hover { color: var(--green-mid); }
 .send-btn {
-  width: 42px; height: 42px; border-radius: var(--r);
-  background: var(--green-deep); border: none; cursor: pointer;
+  width: 52px; height: 52px; border-radius: 18px;
+  background: linear-gradient(135deg, #17bb7e, #0f8f61); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background .18s; flex-shrink: 0;
+  transition: background .18s, transform .18s; flex-shrink: 0; box-shadow: 0 16px 24px rgba(20,183,122,0.18);
 }
-.send-btn:hover { background: #0a2e20; }
+.send-btn:hover { background: #0a2e20; transform: translateY(-1px); }
 .send-btn:disabled { opacity: .45; cursor: not-allowed; }
 .send-btn svg { width: 18px; height: 18px; }
 
@@ -393,6 +523,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
   .msg-layout { grid-template-columns: 1fr; }
+  .topbar { grid-template-columns: 1fr; }
+  .topbar-center { display:none; }
+  .chat-shell { grid-template-columns: 1fr; }
+  .chat-aside { display:none; }
 }
 </style>
 </head>
@@ -461,11 +595,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
           <path d="M11 10V8" stroke="#C5DFD0" stroke-width="1.3" stroke-linecap="round"/>
         </svg>
       </div>
-      <span class="brand-name">CicloBase</span>
+      <div class="brand-copy">
+        <span class="brand-name">CicloBase</span>
+        <span class="brand-sub">Mensajería circular</span>
+      </div>
     </div>
     <div class="sidebar-user">
       <div class="user-company" id="sidebarCompany">Cargando...</div>
       <div class="user-role" id="sidebarRole">—</div>
+      <div class="user-badge"><span class="user-badge-dot"></span><span>Sesión activa</span></div>
     </div>
     <nav class="nav">
       <div class="nav-section">
@@ -483,12 +621,18 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
         <a class="nav-item" href="dashboard.html"><span class="ico">📜</span> Módulo eSIR</a>
         <a class="nav-item" href="dashboard.html"><span class="ico">🌱</span> Impacto ESG</a>
       </div>
-      <div class="nav-section">
-        <div class="nav-lbl">Cuenta</div>
-        <a class="nav-item" href="dashboard.html"><span class="ico">🏭</span> Perfil empresa</a>
-      </div>
     </nav>
     <div class="sidebar-footer">
+      <button class="sidebar-cta" onclick="window.location.href='nuevo-listing.html'">+ Publicar listing</button>
+      <a class="sidebar-account-link" href="dashboard.html#perfil">
+        <div class="sidebar-account">
+          <div class="sidebar-avatar" id="sidebarAvatar">CB</div>
+          <div>
+            <div class="sidebar-account-name" id="sidebarFooterName">CicloBase</div>
+            <div class="sidebar-account-role">Operador verificado</div>
+          </div>
+        </div>
+      </a>
       <button class="btn-logout" id="btnLogout"><span>↩</span> Cerrar sesión</button>
     </div>
   </div>
@@ -496,7 +640,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title">Mensajes</div>
+      <div class="topbar-search">
+        <span>🔎</span>
+        <input type="text" placeholder="Buscar conversaciones o materiales..." oninput="filterConversations(this.value)">
+      </div>
+      <div class="topbar-center">
+        <div class="topbar-title">Mensajes</div>
+        <div class="topbar-subtitle" id="topbarSubtitle">Tus negociaciones activas en CicloBase</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" type="button" title="Notificaciones">🔔</button>
+        <button class="icon-btn" type="button" title="Ajustes">⚙️</button>
+        <button class="btn-primary" onclick="window.location.href='nuevo-listing.html'">Publicar listing</button>
+      </div>
     </div>
 
     <div class="msg-layout">
@@ -504,6 +660,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
       <div class="conv-list">
         <div class="conv-list-header">
           <h3>Conversaciones</h3>
+          <p id="convSummary">Cargando actividad...</p>
           <input class="search-conv" id="searchConv" placeholder="Buscar conversación..." oninput="filterConversations(this.value)">
         </div>
         <div class="conv-items" id="convItems">
@@ -515,8 +672,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--sand); color: var(-
       <div class="chat-panel" id="chatPanel">
         <div class="chat-empty">
           <div class="ico">💬</div>
-          <h3>Tus mensajes</h3>
-          <p>Selecciona una conversación para ver los mensajes, o inicia una desde el detalle de un listing.</p>
+          <h3>Tu bandeja de mensajes</h3>
+          <p>Selecciona una conversación para ver el historial, negociar una oferta y revisar el resumen del listing desde el lateral.</p>
         </div>
       </div>
     </div>
@@ -574,23 +731,30 @@ function initials(name) {
   return (name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
 }
 
+function formatConversationSubtitle(conv) {
+  if(conv.status === 'negotiating') return 'Negociación abierta';
+  if(conv.status === 'closed') return 'Transacción cerrada';
+  if(conv.status === 'archived') return 'Conversación archivada';
+  return 'Interés activo';
+}
+
+function formatPrice(value, unit='/ton') {
+  return value ? `€${value}${unit}` : 'A convenir';
+}
+
+function getListingTags(listing) {
+  if(!listing) return [{ text:'Sin detalles', cls:'' }];
+  const tags = [];
+  if(listing.category === 'metales') tags.push({ text:'Metal valorizable', cls:'primary' });
+  if(listing.docs_analisis) tags.push({ text:'Con análisis', cls:'soft' });
+  if(listing.docs_albaran) tags.push({ text:'Con albarán', cls:'' });
+  if(tags.length === 0) tags.push({ text:'Listing activo', cls:'primary' });
+  tags.push({ text:`LER ${listing.ler_code || '—'}`, cls:'' });
+  return tags.slice(0, 3);
+}
+
 // ── INIT ──────────────────────────────────────────────────────────
-const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname);
-
 async function init() {
-  if(IS_LOCAL) {
-    currentUser = { id:'local-demo', email:'demo@metaliberica.com' };
-    currentProfile = { id:'local-demo', company_name:'Metal Ibérica S.L.', role:'ambos', verified:true };
-    $('sidebarCompany').textContent = currentProfile.company_name;
-    $('sidebarRole').textContent = ROLE_LABELS[currentProfile.role] || currentProfile.role;
-    $('btnLogout').onclick = () => { window.location.href='ciclobase-auth.html'; };
-    await loadConversations();
-    const params = new URLSearchParams(window.location.search);
-    const convParam = params.get('conv');
-    if(convParam) openConversation(convParam);
-    return;
-  }
-
   const {data:{session}} = await sb.auth.getSession();
   if(!session) { window.location.href='ciclobase-auth.html'; return; }
 
@@ -602,6 +766,8 @@ async function init() {
 
   $('sidebarCompany').textContent = profile.company_name;
   $('sidebarRole').textContent = ROLE_LABELS[profile.role] || profile.role;
+  $('sidebarAvatar').textContent = initials(profile.company_name);
+  $('sidebarFooterName').textContent = profile.company_name;
   $('btnLogout').onclick = async () => { await sb.auth.signOut(); window.location.href='ciclobase-auth.html'; };
 
   // Abrir conversación desde URL param
@@ -620,7 +786,7 @@ async function loadConversations() {
     .select(`
       id, status, created_at, updated_at, closed_at,
       listing_id,
-      listings(id, waste_subcategory, ler_code, quantity_tons, min_price_per_ton, status),
+      listings(id, category, subcategory, ler_code, quantity, unit, min_price, status),
       generator:generator_id(id, company_name),
       buyer:buyer_id(id, company_name)
     `)
@@ -630,6 +796,8 @@ async function loadConversations() {
   if(error) { toast('Error al cargar conversaciones'); return; }
 
   conversations = data || [];
+  $('convSummary').textContent = `${conversations.length} conversación${conversations.length===1?'':'es'} activas y recientes`;
+  $('topbarSubtitle').textContent = `${conversations.filter(c => c.status !== 'closed' && c.status !== 'archived').length} negociaciones en curso`;
 
   // Contar no leídos
   await loadUnreadCounts();
@@ -671,9 +839,12 @@ function renderConversationList(convs) {
   el.innerHTML = convs.map(c => {
     const isGen = c.generator?.id === currentUser.id;
     const other = isGen ? c.buyer : c.generator;
-    const material = c.listings?.waste_subcategory || c.listings?.ler_code || 'Material';
-    const price = c.listings?.min_price_per_ton ? `€${c.listings.min_price_per_ton}/ton` : 'A convenir';
+    const material = c.listings?.subcategory || c.listings?.ler_code || 'Material';
+    const price = formatPrice(c.listings?.min_price);
     const unread = c._unread || 0;
+    const excerpt = c.status === 'negotiating'
+      ? `Negociación abierta sobre ${material.toLowerCase()}.`
+      : `Consulta reciente sobre ${material.toLowerCase()}.`;
 
     return `
       <div class="conv-item${activeConvId===c.id?' active':''}${unread>0?' unread':''}"
@@ -682,6 +853,7 @@ function renderConversationList(convs) {
         <div class="conv-meta">
           <div class="conv-subject">${escHTML(other?.company_name||'—')}</div>
           <div class="conv-preview">${escHTML(material)} · ${price}</div>
+          <div class="conv-excerpt">${escHTML(excerpt)}</div>
           <div class="conv-footer">
             <span class="conv-time">${timeAgo(c.updated_at)}</span>
             <span class="conv-status status-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
@@ -698,7 +870,7 @@ function filterConversations(query) {
     ? conversations.filter(c => {
         const other = c.generator?.id===currentUser.id ? c.buyer : c.generator;
         return (other?.company_name||'').toLowerCase().includes(q) ||
-               (c.listings?.waste_subcategory||'').toLowerCase().includes(q);
+               (c.listings?.subcategory||'').toLowerCase().includes(q);
       })
     : conversations;
   renderConversationList(filtered);
@@ -733,57 +905,91 @@ function renderChatPanel(conv) {
   const listing = conv.listings;
   const isClosed = conv.status === 'closed' || conv.status === 'archived';
 
-  const material = listing?.waste_subcategory || listing?.ler_code || 'Material';
-  const price = listing?.min_price_per_ton ? `€${listing.min_price_per_ton}/ton` : 'A convenir';
-  const qty = listing?.quantity_tons ? `${listing.quantity_tons} ton` : '';
+  const material = listing?.subcategory || listing?.ler_code || 'Material';
+  const price = formatPrice(listing?.min_price);
+  const qty = listing?.quantity ? `${listing.quantity} ${listing.unit || 't'}` : '';
+  const tags = getListingTags(listing);
 
   $('chatPanel').innerHTML = `
-    <div class="chat-header">
-      <div class="chat-header-left">
-        <div class="chat-title">${escHTML(other?.company_name||'—')}</div>
-        <div class="chat-subtitle">${isGen?'Comprador':'Generador'} · Conversación ${STATUS_LABELS[conv.status]||conv.status}</div>
-      </div>
-      <div class="chat-header-actions">
-        ${conv.status==='active'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','negotiating')">Marcar Negociando</button>`:''}
-        ${conv.status==='negotiating'?`<button class="btn-sm btn-sm-amber" onclick="openCloseModal('${conv.id}')">Cerrar transacción</button>`:''}
-        ${conv.status==='active'||conv.status==='negotiating'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','archived')">Archivar</button>`:''}
-      </div>
-    </div>
+    <div class="chat-shell">
+      <div class="chat-main">
+        <div class="chat-header">
+          <div class="chat-header-left">
+            <div class="chat-contact-avatar">${initials(other?.company_name)}</div>
+            <div class="chat-contact-meta">
+              <div class="chat-title">${escHTML(other?.company_name||'—')}</div>
+              <div class="chat-subtitle">${isGen?'Comprador':'Generador'} · ${formatConversationSubtitle(conv)}</div>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            ${conv.status==='active'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','negotiating')">Marcar negociando</button>`:''}
+            ${conv.status==='negotiating'?`<button class="btn-sm btn-sm-amber" onclick="openCloseModal('${conv.id}')">Cerrar transacción</button>`:''}
+            ${conv.status==='active'||conv.status==='negotiating'?`<button class="btn-sm btn-sm-outline" onclick="changeStatus('${conv.id}','archived')">Archivar</button>`:''}
+          </div>
+        </div>
 
-    <div class="listing-pill">
-      <div class="listing-pill-ico">📦</div>
-      <div class="listing-pill-info">
-        <div class="listing-pill-name">${escHTML(material)}</div>
-        <div class="listing-pill-meta">${qty ? qty+' · ' : ''}LER: ${escHTML(listing?.ler_code||'—')}</div>
+        <div class="listing-pill">
+          <div class="listing-pill-ico">📦</div>
+          <div class="listing-pill-info">
+            <div class="listing-pill-name">${escHTML(material)}</div>
+            <div class="listing-pill-meta">${qty ? qty+' · ' : ''}LER: ${escHTML(listing?.ler_code||'—')}</div>
+          </div>
+          <div class="listing-pill-price">${price}</div>
+        </div>
+
+        <div class="messages-area" id="messagesArea">
+          <div class="loading-state">Cargando mensajes...</div>
+        </div>
+
+        <div class="chat-input-area" id="inputArea">
+          ${isClosed
+            ? `<div class="closed-notice">Esta conversación está cerrada. ${conv.status==='closed'?'La transacción ya fue completada.':'Puedes consultar el historial cuando quieras.'}</div>`
+            : `<div id="attachPreview" style="display:none"></div>
+               <div class="input-row">
+                 <div class="input-wrap">
+                   <textarea class="msg-input" id="msgInput" placeholder="Escribe un mensaje o comparte una contrapropuesta..." rows="1"
+                     onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+                   <label class="attach-btn" title="Adjuntar archivo">
+                     📎
+                     <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
+                   </label>
+                 </div>
+                 <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar">
+                   <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                     <line x1="22" y1="2" x2="11" y2="13"></line>
+                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                   </svg>
+                 </button>
+               </div>`
+          }
+        </div>
       </div>
-      <div class="listing-pill-price">${price}</div>
-    </div>
 
-    <div class="messages-area" id="messagesArea">
-      <div class="loading-state">Cargando mensajes...</div>
-    </div>
+      <aside class="chat-aside">
+        <div class="detail-label">Resumen del listing</div>
+        <div class="listing-hero"></div>
+        <div class="detail-title">${escHTML(material)}</div>
+        <div class="detail-subtitle">💬 ${formatConversationSubtitle(conv)}</div>
 
-    <div class="chat-input-area" id="inputArea">
-      ${isClosed
-        ? `<div class="closed-notice">Esta conversación está cerrada. ${conv.status==='closed'?'La transacción fue completada.':''}</div>`
-        : `<div id="attachPreview" style="display:none"></div>
-           <div class="input-row">
-             <div class="input-wrap">
-               <textarea class="msg-input" id="msgInput" placeholder="Escribe un mensaje..." rows="1"
-                 onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-               <label class="attach-btn" title="Adjuntar archivo">
-                 📎
-                 <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx">
-               </label>
-             </div>
-             <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Enviar">
-               <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                 <line x1="22" y1="2" x2="11" y2="13"></line>
-                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-               </svg>
-             </button>
-           </div>`
-      }
+        <div class="detail-card">
+          <div class="detail-card-label">Cantidad actual</div>
+          <div class="detail-card-value"><strong>${escHTML(String(listing?.quantity || '—'))}</strong> ${escHTML(listing?.unit || 't')}</div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-label">Precio listado</div>
+          <div class="detail-card-value">${price}</div>
+          <div class="detail-card-note">Referencia visible para la negociación</div>
+        </div>
+
+        <div class="detail-label" style="margin-top:18px">Etiquetas</div>
+        <div class="tag-row">
+          ${tags.map(tag => `<span class="spec-tag ${tag.cls}">${escHTML(tag.text)}</span>`).join('')}
+        </div>
+
+        <button class="aside-action" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Ver detalle del listing</button>
+        <div class="aside-footnote">Conversación iniciada ${timeAgo(conv.created_at)}</div>
+      </aside>
     </div>
   `;
 
@@ -817,10 +1023,16 @@ function renderMessages(msgs) {
   msgs.forEach(msg => {
     const mine = msg.sender_id === currentUser.id;
     const msgDate = new Date(msg.created_at).toDateString();
+    const isSystem = (msg.content || '').startsWith('[SISTEMA]') || (msg.content || '').startsWith('✅ TRANSACCIÓN CERRADA');
 
     if(msgDate !== lastDate) {
       html += `<div class="msg-date-divider">${formatDate(msg.created_at)}</div>`;
       lastDate = msgDate;
+    }
+
+    if(isSystem) {
+      html += `<div class="msg-system">${escHTML(msg.content.replace('[SISTEMA] ', ''))}</div>`;
+      return;
     }
 
     const attachHtml = msg.attachment_url
@@ -878,6 +1090,16 @@ function appendMessage(msg) {
   if(placeholder && placeholder.style.textAlign==='center') placeholder.remove();
 
   const mine = msg.sender_id === currentUser.id;
+  const isSystem = (msg.content || '').startsWith('[SISTEMA]') || (msg.content || '').startsWith('✅ TRANSACCIÓN CERRADA');
+
+  if(isSystem) {
+    const sys = document.createElement('div');
+    sys.className = 'msg-system';
+    sys.textContent = msg.content.replace('[SISTEMA] ', '');
+    area.appendChild(sys);
+    area.scrollTop = area.scrollHeight;
+    return;
+  }
 
   const attachHtml = msg.attachment_url
     ? `<a class="msg-attachment" href="${escHTML(msg.attachment_url)}" target="_blank" rel="noopener">

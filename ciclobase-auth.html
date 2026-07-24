@@ -198,6 +198,12 @@ const LABELS = ['Cuenta','Empresa','Perfil','Activación'];
 
 // ─── HELPERS ─────────────────────────────────────────────────────
 const validateCIF  = v => /^[A-HJ-NP-SUVW][0-9]{7}[0-9A-J]$/i.test((v||'').trim());
+const validateDNI  = v => /^\d{8}[A-Z]$/i.test((v||'').trim());
+const validateNIE  = v => /^[XYZ]\d{7}[A-Z]$/i.test((v||'').trim());
+const validateFiscalId = (v, entityType='empresa') => {
+  const id = (v||'').trim().toUpperCase();
+  return entityType === 'persona' ? (validateDNI(id) || validateNIE(id) || validateCIF(id)) : validateCIF(id);
+};
 const validateNIMA = v => /^\d{10}$/.test((v||'').replace(/\s/g,''));
 const escHTML = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const $      = id => document.getElementById(id);
@@ -268,7 +274,7 @@ function html_auth() {
     <div class="chk-row">
       <input type="checkbox" id="accept" ${d.accept?'checked':''}>
       <span><label for="accept" style="display:inline;font-size:inherit;font-weight:inherit;text-transform:none;letter-spacing:normal;color:inherit;margin-bottom:0;">
-        Acepto los <a href="#">Términos de servicio</a> y la <a href="#">Política de privacidad</a>. Datos tratados conforme al RGPD.
+        Acepto los <a href="#">Términos de servicio</a> y la <a href="#">Política de privacidad</a>. CicloBase tratará mis datos conforme al RGPD para verificar mi perfil, gestionar trazabilidad documental y contactar conmigo sobre operaciones en la plataforma.
       </label></span>
     </div>
     ${e.accept?`<div class="err-msg" style="margin:-8px 0 12px">${e.accept}</div>`:''}
@@ -290,9 +296,6 @@ function html_auth() {
     </div>
     <div style="text-align:right;margin-bottom:22px"><button class="btn-txt">¿Olvidaste tu contraseña?</button></div>
     <button class="btn-p" id="btnLog">Acceder</button>
-    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
-      <button class="btn-s" id="btnLocal" style="font-size:13px;color:var(--muted)">Acceso local (sin Supabase)</button>
-    </div>
     <div class="switch">¿Sin cuenta? <button class="btn-txt" id="toReg">Crear cuenta gratis</button></div>`;
 
   return `
@@ -325,17 +328,24 @@ function html_empresa() {
     </div>`).join('');
 
   return `
-    <h2 class="form-title">Datos de empresa</h2>
-    <p class="form-sub">Usamos esta información para verificar tu empresa y habilitar el módulo eSIR.</p>
+    <h2 class="form-title">Datos de perfil</h2>
+    <p class="form-sub">Usamos esta información para verificar tu actividad y habilitar el módulo eSIR cuando corresponda.</p>
     <div class="field">
-      <label>Razón social <span class="req">*</span></label>
-      <input type="text" id="razonSocial" class="${e.razonSocial?'err':''}" value="${escHTML(d.razonSocial||'')}" placeholder="Metal Ibérica S.L.">
+      <label>Tipo de usuario <span class="req">*</span></label>
+      <select id="entityType">
+        <option value="empresa"${(d.entityType||'empresa')==='empresa'?' selected':''}>Empresa</option>
+        <option value="persona"${d.entityType==='persona'?' selected':''}>Persona física / autónomo</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Razón social o nombre <span class="req">*</span></label>
+      <input type="text" id="razonSocial" class="${e.razonSocial?'err':''}" value="${escHTML(d.razonSocial||'')}" placeholder="Metal Ibérica S.L. / Joan Puig">
       ${e.razonSocial?`<div class="err-msg">${e.razonSocial}</div>`:''}
     </div>
     <div class="field">
-      <label>CIF <span class="req">*</span></label>
-      <input type="text" id="cif" class="${e.cif?'err':''}" value="${escHTML(d.cif||'')}" placeholder="B12345678" maxlength="9" oninput="this.value=this.value.toUpperCase();liveCheckCIF(this.value)">
-      <div id="cifStatus">${validateCIF(d.cif||'')&&!e.cif?'<div class="ok-msg">✓ CIF válido</div>':(e.cif?`<div class="err-msg">${e.cif}</div>`:'')}</div>
+      <label>CIF / NIF / NIE <span class="req">*</span></label>
+      <input type="text" id="cif" class="${e.cif?'err':''}" value="${escHTML(d.cif||'')}" placeholder="B12345678 / 12345678Z / X1234567L" maxlength="9" oninput="this.value=this.value.toUpperCase();liveCheckCIF(this.value)">
+      <div id="cifStatus">${validateFiscalId(d.cif||'', d.entityType||'empresa')&&!e.cif?'<div class="ok-msg">✓ Identificador válido</div>':(e.cif?`<div class="err-msg">${e.cif}</div>`:'')}</div>
     </div>
     <div class="field">
       <label class="lbl">Rol en CicloBase <span class="req">*</span></label>
@@ -347,7 +357,8 @@ function html_empresa() {
 
 function liveCheckCIF(v) {
   const el=$('cifStatus'); if(!el)return;
-  el.innerHTML=v.length>=9?(validateCIF(v)?'<div class="ok-msg">✓ CIF válido</div>':'<div class="err-msg">Formato incorrecto. Ej: B12345678</div>'):'';
+  const type = val('entityType') || 'empresa';
+  el.innerHTML=v.length>=8?(validateFiscalId(v,type)?'<div class="ok-msg">✓ Identificador válido</div>':'<div class="err-msg">Formato incorrecto. Empresa: B12345678 · Persona: 12345678Z o X1234567L</div>'):'';
 }
 
 // ─── STEP 3: PERFIL ──────────────────────────────────────────────
@@ -368,9 +379,9 @@ function html_perfil() {
       <p><strong>¿Tienes número NIMA?</strong> Es el Número de Identificación Medioambiental, asignado por tu CCAA. Lo encuentras en tu autorización de productor o en el registro SIGA (Catalunya).</p>
     </div>
     <div class="field">
-      <label>Número NIMA <span class="req">*</span></label>
+      <label>Número NIMA <span class="opt">(opcional)</span></label>
       <input type="text" id="nima" class="${e.nima?'err':''}" value="${escHTML(d.nima||'')}" placeholder="1234567890" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'');liveCheckNIMA(this.value)">
-      <div id="nimaStatus">${validateNIMA(d.nima||'')&&!e.nima?'<div class="ok-msg">✓ Formato NIMA correcto</div>':(e.nima?`<div class="err-msg">${e.nima}</div>`:'<div class="hint-msg">10 dígitos exactos.</div>')}</div>
+      <div id="nimaStatus">${(d.nima&&validateNIMA(d.nima))&&!e.nima?'<div class="ok-msg">✓ Formato NIMA correcto</div>':(e.nima?`<div class="err-msg">${e.nima}</div>`:'<div class="hint-msg">Si aún no lo tienes, puedes continuar y añadirlo más adelante.</div>')}</div>
     </div>`:''}
 
     <div class="sec-lbl">Clasificación</div>
@@ -442,7 +453,7 @@ function html_perfil() {
 
 function liveCheckNIMA(v) {
   const el=$('nimaStatus'); if(!el)return;
-  el.innerHTML=v.length===10?(validateNIMA(v)?'<div class="ok-msg">✓ Formato NIMA correcto</div>':'<div class="err-msg">Debe tener exactamente 10 dígitos</div>'):'<div class="hint-msg">10 dígitos exactos.</div>';
+  el.innerHTML=!v?'<div class="hint-msg">Si aún no lo tienes, puedes continuar y añadirlo más adelante.</div>':(v.length===10?(validateNIMA(v)?'<div class="ok-msg">✓ Formato NIMA correcto</div>':'<div class="err-msg">Debe tener exactamente 10 dígitos</div>'):'<div class="hint-msg">10 dígitos exactos.</div>');
 }
 
 // ─── STEP 4: SUCCESS ─────────────────────────────────────────────
@@ -458,7 +469,7 @@ function html_success() {
       Tu empresa <strong>${escHTML(d.razonSocial||'')}</strong> está pendiente de verificación manual (24–48h).</p>
       <div class="success-card">
         <div class="ttl">Mientras tanto, puedes preparar:</div>
-        ${isGen?`<div class="success-item"><span style="font-size:15px;flex-shrink:0">📋</span><p><strong>Tus listings:</strong> Ten a mano los códigos LER de tus residuos y fotos del material.</p></div>`:''}
+        ${isGen?`<div class="success-item"><span style="font-size:15px;flex-shrink:0">📋</span><p><strong>Tus materiales:</strong> Ten a mano fotos, cantidades aproximadas y, si lo tienes, el código LER de tus residuos o materiales reutilizables.</p></div>`:''}
         ${isBuy?`<div class="success-item"><span style="font-size:15px;flex-shrink:0">🔍</span><p><strong>Tus búsquedas:</strong> Define qué materiales necesitas. Acceso a generadores verificados en 60km.</p></div>`:''}
         <div class="success-item"><span style="font-size:15px;flex-shrink:0">📜</span><p><strong>Módulo eSIR incluido:</strong> CicloBase genera la documentación compatible con Ley 7/2022 en cada transacción.</p></div>
       </div>
@@ -484,11 +495,11 @@ function validate1log() {
   return !Object.keys(e).length;
 }
 function validate2() {
-  const e={}, rs=val('razonSocial'), ci=val('cif'), ro=S.data.role||'';
-  if(!rs.trim())       e.razonSocial='Razón social requerida';
-  if(!validateCIF(ci)) e.cif='CIF inválido. Formato: A12345678';
-  if(!ro)              e.role='Selecciona tu rol en la plataforma';
-  Object.assign(S.data,{razonSocial:rs,cif:ci}); S.errors=e;
+  const e={}, rs=val('razonSocial'), ci=val('cif'), ro=S.data.role||'', entityType=val('entityType')||'empresa';
+  if(!rs.trim()) e.razonSocial=entityType==='persona'?'Nombre requerido':'Razón social requerida';
+  if(!validateFiscalId(ci, entityType)) e.cif=entityType==='persona'?'NIF/NIE inválido. Ej: 12345678Z o X1234567L':'CIF inválido. Formato: A12345678';
+  if(!ro) e.role='Selecciona tu rol en la plataforma';
+  Object.assign(S.data,{entityType,razonSocial:rs,cif:ci}); S.errors=e;
   return !Object.keys(e).length;
 }
 function validate3() {
@@ -496,7 +507,7 @@ function validate3() {
   const f={nima:val('nima'),sector:val('sector'),empleados:val('empleados'),
     direccion:val('direccion'),municipio:val('municipio'),provincia:val('provincia'),
     cNombre:val('cNombre'),cCargo:val('cCargo'),telefono:val('telefono'),web:val('web')};
-  if(isGen&&!validateNIMA(f.nima)) e.nima='NIMA debe tener exactamente 10 dígitos';
+  if(isGen&&f.nima&&!validateNIMA(f.nima)) e.nima='NIMA debe tener exactamente 10 dígitos';
   if(!f.sector)    e.sector='Selecciona un sector';
   if(!f.empleados) e.empleados='Selecciona rango de empleados';
   if(!f.direccion.trim()) e.direccion='Dirección requerida';
@@ -602,7 +613,6 @@ function bind() {
 
   on('btnReg',()=>{ if(validate1reg()) doRegister(); else render(); });
   on('btnLog',()=>{ if(validate1log()) doLogin();    else render(); });
-  on('btnLocal',()=>{ localStorage.setItem('cb_local_mode','1'); window.location.href='dashboard.html'; });
 
   document.querySelectorAll('.role-card').forEach(c=>{
     c.onclick=()=>{

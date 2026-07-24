@@ -1652,9 +1652,27 @@
     const catNames = { metales: 'Metales', plasticos: 'Plásticos', aceites: 'Aceites', quimicos: 'Químicos', papel: 'Papel/Cartón', otros: 'Otros' };
 
     // ════════════════════════════════════════
+    // LOCAL DEV
+    // ════════════════════════════════════════
+    const IS_LOCAL = ['localhost','127.0.0.1'].includes(location.hostname) || location.protocol === 'file:';
+
+    function loadLocalAdmin() {
+      document.getElementById('login-screen').classList.remove('active');
+      document.getElementById('sidebar').classList.add('active');
+      document.getElementById('main').classList.add('active');
+      document.getElementById('sidebar-avatar').textContent = 'A';
+      document.getElementById('sidebar-name').textContent = 'Admin Local';
+      document.getElementById('sidebar-email').textContent = 'admin@local.dev';
+      document.getElementById('admin-email-display').textContent = 'Modo local · sin Supabase';
+      hideLoading();
+      loadOverviewStats();
+    }
+
+    // ════════════════════════════════════════
     // INIT
     // ════════════════════════════════════════
     async function init() {
+      if(IS_LOCAL) { loadLocalAdmin(); return; }
       try {
         const { data: { session } } = await sb.auth.getSession();
         if (session) {
@@ -1861,7 +1879,7 @@
       document.getElementById('listings-table').innerHTML = '<div class="empty-state" style="padding:32px"><div class="loading-spinner" style="margin:0 auto"></div></div>';
 
       let query = sb.from('listings')
-        .select('*, profiles!inner(company_name, cif, verified)')
+        .select('*, profiles:profiles!listings_profile_id_fkey(company_name, cif, verified)')
         .order('created_at', { ascending: false });
 
       if (statusFilter !== 'all') query = query.eq('status', statusFilter);
@@ -1974,7 +1992,7 @@
       currentModalListingId = listingId;
 
       const [{ data: listing }, { data: photos }] = await Promise.all([
-        sb.from('listings').select('*, profiles(company_name, email, cif, verified)').eq('id', listingId).single(),
+        sb.from('listings').select('*, profiles:profiles!listings_profile_id_fkey(company_name, email, cif, verified)').eq('id', listingId).single(),
         sb.from('listing_photos').select('url, sort_order').eq('listing_id', listingId).order('sort_order'),
       ]);
 
